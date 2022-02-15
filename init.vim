@@ -37,7 +37,6 @@ endif
 source /home/zz/.config/nvim/_machine_specific.vim
 
 
-
 " ====================
 " === Editor Setup ===
 " ====================
@@ -57,7 +56,7 @@ set secure
 set number
 set relativenumber
 " set cursorline
-set hidden
+" set hidden
 set noexpandtab
 set tabstop=4
 set shiftwidth=4
@@ -482,6 +481,7 @@ Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 Plug 'vim-scripts/indentpython.vim', { 'for' :['python', 'vim-plug'] }
 Plug 'plytophogy/vim-virtualenv', { 'for' :['python', 'vim-plug'] }
 Plug 'tweekmonster/braceless.vim', { 'for' :['python', 'vim-plug'] }
+Plug 'petobens/poet-v'
 
 " Flutter Flutter
 Plug 'dart-lang/dart-vim-plugin'
@@ -601,7 +601,7 @@ Plug 'akinsho/bufferline.nvim'
 call plug#end()
 set re=0
 
-let g:python3_host_prog = '/usr/bin/python3'
+let g:python3_host_prog = '/usr/bin/python'
 let g:python_host_prog = '/usr/bin/python2'
 
 " experimental
@@ -636,20 +636,20 @@ let g:gruvbox_contrast_dark = 'hard'
 " colorscheme edge
 
 
-"color dracula
-"color one
-"color railscasts
-"color orbital
-"color ahrenheit
-"color onedark
+" color dracula
+" color one
+" color railscasts
+" color orbital
+" color ahrenheit
+" color onedark
 color gruvbox
-"color neon
-"color deus
-"let ayucolor="light"
-"color ayu
-"color xcodedarkhc
-"set background=light
-"set cursorcolumn
+" color edge
+" color neon
+" color deus
+" let ayucolor="light"
+" color ayu
+" color xcodedarkhc
+" set cursorcolumn
 
 
 
@@ -1538,7 +1538,6 @@ lua require'vimlsp'
 lua require'css-ls'
 lua require'csharp-ls'
 lua require'gdscript-ls'
-" lua require'efmlang-ls'
 lua require'go-ls'
 
 
@@ -1705,8 +1704,11 @@ EOF
 
 nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 
-set guifont=JetBrains\ Mono\ Nerd\ Font:h15
-" set guifont=HeavyData\ Nerd\ Font:h16
+
+set guifont=JetBrainsMono\ Nerd\ Font:h13
+" set guifont=CozetteVector:h14
+" set guifont=superstar:h14
+" set guifont=Retroville\ NC:h10
 
 lua << EOF
 vim.g.symbols_outline = {
@@ -1914,10 +1916,11 @@ require'lsp_signature'.setup(cfg) -- no need to specify bufnr if you don't use t
 EOF
 
 "Godot binare
-let g:godot_executable = '/usr/bin/Godot-v3.4.2'
+let g:godot_executable = '/usr/bin/godot'
 nnoremap <leader>gdrl :GodotRunLast<CR>
 nnoremap <leader>gdrn :GodotRun<CR>
 nnoremap <leader>gdrc :GodotRunCurrent<CR>
+nnoremap <leader>gdrf :GodotRunFZF<CR>
 
 "
 "LSP-saga config
@@ -1971,7 +1974,4 @@ let g:translator_proxy_url = 'socks5://127.0.0.1:7890'
 "
 "neovide
 "
-let g:neovide_refresh_rate=140
-let g:neovide_cursor_animation_length=0.13
-let g:neovide_cursor_trail_length=1.0
-let g:neovide_cursor_vfx_mode = "ripple"
+let g:neovide_cursor_vfx_mode = "wireframe"

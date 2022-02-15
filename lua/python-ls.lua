@@ -1,4 +1,4 @@
 require "lsp_signature".setup()
-require'lspconfig'.pylsp.setup{}
--- require'lspconfig'.pyright.setup{}
--- require'lspconfig'.pyre.setup{}
+require'lspconfig'.pyright.setup{
+	cmd_env = {VIRTUAL_ENV = "$HOMEl/miniconda3/envs/dev"};
+}
