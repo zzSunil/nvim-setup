@@ -1,7 +1,7 @@
-"          _     _                 
-"  _______| |   (_)_ __  _   _ ___ 
+"          _     _
+"  _______| |   (_)_ __  _   _ ___
 " |_  /_  / |   | | '_ \| | | / __|
-"  / / / /| |___| | | | | |_| \__ \
+
 " /___/___|_____|_|_| |_|\__,_|___/
 "
 " Checkout-list
@@ -36,6 +36,11 @@ if empty(glob('~/.config/nvim/_machine_specific.vim'))
 endif
 source /home/zz/.config/nvim/_machine_specific.vim
 
+"===
+"=== Cursor setings
+"===
+set guicursor=n-v-c:block-Cursor
+
 
 " ====================
 " === Editor Setup ===
@@ -58,9 +63,9 @@ set relativenumber
 " set cursorline
 " set hidden
 set noexpandtab
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
 set autoindent
 set list
 set listchars=tab:\|\ ,trail:▫
@@ -139,6 +144,7 @@ noremap l u
 noremap k i
 noremap K I
 
+
 " make Y to copy till the end of the line
 nnoremap Y y$
 
@@ -177,6 +183,7 @@ noremap <silent> <LEADER>o za
 " < n   i >
 "     e
 "     v
+
 noremap <silent> u k
 noremap <silent> n h
 noremap <silent> e j
@@ -205,9 +212,6 @@ noremap B 5b
 noremap h e
 
 source /home/zz/.config/nvim/cursor.vim
-
-"If you use Qwerty keyboard, uncomment the next line.
-"source $XDG_CONFIG_HOME/nvim/cursor_for_qwerty.vim
 
 " ===
 " === Insert Mode Cursor Movement
@@ -340,6 +344,7 @@ map <F10> :call SynGroup()<CR>
 
 "add vim spector Variable highlight
 noremap <leader>sb :call SetName()<CR>
+
 func! SetName()
 	let buffers = filter(range(1, bufnr('$')), 'bufexists(v:val)')
 	echo buffers
@@ -409,9 +414,11 @@ Plug 'RRethy/vim-illuminate'
 " File navigation
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'airblade/vim-rooter'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 " Plug 'pechorin/any-jump.vim'
 "
 
@@ -500,6 +507,9 @@ Plug 'dkarter/bullets.vim'
 Plug 'jceb/vim-orgmode', {'for': ['vim-plug', 'org']}
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
+"minimap
+Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
+
 " Editor Enhancement
 Plug 'Raimondi/delimitMate'
 Plug 'jiangmiao/auto-pairs'
@@ -522,7 +532,7 @@ Plug 'theniceboy/pair-maker.vim'
 Plug 'theniceboy/vim-move'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 " Plug 'Yggdroot/indentLine'
-Plug 'lukas-reineke/indent-blankline.nvim'
+" Plug 'lukas-reineke/indent-blankline.nvim'
 " For general writing
 Plug 'junegunn/goyo.vim'
 Plug 'reedes/vim-wordy'
@@ -598,6 +608,9 @@ Plug 'neomake/neomake'
 "prettier buffer line
 Plug 'akinsho/bufferline.nvim'
 
+"ranger
+Plug 'francoiscabrol/ranger.vim'
+Plug 'rbgrouleff/bclose.vim'
 call plug#end()
 set re=0
 
@@ -613,11 +626,6 @@ set lazyredraw
 " ===
 set termguicolors " enable true colors support
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-"set background=dark
-"let ayucolor="mirage"
-"let g:oceanic_next_terminal_bold = 1
-"let g:oceanic_next_terminal_italic = 1
-"let g:one_allow_italics = 1
 
 " ===
 " === gruvbox
@@ -654,7 +662,7 @@ color gruvbox
 
 
 
-hi NonText ctermfg=gray guifg=grey10
+" hi NonText ctermfg=gray guifg=grey10
 "hi SpecialKey ctermfg=blue guifg=grey70
 
 " ===================== Start of Plugin Settings =====================
@@ -693,7 +701,6 @@ nnoremap <LEADER>g= :GitGutterNextHunk<CR>
 " === vim-instant-markdown
 " ===
 "filetype plugin on
-
 ""Uncomment to override defaults:
 let g:instant_markdown_slow                   = 0
 let g:instant_markdown_autostart              = 0
@@ -711,55 +718,36 @@ noremap <LEADER>tm :TableModeToggle<CR>
 let g:table_mode_cell_text_object_i_map = 'k<Bar>'
 
 
-"===
-"===vim airline
-"==
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = ' '
-let g:airline#extensions#tabline#left_alt_sep = '|'
-let g:airline_theme = 'onedark'
-
-
-
-
 "====
 " === FZF
 " ===
-set rtp+=/usr/local/opt/fzf
-set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
-set rtp+=/home/zz/.linuxbrew/opt/fzf
-nnoremap <silent> <c-f> :FZF<CR>
-nnoremap <c-p> :Leaderf file<CR>
-" noremap <silent> <C-p> :Files<CR>
-noremap <silent> <Leader>h :History<CR>
-"noremap <C-t> :BTags<CR>
-" noremap <silent> <C-l> :Lines<CR>
-noremap <silent> <C-w> :Buffers<CR>
-noremap <leader>; :History:<CR>
-
-let g:fzf_preview_window = 'right:60%'
-let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+" set rtp+=/usr/local/opt/fzf
+" set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
+" set rtp+=/home/zz/.linuxbrew/opt/fzf
+" nnoremap <silent> <c-f> :FZF<CR>
+" nnoremap <c-p> :Leaderf file<CR>
+" " noremap <silent> <C-p> :Files<CR>
+" noremap <silent> <Leader>h :History<CR>
+" "noremap <C-t> :BTags<CR>
+" " noremap <silent> <C-l> :Lines<CR>
+" noremap <silent> <C-w> :Buffers<CR>
+" noremap <leader>; :History:<CR>
 "
-"function! s:list_buffers()
-"  redir => list
-"  silent ls
-"  redir END
-"  return split(list, "\n")
-"endfunction
+" let g:fzf_preview_window = 'right:60%'
+" let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+" function! s:delete_buffers(lines)
+"   execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+" endfunction
 "
-function! s:delete_buffers(lines)
-  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
-endfunction
-
-command! BD call fzf#run(fzf#wrap({
-  \ 'source': s:list_buffers(),
-  \ 'sink*': { lines -> s:delete_buffers(lines) },
-  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
-\ }))
-
-noremap <c-d> :BD<CR>
-
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+" command! BD call fzf#run(fzf#wrap({
+"   \ 'source': s:list_buffers(),
+"   \ 'sink*': { lines -> s:delete_buffers(lines) },
+"   \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+" \ }))
+"
+" noremap <c-d> :BD<CR>
+"
+" let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 
 
 " ===
@@ -792,29 +780,6 @@ let g:Lf_UseCache = 0
 let g:ctrlp_map = ''
 let g:ctrlp_cmd = 'CtrlP'
 
-
-" ===
-" === vim-bookmarks
-" ===
-" let g:bookmark_no_default_key_mappings = 1
-" nmap mt <Plug>BookmarkToggle
-" nmap ma <Plug>BookmarkAnnotate
-" nmap ml <Plug>BookmarkShowAll
-" nmap mi <Plug>BookmarkNext
-" nmap mn <Plug>BookmarkPrev
-" nmap mC <Plug>BookmarkClear
-" nmap mX <Plug>BookmarkClearAll
-" nmap mu <Plug>BookmarkMoveUp
-" nmap me <Plug>BookmarkMoveDown
-" nmap <Leader>g <Plug>BookmarkMoveToLine
-" let g:bookmark_save_per_working_dir = 1
-" let g:bookmark_auto_save = 1
-" let g:bookmark_highlight_lines = 1
-" let g:bookmark_manage_per_buffer = 1
-" let g:bookmark_save_per_working_dir = 1
-" let g:bookmark_center = 1
-" let g:bookmark_auto_close = 1
-" let g:bookmark_location_list = 1
 
 
 " ===
@@ -858,20 +823,10 @@ let g:VM_maps["Redo"]               = '<C-r>'
 " ===
 " === Far.vim
 " ===
-noremap <LEADER>f :F  **/*<left><left><left><left><left>
+noremap <LEADER>f :Far  **/*<left><left><left><left><left>
 let g:far#mapping = {
 		\ "replace_undo" : ["l"],
 		\ }
-
-
-" ===
-" === vim-calc
-" ===
-" noremap <LEADER>a :call Calc()<CR>
-" "Testing
-" if !empty(glob('~/Github/vim-calc/vim-calc.vim'))
-" source ~/Github/vim-calc/vim-calc.vim
-" endif
 
 
 " ===
@@ -995,49 +950,6 @@ augroup autoformat_settings
 	" autocmd FileType vue AutoFormatBuffer prettier
 augroup END
 
-
-" " ===
-" " === OmniSharp
-" " ===
-" let g:OmniSharp_typeLookupInPreview = 1
-" let g:omnicomplete_fetch_full_documentation = 1
-"
-" let g:OmniSharp_server_use_mono = 1
-" let g:OmniSharp_server_stdio = 1
-" let g:OmniSharp_highlight_types = 2
-" let g:OmniSharp_selector_ui = 'ctrlp'
-"
-" autocmd Filetype cs nnoremap <buffer> gd :OmniSharpPreviewDefinition<CR>
-" autocmd Filetype cs nnoremap <buffer> gr :OmniSharpFindUsages<CR>
-" autocmd Filetype cs nnoremap <buffer> gy :OmniSharpTypeLookup<CR>
-" autocmd Filetype cs nnoremap <buffer> ga :OmniSharpGetCodeActions<CR>
-" autocmd Filetype cs nnoremap <buffer> <LEADER>rn :OmniSharpRename<CR><C-N>:res +5<CR>
-"
-" sign define OmniSharpCodeActions text=💡
-"
-" augroup OSCountCodeActions
-" 	autocmd!
-" 	autocmd FileType cs set signcolumn=yes
-" 	autocmd CursorHold *.cs call OSCountCodeActions()
-" augroup END
-"
-" function! OSCountCodeActions() abort
-" 	if bufname('%') ==# '' || OmniSharp#FugitiveCheck() | return | endif
-" 	if !OmniSharp#IsServerRunning() | return | endif
-" 	let opts = {
-" 				\ 'CallbackCount': function('s:CBReturnCount'),
-" 				\ 'CallbackCleanup': {-> execute('sign unplace 99')}
-" 				\}
-" 	call OmniSharp#CountCodeActions(opts)
-" endfunction
-"
-" function! s:CBReturnCount(count) abort
-" 	if a:count
-" 		let l = getpos('.')[1]
-" 		let f = expand('%:p')
-" 		execute ':sign place 99 line='.l.' name= OmniSharpCodeActions file='.f
-" 	endif
-" endfunction
 
 
 " ===
@@ -1168,6 +1080,7 @@ command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
 			\   'sink': function('<sid>read_template_into_buffer')
 " noremap <leader>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
 noremap <leader>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
+noremap <leader>vp :VimspectorReset<CR>
 sign define vimspectorBP text=☛ texthl=Normal
 sign define vimspectorBPDisabled text=☞ texthl=Normal
 sign define vimspectorPC text=🔶 texthl=SpellBad
@@ -1271,7 +1184,6 @@ vmap <LEADER>cu g<
 " === vim-move
 " ===
 let g:move_key_modifier = 'C'
-
 
 " ===
 " === any-jump
@@ -1705,7 +1617,7 @@ EOF
 nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 
 
-set guifont=JetBrainsMono\ Nerd\ Font:h13
+set guifont=JetBrainsMono\ Nerd\ Font:h11
 " set guifont=CozetteVector:h14
 " set guifont=superstar:h14
 " set guifont=Retroville\ NC:h10
@@ -1922,6 +1834,7 @@ nnoremap <leader>gdrn :GodotRun<CR>
 nnoremap <leader>gdrc :GodotRunCurrent<CR>
 nnoremap <leader>gdrf :GodotRunFZF<CR>
 
+
 "
 "LSP-saga config
 "
@@ -1975,3 +1888,55 @@ let g:translator_proxy_url = 'socks5://127.0.0.1:7890'
 "neovide
 "
 let g:neovide_cursor_vfx_mode = "wireframe"
+
+"ranger.vim
+let g:ranger_map_keys = 0
+nnoremap <leader>ra :Ranger<CR>
+
+"===
+"===telescope
+"===
+
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+" Using Lua functions
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+lua << EOF
+require('telescope').setup{
+  defaults = {
+    -- Default configuration for telescope goes here:
+    -- config_key = value,
+    mappings = {
+    n = {
+      ["j"] = false,
+      ["k"] = false,
+      ["e"] = "move_selection_next",
+      ["u"] = "move_selection_previous",
+			},
+    }
+  },
+  pickers = {
+    -- Default configuration for builtin pickers goes here:
+    -- picker_name = {
+    --   picker_config_key = value,
+    --   ...
+    -- }
+    -- Now the picker_config_key will be applied every time you call this
+    -- builtin picker
+  },
+  extensions = {
+    -- Your extension configuration goes here:
+    -- extension_name = {
+    --   extension_config_key = value,
+    -- }
+    -- please take a look at the readme of the extension you want to configure
+  }
+}
+EOF
