@@ -373,6 +373,8 @@ endfunc
 " ===
 
 call plug#begin('~/.config/nvim/plugged')
+"laTex
+Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 
 "color theme
 Plug 'jpo/vim-railscasts-theme'
@@ -381,7 +383,6 @@ Plug 'cange/vim-theme-bronkow'
 Plug 'joshdick/onedark.vim'
 Plug 'fcpg/vim-orbital'
 Plug 'lifepillar/vim-wwdc16-theme'
-Plug 'LoricAndre/fzterm.nvim'
 Plug 'arzg/vim-colors-xcode'
 Plug 'sainnhe/edge'
 
@@ -1902,34 +1903,27 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-
-" Using Lua functions
-nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
-nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
-nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
-nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 lua << EOF
+
 require('telescope').setup{
-  defaults = {
-    -- Default configuration for telescope goes here:
-    -- config_key = value,
-    mappings = {
-    n = {
-      ["j"] = false,
-      ["k"] = false,
-      ["e"] = "move_selection_next",
-      ["u"] = "move_selection_previous",
+		defaults = {
+			layout_config = {
+				vertical = { width = 0.8 }
+				-- other layout configuration here
 			},
+			mappings = {
+			n = {
+				["j"] = false,
+				["k"] = false,
+				["e"] = "move_selection_next",
+				["u"] = "move_selection_previous",
+				},
     }
   },
   pickers = {
-    -- Default configuration for builtin pickers goes here:
-    -- picker_name = {
-    --   picker_config_key = value,
-    --   ...
-    -- }
-    -- Now the picker_config_key will be applied every time you call this
-    -- builtin picker
+		find_files = {
+			theme = "dropdown",
+		}
   },
   extensions = {
     -- Your extension configuration goes here:
@@ -1939,4 +1933,12 @@ require('telescope').setup{
     -- please take a look at the readme of the extension you want to configure
   }
 }
+
 EOF
+
+
+"
+"vim-latex-live-preview
+"
+let g:livepreview_previewer = 'evince'
+let g:livepreview_cursorhold_recompile = 0
