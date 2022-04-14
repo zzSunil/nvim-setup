@@ -415,7 +415,7 @@ Plug 'RRethy/vim-illuminate'
 " File navigation
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
-" Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'airblade/vim-rooter'
 Plug 'nvim-lua/plenary.nvim'
@@ -612,6 +612,18 @@ Plug 'akinsho/bufferline.nvim'
 "ranger
 Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
+
+
+"shader language glsl
+Plug 'tikhomirov/vim-glsl'
+
+"ssh
+Plug 'DanielWeidinger/nvim-sshfs'
+
+"display assembly for the current buffer
+
+Plug 'p00f/godbolt.nvim'
+
 call plug#end()
 set re=0
 
@@ -641,7 +653,7 @@ let g:gruvbox_contrast_dark = 'hard'
 " let g:edge_style = 'default'
 " let g:edge_enable_italic = 1
 " let g:edge_disable_italic_comment = 1
-"
+
 " colorscheme edge
 
 
@@ -655,10 +667,11 @@ color gruvbox
 " color edge
 " color neon
 " color deus
-" let ayucolor="light"
 " color ayu
+" let ayucolor="light"
 " color xcodedarkhc
 " set cursorcolumn
+set cursorline
 
 
 
@@ -719,36 +732,36 @@ noremap <LEADER>tm :TableModeToggle<CR>
 let g:table_mode_cell_text_object_i_map = 'k<Bar>'
 
 
-"====
+" ===
 " === FZF
 " ===
-" set rtp+=/usr/local/opt/fzf
+set rtp+=/usr/local/opt/fzf
 " set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 " set rtp+=/home/zz/.linuxbrew/opt/fzf
-" nnoremap <silent> <c-f> :FZF<CR>
-" nnoremap <c-p> :Leaderf file<CR>
-" " noremap <silent> <C-p> :Files<CR>
-" noremap <silent> <Leader>h :History<CR>
-" "noremap <C-t> :BTags<CR>
-" " noremap <silent> <C-l> :Lines<CR>
-" noremap <silent> <C-w> :Buffers<CR>
+nnoremap <silent> <c-f> :FZF<CR>
+nnoremap <c-p> :Leaderf file<CR>
+" noremap <silent> <C-p> :Files<CR>
+noremap <silent> <Leader>h :History<CR>
+"noremap <C-t> :BTags<CR>
+" noremap <silent> <C-l> :Lines<CR>
+noremap <silent> <C-w> :Buffers<CR>
 " noremap <leader>; :History:<CR>
-"
-" let g:fzf_preview_window = 'right:60%'
-" let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
-" function! s:delete_buffers(lines)
-"   execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
-" endfunction
-"
-" command! BD call fzf#run(fzf#wrap({
-"   \ 'source': s:list_buffers(),
-"   \ 'sink*': { lines -> s:delete_buffers(lines) },
-"   \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
-" \ }))
-"
-" noremap <c-d> :BD<CR>
-"
-" let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+
+let g:fzf_preview_window = 'right:60%'
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+function! s:delete_buffers(lines)
+  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! BD call fzf#run(fzf#wrap({
+  \ 'source': s:list_buffers(),
+  \ 'sink*': { lines -> s:delete_buffers(lines) },
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+\ }))
+
+noremap <c-d> :BD<CR>
+
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 
 
 " ===
@@ -939,7 +952,7 @@ let g:go_doc_keywordprg_enabled = 1
 " ===
 augroup autoformat_settings
 	" autocmd FileType bzl AutoFormatBuffer buildifier
-	autocmd FileType c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
+	autocmd FileType c,cpp,proto,arduino AutoFormatBuffer clang-format
 	" autocmd FileType dart AutoFormatBuffer dartfmt
 	" autocmd FileType go AutoFormatBuffer gofmt
 	" autocmd FileType gn AutoFormatBuffer gn
@@ -1311,8 +1324,8 @@ nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 
 "auto format
-autocmd BufWritePre *.js lua vim.lsp.buf.formatting_sync(nil, 100)
-autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync(nil, 100)
+" autocmd BufWritePre *.js lua vim.lsp.buf.formatting_sync(nil, 100)
+" autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.cs lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.gd lua vim.lsp.buf.formatting_sync(nil, 100)
 " autocmd BufWritePre *.py lua vim.lsp.buf.formatting_sync(nil, 100)
@@ -1440,9 +1453,14 @@ highlight SignColumn guibg=#000000
 highlight SignifySignAdd guifg=#b8bb26 guibg=#000000
 highlight SignifySignDelete guifg=#076678 guibg=#000000 
 highlight SignifySignChange guifg=#cc241d guibg=#000000
+hi CursorLine     guifg=none              guibg=#002943
 
-autocmd InsertEnter * highlight CursorLine guibg=#1d2021
-autocmd InsertLeave * highlight CursorLine guibg=#282828
+
+set guicursor=n-v-c:block-Cursor
+set guicursor+=i:ver100-iCursor
+set guicursor+=n-v-c:blinkon0
+set guicursor+=i:blinkwait10
+
 
 lua require'python-ls'
 lua require'clang-ls'
@@ -1618,7 +1636,8 @@ EOF
 nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 
 
-set guifont=JetBrainsMono\ Nerd\ Font:h11
+set guifont=JetBrainsMono\ Nerd\ Font:h9.5
+
 " set guifont=CozetteVector:h14
 " set guifont=superstar:h14
 " set guifont=Retroville\ NC:h10
@@ -1942,3 +1961,20 @@ EOF
 "
 let g:livepreview_previewer = 'evince'
 let g:livepreview_cursorhold_recompile = 0
+
+"godbolt
+lua << EOF
+require("godbolt").setup({
+    languages = {
+        c = { compiler = "cg112", options = {} },
+        cpp = { compiler = "g112", options = {} },
+        rust = { compiler = "r1590", options = {} },
+        -- any_additional_filetype = { compiler = ..., options = ... },
+    },
+    quickfix = {
+        enable = false, -- whether to populate the quickfix list in case of errors
+        auto_open = false -- whether to open the quickfix list if the compiler outputs errors
+    },
+    url = "https://godbolt.org" -- can be changed to a different godbolt instance
+})
+EOF
