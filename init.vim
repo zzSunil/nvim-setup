@@ -600,7 +600,7 @@ Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'onsails/lspkind-nvim'
 
 "outline
-Plug 'simrat39/symbols-outline.nvim'
+" Plug 'simrat39/symbols-outline.nvim'
 
 "PlatformIO
 Plug 'coddingtonbear/neomake-platformio'
@@ -1868,8 +1868,8 @@ saga.init_lsp_saga {
  diagnostic_header_icon = '   ',
  code_action_icon = ' ',
  code_action_prompt = {
-   enable = false,
-   sign = false,
+   enable = true,
+   sign = true,
    sign_priority = 0,
    virtual_text = true,
  },
@@ -1886,14 +1886,21 @@ saga.init_lsp_saga {
    quit = '<C-c>',exec = '<CR>'  -- quit can be a table
  },
  definition_preview_icon = '  ',
+
  border_style = "single",
  rename_prompt_prefix = '➤',
 }
 require'lspsaga.diagnostic'.show_cursor_diagnostics()
 EOF
-nnoremap <silent>sr :Lspsaga rename<CR>
+nnoremap <silent><leader>sr :Lspsaga rename<CR>
 nnoremap <silent> [f :Lspsaga diagnostic_jump_next<CR>
 nnoremap <silent> ]f :Lspsaga diagnostic_jump_prev<CR>
+nnoremap <silent><leader>sf <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
+nnoremap <silent><leader>ca <cmd>lua require('lspsaga.codeaction').code_action()<CR>
+vnoremap <silent><leader>ca :<C-U>lua require('lspsaga.codeaction').range_code_action()<CR>
+nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
+nnoremap <silent> <A-d> :Lspsaga open_floaterm<CR>
+tnoremap <silent> <A-d> <C-\><C-n>:Lspsaga close_floaterm<CR>
 
 lua << EOF
 require"bufferline".setup{
