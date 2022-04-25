@@ -376,6 +376,9 @@ call plug#begin('~/.config/nvim/plugged')
 "laTex
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 
+"vim-conda support
+Plug 'cjrh/vim-conda'
+
 "color theme
 Plug 'jpo/vim-railscasts-theme'
 Plug 'fcpg/vim-fahrenheit'
@@ -400,6 +403,7 @@ Plug 'nvim-treesitter/playground'
 
 "Clang syntax highlight
 Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'jalvesaq/Nvim-R'
 
 
 "LSP_signature
@@ -599,12 +603,15 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'onsails/lspkind-nvim'
 
-"outline
+"variable hiriacky
 " Plug 'simrat39/symbols-outline.nvim'
 
 "PlatformIO
 Plug 'coddingtonbear/neomake-platformio'
 Plug 'neomake/neomake'
+
+"highlight yank
+Plug 'machakann/vim-highlightedyank'
 
 "prettier buffer line
 Plug 'akinsho/bufferline.nvim'
@@ -1465,6 +1472,7 @@ set guicursor+=i:blinkwait10
 lua require'python-ls'
 lua require'clang-ls'
 lua require'html-ls'
+lua require'r-ls'
 lua require'vimlsp'
 lua require'css-ls'
 lua require'csharp-ls'
@@ -1898,7 +1906,7 @@ nnoremap <silent> ]f :Lspsaga diagnostic_jump_prev<CR>
 nnoremap <silent><leader>sf <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
 nnoremap <silent><leader>ca <cmd>lua require('lspsaga.codeaction').code_action()<CR>
 vnoremap <silent><leader>ca :<C-U>lua require('lspsaga.codeaction').range_code_action()<CR>
-nnoremap <silent> K <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
+nnoremap <silent><leader>k <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
 nnoremap <silent> <A-d> :Lspsaga open_floaterm<CR>
 tnoremap <silent> <A-d> <C-\><C-n>:Lspsaga close_floaterm<CR>
 
@@ -1985,3 +1993,8 @@ require("godbolt").setup({
     url = "https://godbolt.org" -- can be changed to a different godbolt instance
 })
 EOF
+
+"
+"highlight duration
+"
+let g:highlightedyank_highlight_duration = 240
