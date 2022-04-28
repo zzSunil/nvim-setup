@@ -68,7 +68,7 @@ set shiftwidth=2
 set softtabstop=2
 set autoindent
 set list
-set listchars=tab:\|\ ,trail:▫
+set listchars=tab:\ \ ,trail:▫
 set scrolloff=4
 set ttimeoutlen=0
 set notimeout
@@ -405,11 +405,11 @@ Plug 'nvim-treesitter/playground'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'jalvesaq/Nvim-R'
 
-
 "LSP_signature
 Plug 'ray-x/lsp_signature.nvim'
 
 "vim-table-mode
+
 Plug 'dhruvasagar/vim-table-mode'
 
 "General Highlighter
@@ -536,8 +536,7 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'theniceboy/pair-maker.vim'
 Plug 'theniceboy/vim-move'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
-" Plug 'Yggdroot/indentLine'
-" Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'lukas-reineke/indent-blankline.nvim'
 " For general writing
 Plug 'junegunn/goyo.vim'
 Plug 'reedes/vim-wordy'
@@ -603,7 +602,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'onsails/lspkind-nvim'
 
-"variable hiriacky
+"outline
 " Plug 'simrat39/symbols-outline.nvim'
 
 "PlatformIO
@@ -951,8 +950,8 @@ let g:go_highlight_trailing_whitespace_error = 1
 let g:go_highlight_types = 1
 let g:go_highlight_variable_assignments = 1
 let g:go_highlight_variable_declarations = 1
-let g:go_doc_keywordprg_enabled = 1
-
+let g:go_doc_keywordprg_enabled = 0
+nnoremap <silent><leader>gb :GoBuild<CR>
 
 " ===
 " === AutoFormat
@@ -1997,4 +1996,21 @@ EOF
 "
 "highlight duration
 "
-let g:highlightedyank_highlight_duration = 240
+let g:highlightedyank_highlight_duration = 230
+let g:indent_blankline_use_treesitter = v:true
+let g:indent_blankline_filetype_exclude = ['startify']
+let g:indent_blankline_indent_level = 5
+
+lua << EOF
+vim.opt.termguicolors = true
+
+vim.opt.list = true
+vim.opt.listchars:append("space:⋅")
+vim.opt.listchars:append("eol:↴")
+
+require("indent_blankline").setup {
+    space_char_blankline = " ",
+    show_current_context = true,
+    show_current_context_start = true,
+}
+EOF
