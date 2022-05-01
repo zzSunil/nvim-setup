@@ -1,4 +1,3 @@
-"          _     _
 "  _______| |   (_)_ __  _   _ ___
 " |_  /_  / |   | | '_ \| | | / __|
 
@@ -285,11 +284,11 @@ noremap <LEADER>q <C-w>j:q<CR>
 noremap tu :tabe<CR>
 noremap tU :tab split<CR>
 " Move around tabs with tn and ti
-noremap ti :BufferLineCycleNext<CR>
-noremap tn :BufferLineCyclePrev<CR>
+noremap tn :-tabnext<CR>
+noremap ti :+tabnext<CR>
 " Move the tabs with tmn and tmi
-noremap tmn :BufferLineMovePrev<CR>
-noremap tmi :BufferLineMoveNext<CR>
+noremap tmn :-tabmove<CR>
+noremap tmi :+tabmove<CR>
 
 
 " ===
@@ -327,7 +326,7 @@ noremap <C-c> zz
 autocmd BufEnter * silent! lcd %:p:h
 
 " Call figlet
-noremap tx :r !figlet 
+noremap tx :r !figlet
 
 " find and replace
 noremap \s :%s//g<left><left>
@@ -348,7 +347,7 @@ noremap <leader>sb :call SetName()<CR>
 func! SetName()
 	let buffers = filter(range(1, bufnr('$')), 'bufexists(v:val)')
 	echo buffers
-	for i in buffers 
+	for i in buffers
 		if bufname(i) == 'vimspector.Variables'
 			call setbufvar(i,'&filetype','cpp')
 			:LspStop
@@ -484,7 +483,7 @@ Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'pantharshit00/vim-prisma'
 
 " Go
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+" Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 
 " Python
 Plug 'tmhedberg/SimpylFold', { 'for' :['python', 'vim-plug'] }
@@ -504,6 +503,7 @@ Plug 'akinsho/flutter-tools.nvim'
 " Swif
 Plug 'keith/swift.vim'
 Plug 'arzg/vim-swift'
+
 
 " Markdown
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
@@ -613,7 +613,12 @@ Plug 'neomake/neomake'
 Plug 'machakann/vim-highlightedyank'
 
 "prettier buffer line
-Plug 'akinsho/bufferline.nvim'
+" Plug 'akinsho/bufferline.nvim'
+
+"
+"Tabline
+"
+Plug 'seblj/nvim-tabline'
 
 "ranger
 Plug 'francoiscabrol/ranger.vim'
@@ -1909,10 +1914,10 @@ nnoremap <silent><leader>k <cmd>lua require('lspsaga.hover').render_hover_doc()<
 nnoremap <silent> <A-d> :Lspsaga open_floaterm<CR>
 tnoremap <silent> <A-d> <C-\><C-n>:Lspsaga close_floaterm<CR>
 
-lua << EOF
-require"bufferline".setup{
-}
-EOF
+" lua << EOF
+" require"bufferline".setup{
+" }
+" EOF
 
 "vim translator
 nmap <silent> <Leader>w <Plug>TranslateW
@@ -2014,3 +2019,31 @@ require("indent_blankline").setup {
     show_current_context_start = true,
 }
 EOF
+
+"tabline 
+lua << EOF
+require('tabline').setup{
+    no_name = '[No Name]',    -- Name for buffers with no name
+    modified_icon = '',      -- Icon for showing modified buffer
+    close_icon = '',         -- Icon for closing tab with mouse
+    separator = "▌",          -- Separator icon on the left side
+    padding = 3,              -- Prefix and suffix space
+    color_all_icons = false,  -- Color devicons in active and inactive tabs
+    right_separator = false,  -- Show right separator on the last tab
+    show_index = false,       -- Shows the index of tab before filename
+    show_icon = true,         -- Shows the devicon
+}
+EOF
+
+highlight! TabLineSel                                     guibg=NONE guifg=#cc241d  
+highlight! TabLine                                        guibg=NONE guifg=#8ec07c  
+highlight! TabLineFill                                    guibg=NONE guifg=#8ec07c  
+highlight! TabLineSeparatorActive                         guibg=NONE guifg=#8f3f71  
+highlight! TabLineSeparatorInactive                       guibg=NONE guifg=#458588  
+highlight! TabLineModifiedSeparatorActive                 guibg=NONE guifg=#cc241d  
+highlight! TabLineModifiedSeparatorInactive               guibg=NONE guifg=#076678  
+highlight! TabLineModifiedActive                          guibg=NONE guifg=#fb4934  
+highlight! TabLineModifiedInactive                        guibg=NONE guifg=#b8bb26  
+highlight! TabLineCloseActive                             guibg=NONE guifg=#b8bb26  
+highlight! TabLineCloseInactive                           guibg=NONE guifg=#076678  
+
