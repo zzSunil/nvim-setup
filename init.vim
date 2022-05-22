@@ -483,7 +483,7 @@ Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'pantharshit00/vim-prisma'
 
 " Go
-" Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 
 " Python
 Plug 'tmhedberg/SimpylFold', { 'for' :['python', 'vim-plug'] }
@@ -560,6 +560,9 @@ Plug 'skywind3000/asyncrun.vim'
 " Vim Applications
 Plug 'itchyny/calendar.vim'
 
+"fancy notification
+Plug 'rcarriga/nvim-notify'
+
 " Other visual enhancement
 Plug 'luochen1990/rainbow'
 " Plug 'mg979/vim-xtabline'
@@ -603,7 +606,7 @@ Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'onsails/lspkind-nvim'
 
 "outline
-" Plug 'simrat39/symbols-outline.nvim'
+Plug 'simrat39/symbols-outline.nvim'
 
 "PlatformIO
 Plug 'coddingtonbear/neomake-platformio'
@@ -1330,7 +1333,6 @@ lua require'plug-colorizer'
 "
 nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
-nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 
@@ -1339,7 +1341,7 @@ nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 " autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.cs lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.gd lua vim.lsp.buf.formatting_sync(nil, 100)
-" autocmd BufWritePre *.py lua vim.lsp.buf.formatting_sync(nil, 100)
+autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync(nil, 100)
 " autocmd BufWritePre *.c lua vim.lsp.buf.formatting_sync(nil, 100)
 " autocmd BufWritePre *.cpp lua vim.lsp.buf.formatting_sync(nil, 100)
 
@@ -1482,6 +1484,7 @@ lua require'css-ls'
 lua require'csharp-ls'
 lua require'gdscript-ls'
 lua require'go-ls'
+lua require'lua-ls'
 
 
 
@@ -1774,7 +1777,7 @@ nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
 nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
 nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
 nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
-nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+nnoremap gr <cmd>TroubleToggle lsp_references<cr>
 
 
 "paltformIO
@@ -2047,3 +2050,5 @@ highlight! TabLineModifiedInactive                        guibg=NONE guifg=#b8bb
 highlight! TabLineCloseActive                             guibg=NONE guifg=#b8bb26  
 highlight! TabLineCloseInactive                           guibg=NONE guifg=#076678  
 
+"fancy notify
+lua require'nvim-notify'
