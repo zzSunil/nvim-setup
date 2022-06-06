@@ -565,7 +565,6 @@ Plug 'rcarriga/nvim-notify'
 
 " Other visual enhancement
 Plug 'luochen1990/rainbow'
-" Plug 'mg979/vim-xtabline'
 Plug 'wincent/terminus'
 Plug 'ajmwagar/vim-deus'
 
@@ -601,6 +600,8 @@ Plug 'tami5/lspsaga.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'folke/trouble.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
+Plug 'p00f/clangd_extensions.nvim'
+
 " For ultisnips user.
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'onsails/lspkind-nvim'
@@ -1049,19 +1050,6 @@ autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
 " ===
 let g:rainbow_active = 1
 
-
-" ===
-" === xtabline
-" ===
-let g:xtabline_settings = {}
-let g:xtabline_settings.enable_mappings = 0
-let g:xtabline_settings.tabline_modes = ['tabs', 'buffers']
-let g:xtabline_settings.enable_persistance = 0
-let g:xtabline_settings.last_open_first = 1
-noremap to :XTabCycleMode<CR>
-noremap \p :echo expand('%:p')<CR>
-
-
 " ===
 " === vim-session
 " ===
@@ -1247,7 +1235,6 @@ lua <<EOF
    },
  }
 EOF
-
 
 " ===
 " === lazygit.nvim
@@ -1469,6 +1456,16 @@ highlight SignifySignChange guifg=#cc241d guibg=#000000
 hi CursorLine     guifg=none              guibg=#002943
 
 
+highlight! TabLine               guibg=NONE guifg=#8ec07c
+highlight! TabLineSel            guibg=NONE guifg=#cc241d
+highlight! TabLineFill           guibg=NONE guifg=#8ec07c
+highlight! TabLineSeparatorSel   guibg=NONE guifg=#8f3f71
+highlight! TabLineSeparator      guibg=NONE guifg=#458588
+highlight! TabLineModifiedSel    guibg=NONE guifg=#cc241d
+highlight! TabLineModified       guibg=NONE guifg=#076678
+highlight! TabLineCloseSel       guibg=NONE guifg=#458588
+highlight! TabLineClose          guibg=NONE guifg=#b8bb26
+
 set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver100-iCursor
 set guicursor+=n-v-c:blinkon0
@@ -1585,14 +1582,12 @@ require'lualine'.setup {
 EOF
 
 lua << EOF
--- following options are the default
--- each of these are documented in `:help nvim-tree.OPTION_NAME`
 require'nvim-tree'.setup {
   disable_netrw       = true,
   hijack_netrw        = true,
   open_on_setup       = false,
   ignore_ft_on_setup  = {},
-  auto_close          = false,
+  -- auto_close          = false,
   open_on_tab         = false,
   hijack_cursor       = false,
   update_cwd          = false,
@@ -1651,7 +1646,7 @@ EOF
 nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 
 
-set guifont=JetBrainsMono\ Nerd\ Font:h9.5
+set guifont=JetBrainsMono\ Nerd\ Font:h9
 
 " set guifont=CozetteVector:h14
 " set guifont=superstar:h14
@@ -1930,6 +1925,7 @@ let g:translator_proxy_url = 'socks5://127.0.0.1:7890'
 "neovide
 "
 let g:neovide_cursor_vfx_mode = "wireframe"
+let g:neovide_transparency=1.0
 
 "ranger.vim
 let g:ranger_map_keys = 0
@@ -2023,6 +2019,8 @@ require("indent_blankline").setup {
 }
 EOF
 
+
+
 "tabline 
 lua << EOF
 require('tabline').setup{
@@ -2031,24 +2029,14 @@ require('tabline').setup{
     close_icon = '',         -- Icon for closing tab with mouse
     separator = "▌",          -- Separator icon on the left side
     padding = 3,              -- Prefix and suffix space
-    color_all_icons = false,  -- Color devicons in active and inactive tabs
+    color_all_icons = true,  -- Color devicons in active and inactive tabs
     right_separator = false,  -- Show right separator on the last tab
     show_index = false,       -- Shows the index of tab before filename
     show_icon = true,         -- Shows the devicon
 }
 EOF
 
-highlight! TabLineSel                                     guibg=NONE guifg=#cc241d  
-highlight! TabLine                                        guibg=NONE guifg=#8ec07c  
-highlight! TabLineFill                                    guibg=NONE guifg=#8ec07c  
-highlight! TabLineSeparatorActive                         guibg=NONE guifg=#8f3f71  
-highlight! TabLineSeparatorInactive                       guibg=NONE guifg=#458588  
-highlight! TabLineModifiedSeparatorActive                 guibg=NONE guifg=#cc241d  
-highlight! TabLineModifiedSeparatorInactive               guibg=NONE guifg=#076678  
-highlight! TabLineModifiedActive                          guibg=NONE guifg=#fb4934  
-highlight! TabLineModifiedInactive                        guibg=NONE guifg=#b8bb26  
-highlight! TabLineCloseActive                             guibg=NONE guifg=#b8bb26  
-highlight! TabLineCloseInactive                           guibg=NONE guifg=#076678  
+
 
 "fancy notify
 lua require'nvim-notify'
