@@ -163,9 +163,9 @@ noremap <LEADER><CR> :nohlsearch<CR>
 " Adjacent duplicate words
 noremap <LEADER>dw /\(\<\w\+\>\)\_s*\1
 
-" Space to Tab
-nnoremap <LEADER>tt :%s/    /\t/g
-vnoremap <LEADER>tt :s/    /\t/g |
+" " Space to Tab
+" nnoremap <LEADER>tt :%s/    /\t/g
+" vnoremap <LEADER>tt :s/    /\t/g |
 
 " | Folding |
 noremap <silent> <LEADER>o za
@@ -2111,3 +2111,4 @@ lua << EOF
 }
 EOF
 
+nnoremap <silent><leader>tt :TodoTelescope<CR>
