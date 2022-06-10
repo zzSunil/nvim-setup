@@ -580,7 +580,7 @@ Plug 'xolox/vim-session'
 Plug 'xolox/vim-misc' " vim-session dep
 
 "gruvbox color scheme
-Plug 'morhetz/gruvbox'
+Plug 'zzLinus/gruvbox'
 
 "Dependencies
  Plug 'MarcWeber/vim-addon-mw-utils'
@@ -1461,15 +1461,6 @@ highlight SignifySignChange guifg=#cc241d guibg=#000000
 hi CursorLine     guifg=none              guibg=#002943
 
 
-highlight! TabLine               guibg=NONE guifg=#8ec07c
-highlight! TabLineSel            guibg=NONE guifg=#cc241d
-highlight! TabLineFill           guibg=NONE guifg=#8ec07c
-highlight! TabLineSeparatorSel   guibg=NONE guifg=#8f3f71
-highlight! TabLineSeparator      guibg=NONE guifg=#458588
-highlight! TabLineModifiedSel    guibg=NONE guifg=#cc241d
-highlight! TabLineModified       guibg=NONE guifg=#076678
-highlight! TabLineCloseSel       guibg=NONE guifg=#458588
-highlight! TabLineClose          guibg=NONE guifg=#b8bb26
 
 set guicursor=n-v-c:block-Cursor
 set guicursor+=i:ver100-iCursor
@@ -1586,72 +1577,9 @@ require'lualine'.setup {
 }
 EOF
 
-lua << EOF
-require'nvim-tree'.setup {
-  disable_netrw       = true,
-  hijack_netrw        = true,
-  open_on_setup       = false,
-  ignore_ft_on_setup  = {},
-  -- auto_close          = false,
-  open_on_tab         = false,
-  hijack_cursor       = false,
-  update_cwd          = false,
-  update_to_buf_dir   = {
-    enable = true,
-    auto_open = true,
-  },
-  diagnostics = {
-    enable = false,
-    icons = {
-      hint = "",
-      info = "",
-      warning = "",
-      error = "",
-    }
-  },
-  update_focused_file = {
-    enable      = false,
-    update_cwd  = false,
-    ignore_list = {}
-  },
-  system_open = {
-    cmd  = nil,
-    args = {}
-  },
-  filters = {
-    dotfiles = false,
-    custom = {}
-  },
-  git = {
-    enable = true,
-    ignore = true,
-    timeout = 500,
-  },
-  view = {
-    width = 30,
-    height = 30,
-    hide_root_folder = false,
-    side = 'left',
-    auto_resize = false,
-    mappings = {
-      custom_only = false,
-      list = {}
-    },
-    number = false,
-    relativenumber = false,
-    signcolumn = "yes"
-  },
-  trash = {
-    cmd = "trash",
-    require_confirm = true
-  }
-}
-EOF
-
-nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 
 
-set guifont=JetBrainsMono\ Nerd\ Font:h9
+set guifont=JetBrainsMono\ Nerd\ Font:h9.5
 
 " set guifont=CozetteVector:h14
 " set guifont=superstar:h14
@@ -1968,16 +1896,9 @@ require('telescope').setup{
 		}
   },
   extensions = {
-    -- Your extension configuration goes here:
-    -- extension_name = {
-    --   extension_config_key = value,
-    -- }
-    -- please take a look at the readme of the extension you want to configure
   }
 }
-
 EOF
-
 
 "
 "vim-latex-live-preview
@@ -2034,7 +1955,7 @@ require('tabline').setup{
     close_icon = '',         -- Icon for closing tab with mouse
     separator = "▌",          -- Separator icon on the left side
     padding = 3,              -- Prefix and suffix space
-    color_all_icons = true,  -- Color devicons in active and inactive tabs
+    color_all_icons = false,  -- Color devicons in active and inactive tabs
     right_separator = false,  -- Show right separator on the last tab
     show_index = false,       -- Shows the index of tab before filename
     show_icon = true,         -- Shows the devicon
@@ -2042,73 +1963,20 @@ require('tabline').setup{
 EOF
 
 
+highlight! TabLine               guibg=NONE guifg=#8ec07c
+highlight! TabLineSel            guibg=NONE guifg=#cc241d
+highlight! TabLineFill           guibg=NONE guifg=#8ec07c
+highlight! TabLineSeparatorSel   guibg=NONE guifg=#8f3f71
+highlight! TabLineSeparator      guibg=NONE guifg=#458588
+highlight! TabLineModifiedSel    guibg=NONE guifg=#cc241d
+highlight! TabLineModified       guibg=NONE guifg=#076678
+highlight! TabLineCloseSel       guibg=NONE guifg=#458588
+highlight! TabLineClose          guibg=NONE guifg=#b8bb26
+
 "fancy notify
 lua require'nvim-notify'
 
-lua << EOF
-  require("todo-comments").setup {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-  signs = true, -- show icons in the signs column
-  sign_priority = 18, -- sign priority
-  -- keywords recognized as todo comments
-  keywords = {
-    FIX = {
-      icon = " ", -- icon used for the sign, and in search results
-      color = "error", -- can be a hex color, or a named color (see below)
-      alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
-      -- signs = false, -- configure signs for some keywords individually
-    },
-    TODO = { icon = " ", color = "info" },
-    HACK = { icon = " ", color = "warning" },
-    WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-    PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-    NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
-  },
-  merge_keywords = true, -- when true, custom keywords will be merged with the defaults
-  -- highlighting of the line containing the todo comment
-  -- * before: highlights before the keyword (typically comment characters)
-  -- * keyword: highlights of the keyword
-  -- * after: highlights after the keyword (todo text)
-  highlight = {
-    before = "", -- "fg" or "bg" or empty
-    keyword = "wide", -- "fg", "bg", "wide" or empty. (wide is the same as bg, but will also highlight surrounding characters)
-    after = "fg", -- "fg" or "bg" or empty
-    pattern = [[.*<(KEYWORDS)\s*:]], -- pattern or table of patterns, used for highlightng (vim regex)
-    comments_only = true, -- uses treesitter to match keywords in comments only
-    max_line_len = 400, -- ignore lines longer than this
-    exclude = {}, -- list of file types to exclude highlighting
-  },
-  -- list of named colors where we try to extract the guifg from the
-  -- list of hilight groups or use the hex color if hl not found as a fallback
-  colors = {
-    -- error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
-    -- warning = { "DiagnosticWarning", "WarningMsg", "#FBBF24" },
-    -- info = { "DiagnosticInfo", "#2563EB" },
-    -- hint = { "DiagnosticHint", "#10B981" },
-    -- default = { "Identifier", "#7C3AED" },
-    error = { "#DC2626" },
-    warning = { "#FBBF24" },
-    info = { "#2563EB" },
-    hint = { "#10B981" },
-    default = { "#7C3AED" },
-  },
-  search = {
-    command = "rg",
-    args = {
-      "--color=never",
-      "--no-heading",
-      "--with-filename",
-      "--line-number",
-      "--column",
-    },
-    -- regex that will be used to match keywords.
-    -- don't replace the (KEYWORDS) placeholder
-    pattern = [[\b(KEYWORDS):]], -- ripgrep regex
-    -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
-  }
-}
-EOF
+lua require'nvimtree'
+nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 
-nnoremap <silent><leader>tt :TodoTelescope<CR>
+lua require'nvimtodo'
