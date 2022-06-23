@@ -14,12 +14,16 @@ require 'lspconfig'.clangd.setup {}
 -- local lspconfig = require 'lspconfig'
 -- lspconfig.ccls.setup {
 -- 	init_options = {
--- 		-- compilationDatabaseDirectory = "build";
+-- 		-- compilationDatabaseDirectory = "Build/i686";
 -- 		index = {
 -- 			threads = 8;
 -- 		};
--- 		-- clang = {
--- 		-- 	excludeArgs = { "-frounding-math" };
--- 		-- };
+-- 		diagnostics = {
+-- 			onChange = 1;
+-- 		},
+-- 		clang = {
+-- 			extraArgs = { "-std=c++20", "-Qunused-arguments" };
+-- 			excludeArgs = { "" };
+-- 		};
 -- 	}
 -- }

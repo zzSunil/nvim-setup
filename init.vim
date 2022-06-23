@@ -459,6 +459,7 @@ Plug 'yorik1984/lualine-theme.nvim'
 "
 Plug 'google/vim-maktaba'
 Plug 'google/vim-codefmt'
+Plug 'rhysd/vim-clang-format'
 
 " Tex
  Plug 'lervag/vimtex'
@@ -581,6 +582,9 @@ Plug 'xolox/vim-misc' " vim-session dep
 
 "gruvbox color scheme
 Plug 'zzLinus/gruvbox'
+Plug 'lifepillar/vim-gruvbox8'
+Plug 'sainnhe/gruvbox-material'
+Plug 'eddyekofo94/gruvbox-flat.nvim'
 
 "Dependencies
  Plug 'MarcWeber/vim-addon-mw-utils'
@@ -663,8 +667,24 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " ===
 " === gruvbox
 " ===
-let g:gruvbox_contrast_dark = 'hard'
+" let g:gruvbox_contrast_dark = 'hard'
+" set background=dark
+" colorscheme gruvbox8
 
+
+set background=dark
+let g:gruvbox_material_background = 'hard'
+let g:gruvbox_material_better_performance = 1
+let g:gruvbox_material_foreground = 'original'
+let g:gruvbox_material_diagnostic_virtual_text = 'colored'
+colorscheme gruvbox-material
+
+
+" colorscheme gruvbox-flat
+" lua << EOF
+" 	vim.g.gruvbox_flat_style = "dark"
+" 	vim.g.gruvbox_flat_style = "hard"
+" EOF
 
 " ===
 " === edge
@@ -683,7 +703,7 @@ let g:gruvbox_contrast_dark = 'hard'
 " color orbital
 " color ahrenheit
 " color onedark
-color gruvbox
+" color gruvbox8
 " color edge
 " color neon
 " color deus
@@ -972,7 +992,7 @@ nnoremap <silent><leader>gb :GoBuild<CR>
 " ===
 augroup autoformat_settings
 	" autocmd FileType bzl AutoFormatBuffer buildifier
-	autocmd FileType c,cpp,proto,arduino AutoFormatBuffer clang-format
+	" autocmd FileType c,cpp,proto,arduino AutoFormatBuffer clang-format
 	" autocmd FileType dart AutoFormatBuffer dartfmt
 	" autocmd FileType go AutoFormatBuffer gofmt
 	" autocmd FileType gn AutoFormatBuffer gn
@@ -1451,15 +1471,13 @@ highlight! CmpItemKindEmumMember guibg=NONE guifg=#cc241d
 highlight! CmpItemKindConstant   guibg=NONE guifg=#b8bb26
 highlight! CmpItemKindStruct     guibg=NONE guifg=#076678
 highlight! CmpItemKindEvent      guibg=NONE guifg=#076678
-" highlight clear SignColumn
-" highlight clear LineNr
-highlight LineNr guibg=#000000 
-highlight SignColumn guibg=#000000 
-highlight SignifySignAdd guifg=#b8bb26 guibg=#000000
-highlight SignifySignDelete guifg=#076678 guibg=#000000 
-highlight SignifySignChange guifg=#cc241d guibg=#000000
-hi CursorLine     guifg=none              guibg=#002943
+highlight! LineNr guibg=#000000 
+highlight! SignColumn guibg=#000000 
+highlight! SignifySignAdd guifg=#b8bb26 guibg=#000000
+highlight! SignifySignDelete guifg=#076678 guibg=#000000 
+highlight! SignifySignChange guifg=#cc241d guibg=#000000
 
+hi CursorLine     guifg=none              guibg=#002943
 
 
 set guicursor=n-v-c:block-Cursor
@@ -1491,7 +1509,7 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     -- This will disable virtual text, like doing:
     -- let g:diagnostic_enable_virtual_text = 0
     virtual_text = true,
-		underline = false,
+		underline = true,
     -- This is similar to:
     -- let g:diagnostic_show_sign = 1
     -- To configure sign display,
@@ -1579,11 +1597,7 @@ EOF
 
 
 
-set guifont=JetBrainsMono\ Nerd\ Font:h9.5
-
-" set guifont=CozetteVector:h14
-" set guifont=superstar:h14
-" set guifont=Retroville\ NC:h10
+set guifont=JetBrainsMono\ Nerd\ Font:h9
 
 lua << EOF
 vim.g.symbols_outline = {
@@ -1762,7 +1776,6 @@ lua << EOF
   hi_parameter = "LspSignatureActiveParameter", -- how your parameter will be highlight
   max_height = 12, -- max height of signature floating_window, if content is more than max_height, you can scroll down
                    -- to view the hiding contents
-  max_width = 120, -- max_width of signature floating_window, line will be wrapped if exceed max_width
   handler_opts = {
     border = "rounded"   -- double, rounded, single, shadow, none
   },
@@ -1775,7 +1788,7 @@ lua << EOF
 
   padding = '', -- character to pad on left and right of signature can be ' ', or '|'  etc
 
-  transparency = nil, -- disabled by default, allow floating win transparent value 1~100
+  transparency = 0, -- disabled by default, allow floating win transparent value 1~100
   shadow_blend = 36, -- if you using shadow as border use this set the opacity
   shadow_guibg = 'Black', -- if you using shadow as border use this set the color e.g. 'Green' or '#121315'
   timer_interval = 200, -- default timer check interval set to lower value if you want to reduce latency
@@ -1873,8 +1886,8 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-lua << EOF
 
+lua << EOF
 require('telescope').setup{
 		defaults = {
 			layout_config = {
@@ -1963,6 +1976,8 @@ require('tabline').setup{
 EOF
 
 
+highlight! TabLineCloseSel       guibg=NONE guifg=#458588
+highlight! TabLineClose          guibg=NONE guifg=#b8bb26
 highlight! TabLine               guibg=NONE guifg=#8ec07c
 highlight! TabLineSel            guibg=NONE guifg=#cc241d
 highlight! TabLineFill           guibg=NONE guifg=#8ec07c
@@ -1970,8 +1985,6 @@ highlight! TabLineSeparatorSel   guibg=NONE guifg=#8f3f71
 highlight! TabLineSeparator      guibg=NONE guifg=#458588
 highlight! TabLineModifiedSel    guibg=NONE guifg=#cc241d
 highlight! TabLineModified       guibg=NONE guifg=#076678
-highlight! TabLineCloseSel       guibg=NONE guifg=#458588
-highlight! TabLineClose          guibg=NONE guifg=#b8bb26
 
 "fancy notify
 lua require'nvim-notify'
@@ -1980,3 +1993,7 @@ lua require'nvimtree'
 nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 
 lua require'nvimtodo'
+nnoremap <LEADER>tt :TodoTelescope<CR>
+
+"clang format
+let g:clang_format#enable_fallback_style = 0
