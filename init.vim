@@ -372,6 +372,9 @@ endfunc
 " ===
 
 call plug#begin('~/.config/nvim/plugged')
+"
+Plug 'rainbowhxch/beacon.nvim'
+
 "laTex
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 
@@ -425,7 +428,8 @@ Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-Plug 'airblade/vim-rooter'
+Plug 'dylanaraps/root.nvim'
+" Plug 'airblade/vim-rooter'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 " Plug 'pechorin/any-jump.vim'
@@ -667,6 +671,7 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " ===
 " === gruvbox
 " ===
+
 " let g:gruvbox_contrast_dark = 'hard'
 " set background=dark
 " colorscheme gruvbox8
@@ -690,10 +695,10 @@ colorscheme gruvbox-material
 " === edge
 " ===
 
-" let g:edge_style = 'default'
+" let g:edge_style = 'neon'
 " let g:edge_enable_italic = 1
-" let g:edge_disable_italic_comment = 1
-
+" let g:edge_transparent_background = 1
+"
 " colorscheme edge
 
 
@@ -750,7 +755,7 @@ nnoremap <LEADER>g= :GitGutterNextHunk<CR>
 
 
 
- 
+
 " ===
 " === vim-instant-markdown
 " ===
@@ -1086,7 +1091,7 @@ let g:rainbow_active = 1
 "set sessionoptions-=options
 "noremap sl :OpenSession<CR>
 "noremap sS :SaveSession<CR>
-"noremap ss :SaveSession 
+"noremap ss :SaveSession
 "noremap sc :SaveSession<CR>:CloseSession<CR>:q<CR>
 "noremap so :OpenSession default<CR>
 "noremap sD :DeleteSession<CR>
@@ -1148,7 +1153,7 @@ let g:vmt_fence_closing_text = '/TOC'
 "=== MarkdownPreview
 "===
 " example
-let g:mkdp_auto_start = 1 
+let g:mkdp_auto_start = 1
 let g:mkdp_browser = 'firefox'
 let g:mkdp_command_for_global = 0
 let g:mkdp_preview_options = {
@@ -1186,8 +1191,11 @@ hi illuminatedWord cterm=undercurl gui=undercurl
 " ===
 " === vim-rooter
 " ===
-let g:rooter_patterns = ['__vim_project_root', '.git/']
-let g:rooter_silent_chdir = 1
+let g:root#patterns = ['.git', '_darcs', '.hg', '.bzr', '.svn']
+" let g:rooter_patterns = ['__vim_project_root', '.git/']
+" let g:rooter_patterns = ['.git', 'Makefile', '*.sln']
+" let g:rooter_change_directory_for_non_project_files = 'current'
+" let g:rooter_silent_chdir = 1
 
 
 " ===
@@ -1360,7 +1368,7 @@ autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync(nil, 100)
 
 "
 " "nvim cmp settings
-" 
+"
 
 
 set completeopt=menu,menuone,noselect
@@ -1458,7 +1466,7 @@ highlight! CmpItemKindProperty   guibg=NONE guifg=#b8bb26
 highlight! CmpItemKindUnit       guibg=NONE guifg=#8ec07c
 highlight! CmpItemKindConstructor guibg=NONE guifg=#cc241d
 highlight! CmpItemKindField      guibg=NONE guifg=#8ec07c
-highlight! CmpItemKindClass      guibg=NONE guifg=#cc241d 
+highlight! CmpItemKindClass      guibg=NONE guifg=#cc241d
 highlight! CmpItemKindModule     guibg=NONE guifg=#076678
 highlight! CmpItemKindValue      guibg=NONE guifg=#83a598
 highlight! CmpItemKindEmum       guibg=NONE guifg=#cc241d
@@ -1471,10 +1479,10 @@ highlight! CmpItemKindEmumMember guibg=NONE guifg=#cc241d
 highlight! CmpItemKindConstant   guibg=NONE guifg=#b8bb26
 highlight! CmpItemKindStruct     guibg=NONE guifg=#076678
 highlight! CmpItemKindEvent      guibg=NONE guifg=#076678
-highlight! LineNr guibg=#000000 
-highlight! SignColumn guibg=#000000 
+highlight! LineNr guibg=#000000
+highlight! SignColumn guibg=#000000
 highlight! SignifySignAdd guifg=#b8bb26 guibg=#000000
-highlight! SignifySignDelete guifg=#076678 guibg=#000000 
+highlight! SignifySignDelete guifg=#076678 guibg=#000000
 highlight! SignifySignChange guifg=#cc241d guibg=#000000
 
 hi CursorLine     guifg=none              guibg=#002943
@@ -1559,7 +1567,7 @@ require'lualine'.setup {
                     removed  = " "
                 }
 						 },
-                  {'diagnostics', 
+                  {'diagnostics',
 										sources={'nvim_diagnostic', 'coc'},
 										sections = {'error', 'warn', 'info', 'hint'},
                 		diagnostics_color = {
@@ -1960,7 +1968,7 @@ EOF
 
 
 
-"tabline 
+"tabline
 lua << EOF
 require('tabline').setup{
     no_name = '[No Name]',    -- Name for buffers with no name
@@ -1997,3 +2005,4 @@ nnoremap <LEADER>tt :TodoTelescope<CR>
 
 "clang format
 let g:clang_format#enable_fallback_style = 0
+let g:clang_format#auto_format = 1
