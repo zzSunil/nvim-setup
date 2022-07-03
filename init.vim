@@ -3,10 +3,6 @@
 
 " /___/___|_____|_|_| |_|\__,_|___/
 "
-" Checkout-list
-" vim-esearch
-" fmoralesc/worldslice
-" SidOfc/mkdx
 filetype on
 filetype indent on
 filetype plugin on
@@ -49,8 +45,8 @@ set guicursor=n-v-c:block-Cursor
 " ===
 "set clipboard=unnamedplus
 let &t_ut=''
-set autochdir
 
+autocmd BufEnter * silent! lcd %:p:h
 
 " ===
 " === Editor behavior
@@ -62,7 +58,7 @@ set relativenumber
 " set cursorline
 " set hidden
 set noexpandtab
-set tabstop=2
+set tabstop=4
 set shiftwidth=2
 set softtabstop=2
 set autoindent
@@ -428,12 +424,9 @@ Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-Plug 'dylanaraps/root.nvim'
-" Plug 'airblade/vim-rooter'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
-" Plug 'pechorin/any-jump.vim'
-"
+
 
 " Debugger
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
@@ -677,12 +670,12 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " colorscheme gruvbox8
 
 
-set background=dark
-let g:gruvbox_material_background = 'hard'
-let g:gruvbox_material_better_performance = 1
-let g:gruvbox_material_foreground = 'original'
-let g:gruvbox_material_diagnostic_virtual_text = 'colored'
-colorscheme gruvbox-material
+" set background=dark
+" let g:gruvbox_material_background = 'hard'
+" let g:gruvbox_material_better_performance = 1
+" let g:gruvbox_material_foreground = 'original'
+" let g:gruvbox_material_diagnostic_virtual_text = 'colored'
+" colorscheme gruvbox-material
 
 
 " colorscheme gruvbox-flat
@@ -695,11 +688,15 @@ colorscheme gruvbox-material
 " === edge
 " ===
 
-" let g:edge_style = 'neon'
-" let g:edge_enable_italic = 1
-" let g:edge_transparent_background = 1
-"
-" colorscheme edge
+colorscheme edge
+
+let g:edge_disable_italic_comment = 1
+let g:edge_style = "default"
+let g:edge_enable_italic = 1
+let g:edge_disable_italic_comment = 1
+let g:edge_diagnostic_text_highlight = 1
+let g:edge_diagnostic_virtual_text = 'colored'
+let g:edge_transparent_background = 1
 
 
 " color dracula
@@ -707,10 +704,17 @@ colorscheme gruvbox-material
 " color railscasts
 " color orbital
 " color ahrenheit
+
 " color onedark
+
 " color gruvbox8
 " color edge
+
 " color neon
+" lua << EOF
+" vim.g.neon_style = "dark"
+" EOF
+
 " color deus
 " color ayu
 " let ayucolor="light"
@@ -1186,16 +1190,6 @@ nmap ss <plug>(SubversiveSubstituteLine)
 " ===
 let g:Illuminate_delay = 750
 hi illuminatedWord cterm=undercurl gui=undercurl
-
-
-" ===
-" === vim-rooter
-" ===
-let g:root#patterns = ['.git', '_darcs', '.hg', '.bzr', '.svn']
-" let g:rooter_patterns = ['__vim_project_root', '.git/']
-" let g:rooter_patterns = ['.git', 'Makefile', '*.sln']
-" let g:rooter_change_directory_for_non_project_files = 'current'
-" let g:rooter_silent_chdir = 1
 
 
 " ===
