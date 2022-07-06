@@ -58,6 +58,7 @@ set relativenumber
 " set cursorline
 " set hidden
 set noexpandtab
+set autochdir
 set tabstop=4
 set shiftwidth=2
 set softtabstop=2
@@ -411,8 +412,10 @@ Plug 'jalvesaq/Nvim-R'
 "LSP_signature
 Plug 'ray-x/lsp_signature.nvim'
 
-"vim-table-mode
+"Vim rooter
+Plug 'rendon/vim-rooter'
 
+"vim-table-mode
 Plug 'dhruvasagar/vim-table-mode'
 
 "General Highlighter
@@ -567,7 +570,7 @@ Plug 'itchyny/calendar.vim'
 Plug 'rcarriga/nvim-notify'
 
 " Other visual enhancement
-Plug 'luochen1990/rainbow'
+Plug 'p00f/nvim-ts-rainbow'
 Plug 'wincent/terminus'
 Plug 'ajmwagar/vim-deus'
 
@@ -668,8 +671,8 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " let g:gruvbox_contrast_dark = 'hard'
 " set background=dark
 " colorscheme gruvbox8
-
-
+"
+"
 " set background=dark
 " let g:gruvbox_material_background = 'hard'
 " let g:gruvbox_material_better_performance = 1
@@ -688,16 +691,15 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " === edge
 " ===
 
-colorscheme edge
-
 let g:edge_disable_italic_comment = 1
-let g:edge_style = "default"
+let g:edge_style = "neon"
 let g:edge_enable_italic = 1
 let g:edge_disable_italic_comment = 1
 let g:edge_diagnostic_text_highlight = 1
 let g:edge_diagnostic_virtual_text = 'colored'
 let g:edge_transparent_background = 1
 
+colorscheme edge
 
 " color dracula
 " color one
@@ -708,7 +710,6 @@ let g:edge_transparent_background = 1
 " color onedark
 
 " color gruvbox8
-" color edge
 
 " color neon
 " lua << EOF
@@ -720,9 +721,9 @@ let g:edge_transparent_background = 1
 " let ayucolor="light"
 " color xcodedarkhc
 " set cursorcolumn
+
+" colorscheme kanagawa
 set cursorline
-
-
 
 
 " hi NonText ctermfg=gray guifg=grey10
@@ -756,8 +757,6 @@ let g:gitgutter_sign_modified_removed = '▒'
 nnoremap <LEADER>gf :GitGutterFold<CR>
 nnoremap <LEADER>g- :GitGutterPrevHunk<CR>
 nnoremap <LEADER>g= :GitGutterNextHunk<CR>
-
-
 
 
 " ===
@@ -1079,10 +1078,6 @@ vmap ga :Tabularize /
 autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
 
 
-" ===
-" === rainbow
-" ===
-let g:rainbow_active = 1
 
 " ===
 " === vim-session
@@ -1605,7 +1600,6 @@ lua << EOF
 vim.g.symbols_outline = {
     highlight_hovered_item = true,
     show_guides = true,
-    auto_preview = true,
     position = 'right',
     relative_width = true,
     width = 25,
@@ -1920,6 +1914,7 @@ EOF
 "
 let g:livepreview_previewer = 'evince'
 let g:livepreview_cursorhold_recompile = 0
+let g:livepreview_engine = 'xelatex '
 
 "godbolt
 lua << EOF
@@ -1961,6 +1956,16 @@ require("indent_blankline").setup {
 EOF
 
 
+highlight! TabLineCloseSel       guibg=NONE guifg=#458588
+highlight! TabLineClose          guibg=NONE guifg=#b8bb26
+highlight! TabLine               guibg=NONE guifg=#8ec07c
+highlight! TabLineSel            guibg=NONE guifg=#cc241d
+highlight! TabLineFill           guibg=NONE guifg=#8ec07c
+highlight! TabLineSeparatorSel   guibg=NONE guifg=#8f3f71
+highlight! TabLineSeparator      guibg=NONE guifg=#458588
+highlight! TabLineModifiedSel    guibg=NONE guifg=#cc241d
+highlight! TabLineModified       guibg=NONE guifg=#076678
+
 
 "tabline
 lua << EOF
@@ -1978,15 +1983,6 @@ require('tabline').setup{
 EOF
 
 
-highlight! TabLineCloseSel       guibg=NONE guifg=#458588
-highlight! TabLineClose          guibg=NONE guifg=#b8bb26
-highlight! TabLine               guibg=NONE guifg=#8ec07c
-highlight! TabLineSel            guibg=NONE guifg=#cc241d
-highlight! TabLineFill           guibg=NONE guifg=#8ec07c
-highlight! TabLineSeparatorSel   guibg=NONE guifg=#8f3f71
-highlight! TabLineSeparator      guibg=NONE guifg=#458588
-highlight! TabLineModifiedSel    guibg=NONE guifg=#cc241d
-highlight! TabLineModified       guibg=NONE guifg=#076678
 
 "fancy notify
 lua require'nvim-notify'
@@ -1995,8 +1991,33 @@ lua require'nvimtree'
 nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 
 lua require'nvimtodo'
-nnoremap <LEADER>tt :TodoTelescope<CR>
+nnoremap <LEADER>to :TodoTelescope<CR>
 
 "clang format
 let g:clang_format#enable_fallback_style = 0
 let g:clang_format#auto_format = 1
+
+" ts-rainbow3-brackets
+lua << EOF
+require("nvim-treesitter.configs").setup {
+  highlight = {
+      -- ...
+  },
+  -- ...
+  rainbow = {
+    enable = true,
+    -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
+    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
+    max_file_lines = nil, -- Do not enable for files with more than n lines, int
+    -- colors = {}, -- table of hex strings
+    -- termcolors = {} -- table of colour name strings
+  }
+}
+EOF
+
+
+"vim rooter
+let g:rooter_disable_map = 1
+let g:rooter_patterns = ['Makefile', '.git/']
+let g:rooter_change_directory_for_non_project_files = 1
+let g:rooter_silent_chdir = 0
