@@ -29,7 +29,8 @@ if empty(glob('~/.config/nvim/_machine_specific.vim'))
 	let has_machine_specific_file = 0
 	silent! exec "!cp ~/.config/nvim/default_configs/_machine_specific_default.vim ~/.config/nvim/_machine_specific.vim"
 endif
-source /home/zz/.config/nvim/_machine_specific.vim
+source /home/zzlinus/.config/nvim/_machine_specific.vim
+" source /home/zzlinus/.config/nvim/colors/agnostic.vim
 
 "===
 "=== Cursor setings
@@ -60,8 +61,8 @@ set relativenumber
 set noexpandtab
 set autochdir
 set tabstop=4
-set shiftwidth=2
-set softtabstop=2
+set shiftwidth=4
+set softtabstop=4
 set autoindent
 set list
 set listchars=tab:\ \ ,trail:▫
@@ -146,6 +147,8 @@ nnoremap Y y$
 
 " Copy to system clipboard
 vnoremap Y "+y
+set clipboard^=unnamed,unnamedplus
+
 
 " Indentation
 nnoremap < <<
@@ -153,6 +156,7 @@ nnoremap > >>
 
 " Delete find pair
 nnoremap dy d%
+
 
 " Search
 noremap <LEADER><CR> :nohlsearch<CR>
@@ -207,7 +211,7 @@ noremap B 5b
 " set h (same as n, cursor left) to 'end of word'
 noremap h e
 
-source /home/zz/.config/nvim/cursor.vim
+source /home/zzlinus/.config/nvim/cursor.vim
 
 " ===
 " === Insert Mode Cursor Movement
@@ -292,7 +296,7 @@ noremap tmi :+tabmove<CR>
 " === Markdown Settings
 " ===
 " Snippets
-source /home/zz/.config/nvim/md-snippets.vim
+source /home/zzlinus/.config/nvim/md-snippets.vim
 " auto spell
 autocmd BufRead,BufNewFile *.md setlocal spell
 
@@ -370,7 +374,7 @@ endfunc
 
 call plug#begin('~/.config/nvim/plugged')
 "
-Plug 'rainbowhxch/beacon.nvim'
+" Plug 'rainbowhxch/beacon.nvim'
 
 "laTex
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
@@ -387,11 +391,14 @@ Plug 'fcpg/vim-orbital'
 Plug 'lifepillar/vim-wwdc16-theme'
 Plug 'arzg/vim-colors-xcode'
 Plug 'sainnhe/edge'
+Plug 'andreasvc/vim-256noir'
+Plug 'yorickpeterse/happy_hacking.vim'
+Plug 'fcpg/vim-orbital'
+Plug 'vim-scripts/redstring.vim'
 
 "Godot
 Plug 'habamax/vim-godot'
 Plug 'calviken/vim-gdscript3'
-Plug 'quabug/vim-gdscript'
 
  "colorize
 Plug 'norcalli/nvim-colorizer.lua'
@@ -444,7 +451,6 @@ Plug 'mbbill/undotree'
 " Git
 Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
 Plug 'mhinz/vim-signify'
-Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
 
 "nvim v0.5.0
@@ -506,25 +512,18 @@ Plug 'f-person/pubspec-assist-nvim', { 'for' : ['pubspec.yaml'] }
 Plug 'nvim-lua/plenary.nvim'
 Plug 'akinsho/flutter-tools.nvim'
 
-" Swif
-Plug 'keith/swift.vim'
-Plug 'arzg/vim-swift'
-
 
 " Markdown
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
 Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
 Plug 'dkarter/bullets.vim'
-Plug 'jceb/vim-orgmode', {'for': ['vim-plug', 'org']}
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+Plug 'ellisonleao/glow.nvim'
+" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
-"minimap
-Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 " Editor Enhancement
 Plug 'Raimondi/delimitMate'
 Plug 'jiangmiao/auto-pairs'
-"Plug 'mg979/vim-visual-multi'
 Plug 'tomtom/tcomment_vim' " in <space>cn to comment a line
 Plug 'tpope/vim-surround' " type yskw' to wrap the word with '' or type cs'` to change 'word' to `word`
 Plug 'gcmt/wildfire.vim' " in Visual mode, type k' to select all text in '', or type k) k] k} kp
@@ -558,13 +557,10 @@ Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
 Plug 'KabbAmine/zeavim.vim' " <LEADER>z to find doc
 
 " Mini Vim-APP
-Plug 'jceb/vim-orgmode'
 Plug 'mhinz/vim-startify'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
 
-" Vim Applications
-Plug 'itchyny/calendar.vim'
 
 "fancy notification
 Plug 'rcarriga/nvim-notify'
@@ -648,6 +644,10 @@ Plug 'DanielWeidinger/nvim-sshfs'
 
 Plug 'p00f/godbolt.nvim'
 
+" **THE org mode**
+Plug 'nvim-neorg/neorg'
+Plug 'https://github.com/folke/zen-mode.nvim'
+
 call plug#end()
 set re=0
 
@@ -667,18 +667,17 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " ===
 " === gruvbox
 " ===
+"
 
-" let g:gruvbox_contrast_dark = 'hard'
-" set background=dark
-" colorscheme gruvbox8
-"
-"
-" set background=dark
-" let g:gruvbox_material_background = 'hard'
-" let g:gruvbox_material_better_performance = 1
-" let g:gruvbox_material_foreground = 'original'
-" let g:gruvbox_material_diagnostic_virtual_text = 'colored'
-" colorscheme gruvbox-material
+set background=dark
+let g:gruvbox_contrast_dark='hard'
+colorscheme gruvbox
+
+" colors gruvbox8_hard
+" let g:gruvbox_italics = 0
+" let g:gruvbox_plugin_hi_groups = 1
+" let g:gruvbox_italicize_strings = 0
+" let g:gruvbox_bold = 1
 
 
 " colorscheme gruvbox-flat
@@ -691,25 +690,20 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " === edge
 " ===
 
-let g:edge_disable_italic_comment = 1
-let g:edge_style = "neon"
-let g:edge_enable_italic = 1
-let g:edge_disable_italic_comment = 1
-let g:edge_diagnostic_text_highlight = 1
-let g:edge_diagnostic_virtual_text = 'colored'
-let g:edge_transparent_background = 1
-
-colorscheme edge
-
+" let g:edge_style = "neon"
+" let g:edge_enable_italic = 0
+" let g:edge_disable_italic_comment = 1
+" let g:edge_diagnostic_text_highlight = 1
+" let g:edge_diagnostic_virtual_text = 'colored'
+"
+" colorscheme edge
 " color dracula
 " color one
 " color railscasts
 " color orbital
 " color ahrenheit
-
 " color onedark
-
-" color gruvbox8
+" color gruvbox8_hard
 
 " color neon
 " lua << EOF
@@ -721,8 +715,6 @@ colorscheme edge
 " let ayucolor="light"
 " color xcodedarkhc
 " set cursorcolumn
-
-" colorscheme kanagawa
 set cursorline
 
 
@@ -740,23 +732,6 @@ let g:airline_powerline_fonts = 1
 
 
 
-"==
-" == GitGutter
-" ==
-let g:gitgutter_signs = 0
-let g:gitgutter_sign_allow_clobber = 0
-let g:gitgutter_map_keys = 0
-let g:gitgutter_override_sign_column_highlight = 0
-let g:gitgutter_preview_win_floating = 1
-let g:gitgutter_sign_added = '▎'
-let g:gitgutter_sign_modified = '░'
-let g:gitgutter_sign_removed = '▏'
-let g:gitgutter_sign_removed_first_line = '▔'
-let g:gitgutter_sign_modified_removed = '▒'
-" autocmd BufWritePost * GitGutter
-nnoremap <LEADER>gf :GitGutterFold<CR>
-nnoremap <LEADER>g- :GitGutterPrevHunk<CR>
-nnoremap <LEADER>g= :GitGutterNextHunk<CR>
 
 
 " ===
@@ -784,8 +759,6 @@ let g:table_mode_cell_text_object_i_map = 'k<Bar>'
 " === FZF
 " ===
 set rtp+=/usr/local/opt/fzf
-" set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
-" set rtp+=/home/zz/.linuxbrew/opt/fzf
 nnoremap <silent> <c-f> :FZF<CR>
 nnoremap <c-p> :Leaderf file<CR>
 " noremap <silent> <C-p> :Files<CR>
@@ -1199,12 +1172,6 @@ noremap gp :AsyncRun git push<CR>
 let g:asyncrun_open = 6
 "
 
-" ===
-" === dart-vim-plugin
-" ===
-let g:dart_style_guide = 2
-let g:dart_format_on_save = 1
-let g:dartfmt_options = ["-l 100"]
 
 
 " ===
@@ -1346,8 +1313,8 @@ nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 
 "auto format
-" autocmd BufWritePre *.js lua vim.lsp.buf.formatting_sync(nil, 100)
-" autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync(nil, 100)
+autocmd BufWritePre *.js lua vim.lsp.buf.formatting_sync(nil, 100)
+autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.cs lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.gd lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync(nil, 100)
@@ -1405,7 +1372,7 @@ lua <<EOF
     },
     sources = {
       { name = 'nvim_lsp' },
-
+		{ name = "neorg" },
       -- For vsnip user.
       { name = 'vsnip' },
 
@@ -1474,7 +1441,7 @@ highlight! SignifySignAdd guifg=#b8bb26 guibg=#000000
 highlight! SignifySignDelete guifg=#076678 guibg=#000000
 highlight! SignifySignChange guifg=#cc241d guibg=#000000
 
-hi CursorLine     guifg=none              guibg=#002943
+hi CursorLine     guifg=none              guibg=#0f0f37
 
 
 set guicursor=n-v-c:block-Cursor
@@ -1535,8 +1502,8 @@ require'lualine'.setup {
     theme = 'gruvbox',
     disabled_filetypes = {},
     always_divide_middle = true,
-	  section_separators = { left = '', right = ''},
-	  component_separators = { left = '', right = ''},
+	  section_separators = { left = ' ', right = ' '},
+	  component_separators = { left = ' ', right = ' '},
   },
 
   sections = {
@@ -1594,7 +1561,7 @@ EOF
 
 
 
-set guifont=JetBrainsMono\ Nerd\ Font:h9
+set guifont=TerminessTTF\ NF:h12
 
 lua << EOF
 vim.g.symbols_outline = {
@@ -1784,7 +1751,7 @@ lua << EOF
 
   padding = '', -- character to pad on left and right of signature can be ' ', or '|'  etc
 
-  transparency = 0, -- disabled by default, allow floating win transparent value 1~100
+  transparency = 90, -- disabled by default, allow floating win transparent value 1~100
   shadow_blend = 36, -- if you using shadow as border use this set the opacity
   shadow_guibg = 'Black', -- if you using shadow as border use this set the color e.g. 'Green' or '#121315'
   timer_interval = 200, -- default timer check interval set to lower value if you want to reduce latency
@@ -1866,8 +1833,10 @@ let g:translator_proxy_url = 'socks5://127.0.0.1:7890'
 "
 "neovide
 "
-let g:neovide_cursor_vfx_mode = "wireframe"
+let g:neovide_cursor_vfx_mode = ""
 let g:neovide_transparency=0.8
+let g:neovide_cursor_animation_length=0.0
+
 
 "ranger.vim
 let g:ranger_map_keys = 0
@@ -1940,7 +1909,8 @@ let g:highlightedyank_highlight_duration = 230
 let g:indent_blankline_use_treesitter = v:true
 let g:indent_blankline_filetype_exclude = ['startify']
 let g:indent_blankline_indent_level = 5
-
+highlight IndentBlanklineSpaceChar guifg=#000000 gui=nocombine
+highlight IndentBlanklineContextChar guifg=#cc241d gui=nocombine
 lua << EOF
 vim.opt.termguicolors = true
 
@@ -2021,3 +1991,68 @@ let g:rooter_disable_map = 1
 let g:rooter_patterns = ['Makefile', '.git/']
 let g:rooter_change_directory_for_non_project_files = 1
 let g:rooter_silent_chdir = 0
+
+" Glow Makdown preview
+"
+lua << EOF
+require('glow').setup({
+  style = "dark",
+  width = 120,
+})
+EOF
+
+
+" org mode
+
+lua << EOF
+require('neorg').setup {
+    load = {
+        ["core.defaults"] = {},
+        ["core.norg.dirman"] = {
+            config = {
+                workspaces = {
+                    programming = "~/Dev/Notes/Programming",
+                    books = "~/Dev/Notes/Books",
+                    home = "~/Dev/Notes/Home",
+                    hardwarestuff = "~/Dev/Notes/Hardware",
+                    gtd = "~/Dev/Notes/Gtd",
+                }
+            }
+        },
+		["core.norg.concealer"] = {},
+		["core.norg.qol.toc"] = {},
+		["core.export"] = {},
+		["core.norg.journal"] = {},
+		["core.norg.completion"] = {
+		   config = {
+			   engine = "nvim-cmp",
+		   }
+		},
+		["core.integrations.nvim-cmp"] = {
+		   config = { -- Note that this table is optional and doesn't need to be provided
+			   -- Configuration here
+		   }
+		},
+		["core.integrations.nvim-cmp"] = {
+			config = {
+				engine = "nvim-cmp",
+			},
+		},
+		["core.queries.native"] = {},
+		["core.ui"] = {},
+		["core.gtd.ui"] = {},
+		["core.gtd.helpers"] = {},
+		["core.gtd.queries"] = {},
+		["core.gtd.base"] = {
+			config = {
+				workspace = "gtd",
+			},
+			},
+		["core.presenter"] = {
+			config = {
+				zen_mode = "zen-mode",
+			},
+		},
+    }
+}
+EOF
