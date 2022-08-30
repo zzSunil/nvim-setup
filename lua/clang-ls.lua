@@ -8,7 +8,8 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 	}
 }
 require "lsp_signature".setup()
-require 'lspconfig'.clangd.setup {}
+require 'lspconfig'.clangd.setup {
+}
 
 -- ccls:
 -- local lspconfig = require 'lspconfig'

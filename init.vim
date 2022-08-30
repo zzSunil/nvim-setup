@@ -222,7 +222,6 @@ inoremap <C-a> <ESC>A
 " ===
 " === Command Mode Cursor Movement
 " ===
-cnoremap <C-e> <End>
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 cnoremap <C-b> <Left>
@@ -395,6 +394,7 @@ Plug 'andreasvc/vim-256noir'
 Plug 'yorickpeterse/happy_hacking.vim'
 Plug 'fcpg/vim-orbital'
 Plug 'vim-scripts/redstring.vim'
+Plug 'glepnir/zephyr-nvim'
 
 "Godot
 Plug 'habamax/vim-godot'
@@ -440,6 +440,8 @@ Plug 'nvim-telescope/telescope.nvim'
 
 " Debugger
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
+Plug 'mfussenegger/nvim-dap'
+
 
 " Snippets
 Plug 'SirVer/ultisnips'
@@ -648,11 +650,14 @@ Plug 'p00f/godbolt.nvim'
 Plug 'nvim-neorg/neorg'
 Plug 'https://github.com/folke/zen-mode.nvim'
 
+" cmake intergration
+Plug 'Civitasv/cmake-tools.nvim'
+
 call plug#end()
 set re=0
 
-let g:python3_host_prog = '/usr/bin/python'
-let g:python_host_prog = '/usr/bin/python2'
+let g:python3_host_prog = '/sbin/python'
+let g:python_host_prog = '/sbin/python2'
 
 " experimental
 set lazyredraw
@@ -669,9 +674,12 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " ===
 "
 
-set background=dark
-let g:gruvbox_contrast_dark='hard'
-colorscheme gruvbox
+" set background=dark
+" let g:gruvbox_contrast_dark='hard'
+" colorscheme gruvbox
+
+" zephyr
+colorscheme zephyr
 
 " colors gruvbox8_hard
 " let g:gruvbox_italics = 0
@@ -764,7 +772,6 @@ nnoremap <c-p> :Leaderf file<CR>
 " noremap <silent> <C-p> :Files<CR>
 noremap <silent> <Leader>h :History<CR>
 "noremap <C-t> :BTags<CR>
-" noremap <silent> <C-l> :Lines<CR>
 noremap <silent> <C-w> :Buffers<CR>
 " noremap <leader>; :History:<CR>
 
@@ -1214,7 +1221,7 @@ let g:agit_no_default_mappings = 1
 " ===
 " === nvim-treesitter
 
-lua <<EOF
+lua << EOF
  require'nvim-treesitter.configs'.setup {
    ensure_installed = {"typescript", "dart", "java","c","cpp"},     -- one of "all", "language", or a list of languages
    highlight = {
@@ -1366,9 +1373,9 @@ lua <<EOF
     mapping = {
 			['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
 			['<C-l>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-      ['<C-Space>'] = cmp.mapping.complete(),
-      ['<C-g>'] = cmp.mapping.close(),
-      ['<C-i>'] = cmp.mapping.confirm({ select = true }),
+			['<C-j>'] = cmp.mapping.complete(),
+			['<C-g>'] = cmp.mapping.close(),
+			['<C-s>'] = cmp.mapping.confirm({ select = true }),
     },
     sources = {
       { name = 'nvim_lsp' },
@@ -1460,7 +1467,7 @@ lua require'csharp-ls'
 lua require'gdscript-ls'
 lua require'go-ls'
 lua require'lua-ls'
-
+lua require'codelldb'
 
 
 "
@@ -1499,7 +1506,7 @@ lua << EOF
 require'lualine'.setup {
   options = {
     icons_enabled = true,
-    theme = 'gruvbox',
+    theme = 'zephyr',
     disabled_filetypes = {},
     always_divide_middle = true,
 	  section_separators = { left = ' ', right = ' '},
@@ -1513,9 +1520,6 @@ require'lualine'.setup {
                 'diff',
                 colored = true,
                 diff_color = {
-                    added    = { fg = '#98971d' },
-                    modified = { fg = '#D79921' },
-                    removed  = { fg = '#CC241D' }
                 },
                 symbols = {
                     added    = " ",
@@ -1527,10 +1531,6 @@ require'lualine'.setup {
 										sources={'nvim_diagnostic', 'coc'},
 										sections = {'error', 'warn', 'info', 'hint'},
                 		diagnostics_color = {
-                		    error = { fg = '#cc241d' },
-                		    warn  = { fg = '#fabd2f' },
-                		    info  = { fg = '#458588' },
-                		    hint  = { fg = '#98971a' }
                 		},
                 		symbols = {
                 		    error = " ",
@@ -1563,58 +1563,73 @@ EOF
 
 set guifont=TerminessTTF\ NF:h12
 
+" symbol outline
 lua << EOF
-vim.g.symbols_outline = {
-    highlight_hovered_item = true,
-    show_guides = true,
-    position = 'right',
-    relative_width = true,
-    width = 25,
-    show_numbers = false,
-    show_relative_numbers = false,
-    show_symbol_details = true,
-    preview_bg_highlight = 'Pmenu',
-    keymaps = { -- These keymaps can be a string or a table for multiple keys
-        close = {"<Esc>", "q"},
-        goto_location = "<Cr>",
-        focus_location = "o",
-        hover_symbol = "<C-space>",
-        toggle_preview = "K",
-        rename_symbol = "r",
-        code_actions = "a",
-    },
-    lsp_blacklist = {},
-    symbol_blacklist = {},
-    symbols = {
-        File = {icon = "", hl = "TSURI"},
-        Module = {icon = "", hl = "TSNamespace"},
-        Namespace = {icon = "", hl = "TSNamespace"},
-        Package = {icon = "", hl = "TSNamespace"},
-        Class = {icon = "𝓒", hl = "TSType"},
-        Method = {icon = "ƒ", hl = "TSMethod"},
-        Property = {icon = "", hl = "TSMethod"},
-        Field = {icon = "", hl = "TSField"},
-        Constructor = {icon = "", hl = "TSConstructor"},
-        Enum = {icon = "ℰ", hl = "TSType"},
-        Interface = {icon = "ﰮ", hl = "TSType"},
-        Function = {icon = "", hl = "TSFunction"},
-        Variable = {icon = "", hl = "TSConstant"},
-        Constant = {icon = "", hl = "TSConstant"},
-        String = {icon = "𝓐", hl = "TSString"},
-        Number = {icon = "#", hl = "TSNumber"},
-        Boolean = {icon = "⊨", hl = "TSBoolean"},
-        Array = {icon = "", hl = "TSConstant"},
-        Object = {icon = "⦿", hl = "TSType"},
-        Key = {icon = "🔐", hl = "TSType"},
-        Null = {icon = "NULL", hl = "TSType"},
-        EnumMember = {icon = "", hl = "TSField"},
-        Struct = {icon = "𝓢", hl = "TSType"},
-        Event = {icon = "🗲", hl = "TSType"},
-        Operator = {icon = "+", hl = "TSOperator"},
-        TypeParameter = {icon = "𝙏", hl = "TSParameter"}
-    }
+require("symbols-outline").setup{
+{
+  highlight_hovered_item = true,
+  show_guides = true,
+  auto_preview = false,
+  position = 'right',
+  relative_width = true,
+  width = 25,
+  auto_close = false,
+  show_numbers = false,
+  show_relative_numbers = false,
+  show_symbol_details = true,
+  preview_bg_highlight = 'Pmenu',
+  autofold_depth = nil,
+  auto_unfold_hover = true,
+  fold_markers = { '', '' },
+  wrap = false,
+  keymaps = { -- These keymaps can be a string or a table for multiple keys
+    close = {"<Esc>", "q"},
+    goto_location = "<Cr>",
+    focus_location = "o",
+    hover_symbol = "<C-space>",
+    toggle_preview = "K",
+    rename_symbol = "r",
+    code_actions = "a",
+    fold = "h",
+    unfold = "l",
+    fold_all = "W",
+    unfold_all = "E",
+    fold_reset = "R",
+  },
+  lsp_blacklist = {},
+  symbol_blacklist = {},
+  symbols = {
+    File = {icon = "", hl = "TSURI"},
+    Module = {icon = "", hl = "TSNamespace"},
+    Namespace = {icon = "", hl = "TSNamespace"},
+    Package = {icon = "", hl = "TSNamespace"},
+    Class = {icon = "𝓒", hl = "TSType"},
+    Method = {icon = "ƒ", hl = "TSMethod"},
+    Property = {icon = "", hl = "TSMethod"},
+    Field = {icon = "", hl = "TSField"},
+    Constructor = {icon = "", hl = "TSConstructor"},
+    Enum = {icon = "ℰ", hl = "TSType"},
+    Interface = {icon = "ﰮ", hl = "TSType"},
+    Function = {icon = "", hl = "TSFunction"},
+    Variable = {icon = "", hl = "TSConstant"},
+    Constant = {icon = "", hl = "TSConstant"},
+    String = {icon = "𝓐", hl = "TSString"},
+    Number = {icon = "#", hl = "TSNumber"},
+    Boolean = {icon = "⊨", hl = "TSBoolean"},
+    Array = {icon = "", hl = "TSConstant"},
+    Object = {icon = "⦿", hl = "TSType"},
+    Key = {icon = "🔐", hl = "TSType"},
+    Null = {icon = "NULL", hl = "TSType"},
+    EnumMember = {icon = "", hl = "TSField"},
+    Struct = {icon = "𝓢", hl = "TSType"},
+    Event = {icon = "🗲", hl = "TSType"},
+    Operator = {icon = "+", hl = "TSOperator"},
+    TypeParameter = {icon = "𝙏", hl = "TSParameter"}
+  }
+}
 }
 EOF
+
 nnoremap <leader>sy :SymbolsOutline<CR>
 
 "flutter tools
@@ -1751,7 +1766,7 @@ lua << EOF
 
   padding = '', -- character to pad on left and right of signature can be ' ', or '|'  etc
 
-  transparency = 90, -- disabled by default, allow floating win transparent value 1~100
+  -- transparency = 1, -- disabled by default, allow floating win transparent value 1~100
   shadow_blend = 36, -- if you using shadow as border use this set the opacity
   shadow_guibg = 'Black', -- if you using shadow as border use this set the color e.g. 'Green' or '#121315'
   timer_interval = 200, -- default timer check interval set to lower value if you want to reduce latency
@@ -2014,6 +2029,7 @@ require('neorg').setup {
                     programming = "~/Dev/Notes/Programming",
                     books = "~/Dev/Notes/Books",
                     home = "~/Dev/Notes/Home",
+                    opengl = "~/Dev/Notes/Opengl",
                     hardwarestuff = "~/Dev/Notes/Hardware",
                     gtd = "~/Dev/Notes/Gtd",
                 }
@@ -2056,3 +2072,20 @@ require('neorg').setup {
     }
 }
 EOF
+
+
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.jsx,*.js'
+let g:closetag_xhtml_filetypes = 'xhtml,jsx'
+let g:closetag_regions = {
+    \ 'typescript.tsx': 'jsxRegion,tsxRegion',
+    \ 'javascript.jsx': 'jsxRegion',
+    \ 'typescriptreact': 'jsxRegion,tsxRegion',
+    \ 'javascriptreact': 'jsxRegion',
+    \ }
+let g:closetag_shortcut = '>'
+let g:closetag_enable_react_fragment = 1
+
+" cmake tools
+nnoremap <leader>cg :CMakeGenerate<CR>
+nnoremap <leader>cb :CMakeBuild<CR>
+nnoremap <leader>cr :CMakeRun<CR>
