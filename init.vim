@@ -164,10 +164,6 @@ noremap <LEADER><CR> :nohlsearch<CR>
 " Adjacent duplicate words
 noremap <LEADER>dw /\(\<\w\+\>\)\_s*\1
 
-" " Space to Tab
-" nnoremap <LEADER>tt :%s/    /\t/g
-" vnoremap <LEADER>tt :s/    /\t/g |
-
 " | Folding |
 noremap <silent> <LEADER>o za
 
@@ -558,7 +554,7 @@ Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
 " Documentation
 Plug 'KabbAmine/zeavim.vim' " <LEADER>z to find doc
 
-" Mini Vim-APP
+ln -s ~/.tmux/.tmux.conf ~/.tmux.conf" Mini Vim-APP
 Plug 'mhinz/vim-startify'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
@@ -656,8 +652,8 @@ Plug 'Civitasv/cmake-tools.nvim'
 call plug#end()
 set re=0
 
-let g:python3_host_prog = '/sbin/python'
-let g:python_host_prog = '/sbin/python2'
+let g:python3_host_prog = '/usr/bin/python'
+let g:python_host_prog = '/usr/bin/python2'
 
 " experimental
 set lazyredraw
@@ -1325,6 +1321,7 @@ autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.cs lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.gd lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync(nil, 100)
+autocmd BufWritePre *.css lua vim.lsp.buf.formatting_sync(nil, 100)
 " autocmd BufWritePre *.c lua vim.lsp.buf.formatting_sync(nil, 100)
 " autocmd BufWritePre *.cpp lua vim.lsp.buf.formatting_sync(nil, 100)
 
