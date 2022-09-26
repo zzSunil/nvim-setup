@@ -340,28 +340,6 @@ map <F10> :call SynGroup()<CR>
 "add vim spector Variable highlight
 noremap <leader>sb :call SetName()<CR>
 
-func! SetName()
-	let buffers = filter(range(1, bufnr('$')), 'bufexists(v:val)')
-	echo buffers
-	for i in buffers
-		if bufname(i) == 'vimspector.Variables'
-			call setbufvar(i,'&filetype','cpp')
-			:LspStop
-		endif
-		if bufname(i) == 'vimspector.StackTrace'
-			call setbufvar(i,'&filetype','cpp')
-			:LspStop
-		endif
-		if bufname(i) == 'vimspector.Watches'
-			call setbufvar(i,'&filetype','cpp')
-			:LspStop
-		endif
-		if bufname(i) == 'vimspector.Console'
-			call setbufvar(i,'&filetype','cpp')
-			:LspStop
-		endif
-	endfor
-endfunc
 
 " ===
 " === Install Plugins with Vim-Plug
@@ -435,8 +413,9 @@ Plug 'nvim-telescope/telescope.nvim'
 
 
 " Debugger
-Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
+" Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
 Plug 'mfussenegger/nvim-dap'
+Plug 'rcarriga/nvim-dap-ui'
 
 
 " Snippets
@@ -516,7 +495,7 @@ Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn in
 Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
 Plug 'dkarter/bullets.vim'
 Plug 'ellisonleao/glow.nvim'
-" Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 
 " Editor Enhancement
@@ -670,12 +649,12 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " ===
 "
 
-" set background=dark
-" let g:gruvbox_contrast_dark='hard'
-" colorscheme gruvbox
+set background=dark
+let g:gruvbox_contrast_dark='hard'
+colorscheme gruvbox
 
 " zephyr
-colorscheme zephyr
+" colorscheme zephyr
 
 " colors gruvbox8_hard
 " let g:gruvbox_italics = 0
@@ -1090,22 +1069,22 @@ cnoreabbrev sw w suda://%
 " ===
 " === vimspector
 " ===
-let g:vimspector_enable_mappings = 'HUMAN'
-function! s:read_template_into_buffer(template)
-	" has to be a function to avoid the extra space fzf#run insers otherwise
-	execute '0r ~/.config/nvim/sample_vimspector_json/'.a:template
-endfunction
-command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
-			\   'source': 'ls -1 ~/.config/nvim/sample_vimspector_json',
-			\   'down': 20,
-			\   'sink': function('<sid>read_template_into_buffer')
+" let g:vimspector_enable_mappings = 'HUMAN'
+" function! s:read_template_into_buffer(template)
+" 	" has to be a function to avoid the extra space fzf#run insers otherwise
+" 	execute '0r ~/.config/nvim/sample_vimspector_json/'.a:template
+" endfunction
+" command! -bang -nargs=* LoadVimSpectorJsonTemplate call fzf#run({
+" 			\   'source': 'ls -1 ~/.config/nvim/sample_vimspector_json',
+" 			\   'down': 20,
+" 			\   'sink': function('<sid>read_template_into_buffer')
+" " noremap <leader>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
 " noremap <leader>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
-noremap <leader>vs :tabe .vimspector.json<CR>:LoadVimSpectorJsonTemplate<CR>
-noremap <leader>vp :VimspectorReset<CR>
-sign define vimspectorBP text=☛ texthl=Normal
-sign define vimspectorBPDisabled text=☞ texthl=Normal
-sign define vimspectorPC text=🔶 texthl=SpellBad
-
+" noremap <leader>vp :VimspectorReset<CR>
+" sign define vimspectorBP text=☛ texthl=Normal
+" sign define vimspectorBPDisabled text=☞ texthl=Normal
+" sign define vimspectorPC text=🔶 texthl=SpellBad
+"
 
 " ===
 " === reply.vim
@@ -1456,6 +1435,7 @@ set guicursor+=i:blinkwait10
 
 lua require'python-ls'
 lua require'clang-ls'
+lua require'glsl-ls'
 lua require'html-ls'
 lua require'r-ls'
 lua require'vimlsp'
@@ -1464,9 +1444,9 @@ lua require'csharp-ls'
 lua require'gdscript-ls'
 lua require'go-ls'
 lua require'lua-ls'
-lua require'codelldb'
 
 
+lua require'nvim-dap'
 "
 "diagnostic-nvim config
 "
@@ -1503,7 +1483,7 @@ lua << EOF
 require'lualine'.setup {
   options = {
     icons_enabled = true,
-    theme = 'zephyr',
+    theme = 'auto',
     disabled_filetypes = {},
     always_divide_middle = true,
 	  section_separators = { left = ' ', right = ' '},
@@ -1921,13 +1901,13 @@ let g:highlightedyank_highlight_duration = 230
 let g:indent_blankline_use_treesitter = v:true
 let g:indent_blankline_filetype_exclude = ['startify']
 let g:indent_blankline_indent_level = 5
-highlight IndentBlanklineSpaceChar guifg=#000000 gui=nocombine
+let g:indent_blankline_space_char_blankline = ' '
 highlight IndentBlanklineContextChar guifg=#cc241d gui=nocombine
+
 lua << EOF
 vim.opt.termguicolors = true
 
 vim.opt.list = true
-vim.opt.listchars:append("space:⋅")
 vim.opt.listchars:append("eol:↴")
 
 require("indent_blankline").setup {
@@ -2000,7 +1980,7 @@ EOF
 
 "vim rooter
 let g:rooter_disable_map = 1
-let g:rooter_patterns = ['Makefile', '.git/']
+let g:rooter_patterns = ['CMakeLists.txt','.git/','Makefile', 'build/',]
 let g:rooter_change_directory_for_non_project_files = 1
 let g:rooter_silent_chdir = 0
 
@@ -2086,3 +2066,12 @@ let g:closetag_enable_react_fragment = 1
 nnoremap <leader>cg :CMakeGenerate<CR>
 nnoremap <leader>cb :CMakeBuild<CR>
 nnoremap <leader>cr :CMakeRun<CR>
+
+" nvim dap
+nnoremap <leader>db <Cmd>lua require("dapui").open()<CR>
+nnoremap <leader>dc <Cmd>lua require("dapui").close()<CR>
+vnoremap <leader>dk <Cmd>lua require("dapui").eval()<CR>
+nnoremap <leader>dh <Cmd>lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <leader>do <Cmd>lua require'dap'.step_out()<CR>
+nnoremap <leader>di <Cmd>lua require'dap'.step_into()<CR>
+nnoremap <leader>ds <Cmd>lua require'dap'.step_over()<CR>

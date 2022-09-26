@@ -1,1 +1,1 @@
-require'lspconfig'.glslls.setup{}
+require 'lspconfig'.glslls.setup {}
