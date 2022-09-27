@@ -30,6 +30,7 @@ dap.adapters.cppdbg = {
 	command = '/home/zzlinus/Downloads/vscode-cpptools/1.11.5/root/extension/debugAdapters/bin/OpenDebugAD7',
 }
 
+
 vim.fn.sign_define('DapBreakpoint', { text = '🍅', texthl = '', linehl = '', numhl = '' })
 vim.fn.sign_define('DapStopped', { text = '🔎', texthl = '', linehl = '', numhl = '' })
 

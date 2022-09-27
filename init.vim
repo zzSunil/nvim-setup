@@ -416,6 +416,7 @@ Plug 'nvim-telescope/telescope.nvim'
 " Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
+Plug 'leoluz/nvim-dap-go'
 
 
 " Snippets
@@ -610,6 +611,8 @@ Plug 'seblj/nvim-tabline'
 Plug 'francoiscabrol/ranger.vim'
 Plug 'rbgrouleff/bclose.vim'
 
+"code runner
+Plug 'CRAG666/code_runner.nvim'
 
 "shader language glsl
 Plug 'tikhomirov/vim-glsl'
@@ -1445,6 +1448,7 @@ lua require'gdscript-ls'
 lua require'go-ls'
 lua require'lua-ls'
 
+lua require'code-runner'
 
 lua require'nvim-dap'
 "
@@ -2065,7 +2069,6 @@ let g:closetag_enable_react_fragment = 1
 " cmake tools
 nnoremap <leader>cg :CMakeGenerate<CR>
 nnoremap <leader>cb :CMakeBuild<CR>
-nnoremap <leader>cr :CMakeRun<CR>
 
 " nvim dap
 nnoremap <leader>db <Cmd>lua require("dapui").open()<CR>
@@ -2075,3 +2078,6 @@ nnoremap <leader>dh <Cmd>lua require'dap'.toggle_breakpoint()<CR>
 nnoremap <leader>do <Cmd>lua require'dap'.step_out()<CR>
 nnoremap <leader>di <Cmd>lua require'dap'.step_into()<CR>
 nnoremap <leader>ds <Cmd>lua require'dap'.step_over()<CR>
+
+lua require('dap-go').setup()
+
