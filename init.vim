@@ -353,7 +353,7 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 
 "vim-conda support
-Plug 'cjrh/vim-conda'
+" Plug 'cjrh/vim-conda'
 
 "color theme
 Plug 'jpo/vim-railscasts-theme'
@@ -482,7 +482,7 @@ Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 Plug 'vim-scripts/indentpython.vim', { 'for' :['python', 'vim-plug'] }
 Plug 'plytophogy/vim-virtualenv', { 'for' :['python', 'vim-plug'] }
 Plug 'tweekmonster/braceless.vim', { 'for' :['python', 'vim-plug'] }
-Plug 'petobens/poet-v'
+" Plug 'petobens/poet-v'
 
 " Flutter Flutter
 Plug 'dart-lang/dart-vim-plugin'
@@ -1322,32 +1322,38 @@ lua <<EOF
   cmp.setup({
     snippet = {
       expand = function(args)
-        -- For `vsnip` user.
-        --vim.fn["vsnip#anonymous"](args.body)
-
-        -- For `luasnip` user.
-        -- require('luasnip').lsp_expand(args.body)
-
-        -- For `ultisnips` user.
         vim.fn["UltiSnips#Anon"](args.body)
       end,
     },
-		formatting = {
-		  format = require("lspkind").cmp_format({with_text = true, menu = ({
-		      buffer = "[Buffer]",
-		      nvim_lsp = "[LSP]",
-		      ultisnips = "[UltiSnips]",
-		      nvim_lua = "[Lua]",
-		      latex_symbols = "[Latex]",
-		    })}),
-		fields = { 'abbr', 'kind', 'menu' },
+
+	window = {
+		completion = {
+			winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+			border = 'rounded',
+			col_offset = -3,
+			side_padding = 0,
 		},
+		documentation = { -- no border; native-style scrollbar
+			  border = 'rounded',
+			  scrollbar = '',
+		},
+	},
+	formatting = {
+	fields = { "kind", "abbr", "menu" },
+	  format = require("lspkind").cmp_format({with_text = true, menu = ({
+	      buffer = "[Buffer]",
+	      nvim_lsp = "[LSP]",
+	      ultisnips = "[UltiSnips]",
+	      nvim_lua = "[Lua]",
+	      latex_symbols = "[Latex]",
+	    })}),
+	},
 
 
-		experimental = {
-			native_menu = false,
-			ghost_text = true,
-		},
+	experimental = {
+		native_menu = false,
+		ghost_text = true,
+	},
 
     mapping = {
 			['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
@@ -1357,18 +1363,11 @@ lua <<EOF
 			['<C-s>'] = cmp.mapping.confirm({ select = true }),
     },
     sources = {
-      { name = 'nvim_lsp' },
+		{ name = 'nvim_lsp' },
 		{ name = "neorg" },
-      -- For vsnip user.
-      { name = 'vsnip' },
-
-      -- For luasnip user.
-      -- { name = 'luasnip' },
-
-      -- For ultisnips user.
-			{ name = 'ultisnips' ,keyword_length = 2},
-
-      { name = 'buffer' },
+    	{ name = 'vsnip' },
+		{ name = 'ultisnips' ,keyword_length = 2},
+		{ name = 'buffer' },
     }
   })
 
@@ -1541,8 +1540,8 @@ require'lualine'.setup {
 EOF
 
 
-
-set guifont=TerminessTTF\ NF:h12
+"
+set guifont=JetBrainsMono\ NF:h12
 
 " symbol outline
 lua << EOF
@@ -1831,7 +1830,6 @@ let g:translator_proxy_url = 'socks5://127.0.0.1:7890'
 "
 let g:neovide_cursor_vfx_mode = ""
 let g:neovide_transparency=0.8
-let g:neovide_cursor_animation_length=0.0
 
 
 "ranger.vim
@@ -2080,4 +2078,3 @@ nnoremap <leader>di <Cmd>lua require'dap'.step_into()<CR>
 nnoremap <leader>ds <Cmd>lua require'dap'.step_over()<CR>
 
 lua require('dap-go').setup()
-

@@ -13,10 +13,10 @@ require('code_runner').setup {
 			file_name = "http/main.ts",
 			command = "deno run --allow-net"
 		},
-		["~/Dev/CPP/bgfx-minimal-example"] = {
+		["~/Dev/CPP/bgfx-game"] = {
 			name = "bgfx project",
 			description = "bgfx cpp dev",
-			command = "premake5 gmake && premake5 export-compile-commands && cd build/gmake && make && ./bin/x86_64/Release/helloworld"
+			command = "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j 8 && ./bgfx_test"
 		},
 		["~/Dev/CPP/OpenGLSomething/chap2"] = {
 			name = "OpenGL Chap2",
