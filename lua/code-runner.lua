@@ -22,6 +22,11 @@ require('code_runner').setup {
 			name = "OpenGL Chap2",
 			description = "Project with make file",
 			command = "cd build && cmake .. && make && cd .. && ./build/main"
+		},
+		["~/Dev/CPP/OpenGLSomething/chap3"] = {
+			name = "OpenGL Chap3",
+			description = "Project with make file",
+			command = "cd build && cmake .. && make && cd .. && ./build/main"
 		}
 	},
 	filetype = {

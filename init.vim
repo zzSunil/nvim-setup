@@ -372,7 +372,7 @@ Plug 'glepnir/zephyr-nvim'
 
 "Godot
 Plug 'habamax/vim-godot'
-Plug 'calviken/vim-gdscript3'
+" Plug 'calviken/vim-gdscript3'
 
  "colorize
 Plug 'norcalli/nvim-colorizer.lua'
@@ -413,7 +413,7 @@ Plug 'nvim-telescope/telescope.nvim'
 
 
 " Debugger
-" Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
+Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'leoluz/nvim-dap-go'
@@ -478,7 +478,7 @@ Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 " Python
 Plug 'tmhedberg/SimpylFold', { 'for' :['python', 'vim-plug'] }
 Plug 'Vimjas/vim-python-pep8-indent', { 'for' :['python', 'vim-plug'] }
-Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
+" Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 Plug 'vim-scripts/indentpython.vim', { 'for' :['python', 'vim-plug'] }
 Plug 'plytophogy/vim-virtualenv', { 'for' :['python', 'vim-plug'] }
 Plug 'tweekmonster/braceless.vim', { 'for' :['python', 'vim-plug'] }
@@ -625,7 +625,6 @@ Plug 'DanielWeidinger/nvim-sshfs'
 Plug 'p00f/godbolt.nvim'
 
 " **THE org mode**
-Plug 'nvim-neorg/neorg'
 Plug 'https://github.com/folke/zen-mode.nvim'
 
 " cmake intergration
@@ -634,7 +633,7 @@ Plug 'Civitasv/cmake-tools.nvim'
 call plug#end()
 set re=0
 
-let g:python3_host_prog = '/usr/bin/python'
+let g:python3_host_prog = '/usr/bin/python3'
 let g:python_host_prog = '/usr/bin/python2'
 
 " experimental
@@ -654,7 +653,11 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 set background=dark
 let g:gruvbox_contrast_dark='hard'
+set pumblend=20
+hi PmenuSel blend=0
 colorscheme gruvbox
+
+hi! Normal ctermbg=NONE guibg=NONE
 
 " zephyr
 " colorscheme zephyr
@@ -1364,7 +1367,6 @@ lua <<EOF
     },
     sources = {
 		{ name = 'nvim_lsp' },
-		{ name = "neorg" },
     	{ name = 'vsnip' },
 		{ name = 'ultisnips' ,keyword_length = 2},
 		{ name = 'buffer' },
@@ -1746,7 +1748,7 @@ lua << EOF
 
   padding = '', -- character to pad on left and right of signature can be ' ', or '|'  etc
 
-  -- transparency = 1, -- disabled by default, allow floating win transparent value 1~100
+  transparency = 1, -- disabled by default, allow floating win transparent value 1~100
   shadow_blend = 36, -- if you using shadow as border use this set the opacity
   shadow_guibg = 'Black', -- if you using shadow as border use this set the color e.g. 'Green' or '#121315'
   timer_interval = 200, -- default timer check interval set to lower value if you want to reduce latency
@@ -1998,59 +2000,6 @@ EOF
 
 " org mode
 
-lua << EOF
-require('neorg').setup {
-    load = {
-        ["core.defaults"] = {},
-        ["core.norg.dirman"] = {
-            config = {
-                workspaces = {
-                    programming = "~/Dev/Notes/Programming",
-                    books = "~/Dev/Notes/Books",
-                    home = "~/Dev/Notes/Home",
-                    opengl = "~/Dev/Notes/Opengl",
-                    hardwarestuff = "~/Dev/Notes/Hardware",
-                    gtd = "~/Dev/Notes/Gtd",
-                }
-            }
-        },
-		["core.norg.concealer"] = {},
-		["core.norg.qol.toc"] = {},
-		["core.export"] = {},
-		["core.norg.journal"] = {},
-		["core.norg.completion"] = {
-		   config = {
-			   engine = "nvim-cmp",
-		   }
-		},
-		["core.integrations.nvim-cmp"] = {
-		   config = { -- Note that this table is optional and doesn't need to be provided
-			   -- Configuration here
-		   }
-		},
-		["core.integrations.nvim-cmp"] = {
-			config = {
-				engine = "nvim-cmp",
-			},
-		},
-		["core.queries.native"] = {},
-		["core.ui"] = {},
-		["core.gtd.ui"] = {},
-		["core.gtd.helpers"] = {},
-		["core.gtd.queries"] = {},
-		["core.gtd.base"] = {
-			config = {
-				workspace = "gtd",
-			},
-			},
-		["core.presenter"] = {
-			config = {
-				zen_mode = "zen-mode",
-			},
-		},
-    }
-}
-EOF
 
 
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.jsx,*.js'
