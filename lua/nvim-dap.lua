@@ -24,6 +24,8 @@ dap.configurations.cpp = {
 	},
 }
 
+dap.configurations.c = dap.configurations.cpp
+
 dap.adapters.cppdbg = {
 	id = 'cppdbg',
 	type = 'executable',

@@ -13,7 +13,7 @@ require('code_runner').setup {
 			file_name = "http/main.ts",
 			command = "deno run --allow-net"
 		},
-		["~/Dev/CPP/bgfx-game"] = {
+		["~/Dev/CPP/bgfx-things?"] = {
 			name = "bgfx project",
 			description = "bgfx cpp dev",
 			command = "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j 8 && ./bgfx_test"
@@ -22,6 +22,11 @@ require('code_runner').setup {
 			name = "OpenGL Chap2",
 			description = "Project with make file",
 			command = "cd build && cmake .. && make && cd .. && ./build/main"
+		},
+		["~/Dev/School/dataStructer/Assign1"] = {
+			name = "datastructer lab",
+			description = "Project with make file",
+			command = "cc -g main.c && ./a.out"
 		},
 		["~/Dev/CPP/OpenGLSomething/chap3"] = {
 			name = "OpenGL Chap3",
@@ -35,6 +40,7 @@ require('code_runner').setup {
 		typescript = "deno run",
 		rust = "cd $dir && rustc $fileName && $dir/$fileNameWithoutExt"
 	},
+
 }
 
 vim.keymap.set('n', '<leader>cr', ':RunProject<CR>', { noremap = true, silent = false })

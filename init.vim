@@ -428,8 +428,8 @@ Plug 'mbbill/undotree'
 
 " Git
 Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
-Plug 'mhinz/vim-signify'
 Plug 'cohama/agit.vim'
+Plug 'lewis6991/gitsigns.nvim'
 
 "nvim v0.5.0
 Plug 'kdheepak/lazygit.nvim'
@@ -579,7 +579,8 @@ Plug 'rafamadriz/neon'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
-Plug 'tami5/lspsaga.nvim'
+Plug 'glepnir/lspsaga.nvim'
+" Plug 'Maan2003/lsp_lines.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'folke/trouble.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
@@ -589,8 +590,8 @@ Plug 'p00f/clangd_extensions.nvim'
 Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'onsails/lspkind-nvim'
 
-"outline
-Plug 'simrat39/symbols-outline.nvim'
+" "outline
+" Plug 'simrat39/symbols-outline.nvim'
 
 "PlatformIO
 Plug 'coddingtonbear/neomake-platformio'
@@ -1452,29 +1453,6 @@ lua require'lua-ls'
 lua require'code-runner'
 
 lua require'nvim-dap'
-"
-"diagnostic-nvim config
-"
-
-lua << EOF
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    -- This will disable virtual text, like doing:
-    -- let g:diagnostic_enable_virtual_text = 0
-    virtual_text = true,
-		underline = true,
-    -- This is similar to:
-    -- let g:diagnostic_show_sign = 1
-    -- To configure sign display,
-    --  see: ":help vim.lsp.diagnostic.set_signs()"
-    signs = true,
-
-    -- This is similar to:
-    -- "let g:diagnostic_insert_delay = 1"
-    update_in_insert = true,
-  }
-)
-EOF
 
 
 "lsp trouble
@@ -1546,73 +1524,73 @@ EOF
 set guifont=JetBrainsMono\ NF:h12
 
 " symbol outline
-lua << EOF
-require("symbols-outline").setup{
-{
-  highlight_hovered_item = true,
-  show_guides = true,
-  auto_preview = false,
-  position = 'right',
-  relative_width = true,
-  width = 25,
-  auto_close = false,
-  show_numbers = false,
-  show_relative_numbers = false,
-  show_symbol_details = true,
-  preview_bg_highlight = 'Pmenu',
-  autofold_depth = nil,
-  auto_unfold_hover = true,
-  fold_markers = { '', '' },
-  wrap = false,
-  keymaps = { -- These keymaps can be a string or a table for multiple keys
-    close = {"<Esc>", "q"},
-    goto_location = "<Cr>",
-    focus_location = "o",
-    hover_symbol = "<C-space>",
-    toggle_preview = "K",
-    rename_symbol = "r",
-    code_actions = "a",
-    fold = "h",
-    unfold = "l",
-    fold_all = "W",
-    unfold_all = "E",
-    fold_reset = "R",
-  },
-  lsp_blacklist = {},
-  symbol_blacklist = {},
-  symbols = {
-    File = {icon = "", hl = "TSURI"},
-    Module = {icon = "", hl = "TSNamespace"},
-    Namespace = {icon = "", hl = "TSNamespace"},
-    Package = {icon = "", hl = "TSNamespace"},
-    Class = {icon = "𝓒", hl = "TSType"},
-    Method = {icon = "ƒ", hl = "TSMethod"},
-    Property = {icon = "", hl = "TSMethod"},
-    Field = {icon = "", hl = "TSField"},
-    Constructor = {icon = "", hl = "TSConstructor"},
-    Enum = {icon = "ℰ", hl = "TSType"},
-    Interface = {icon = "ﰮ", hl = "TSType"},
-    Function = {icon = "", hl = "TSFunction"},
-    Variable = {icon = "", hl = "TSConstant"},
-    Constant = {icon = "", hl = "TSConstant"},
-    String = {icon = "𝓐", hl = "TSString"},
-    Number = {icon = "#", hl = "TSNumber"},
-    Boolean = {icon = "⊨", hl = "TSBoolean"},
-    Array = {icon = "", hl = "TSConstant"},
-    Object = {icon = "⦿", hl = "TSType"},
-    Key = {icon = "🔐", hl = "TSType"},
-    Null = {icon = "NULL", hl = "TSType"},
-    EnumMember = {icon = "", hl = "TSField"},
-    Struct = {icon = "𝓢", hl = "TSType"},
-    Event = {icon = "🗲", hl = "TSType"},
-    Operator = {icon = "+", hl = "TSOperator"},
-    TypeParameter = {icon = "𝙏", hl = "TSParameter"}
-  }
-}
-}
-EOF
-
-nnoremap <leader>sy :SymbolsOutline<CR>
+" lua << EOF
+" require("symbols-outline").setup{
+" {
+"   highlight_hovered_item = true,
+"   show_guides = true,
+"   auto_preview = false,
+"   position = 'right',
+"   relative_width = true,
+"   width = 25,
+"   auto_close = false,
+"   show_numbers = false,
+"   show_relative_numbers = false,
+"   show_symbol_details = true,
+"   preview_bg_highlight = 'Pmenu',
+"   autofold_depth = nil,
+"   auto_unfold_hover = true,
+"   fold_markers = { '', '' },
+"   wrap = false,
+"   keymaps = { -- These keymaps can be a string or a table for multiple keys
+"     close = {"<Esc>", "q"},
+"     goto_location = "<Cr>",
+"     focus_location = "o",
+"     hover_symbol = "<C-space>",
+"     toggle_preview = "K",
+"     rename_symbol = "r",
+"     code_actions = "a",
+"     fold = "h",
+"     unfold = "l",
+"     fold_all = "W",
+"     unfold_all = "E",
+"     fold_reset = "R",
+"   },
+"   lsp_blacklist = {},
+"   symbol_blacklist = {},
+"   symbols = {
+"     File = {icon = "", hl = "TSURI"},
+"     Module = {icon = "", hl = "TSNamespace"},
+"     Namespace = {icon = "", hl = "TSNamespace"},
+"     Package = {icon = "", hl = "TSNamespace"},
+"     Class = {icon = "𝓒", hl = "TSType"},
+"     Method = {icon = "ƒ", hl = "TSMethod"},
+"     Property = {icon = "", hl = "TSMethod"},
+"     Field = {icon = "", hl = "TSField"},
+"     Constructor = {icon = "", hl = "TSConstructor"},
+"     Enum = {icon = "ℰ", hl = "TSType"},
+"     Interface = {icon = "ﰮ", hl = "TSType"},
+"     Function = {icon = "", hl = "TSFunction"},
+"     Variable = {icon = "", hl = "TSConstant"},
+"     Constant = {icon = "", hl = "TSConstant"},
+"     String = {icon = "𝓐", hl = "TSString"},
+"     Number = {icon = "#", hl = "TSNumber"},
+"     Boolean = {icon = "⊨", hl = "TSBoolean"},
+"     Array = {icon = "", hl = "TSConstant"},
+"     Object = {icon = "⦿", hl = "TSType"},
+"     Key = {icon = "🔐", hl = "TSType"},
+"     Null = {icon = "NULL", hl = "TSType"},
+"     EnumMember = {icon = "", hl = "TSField"},
+"     Struct = {icon = "𝓢", hl = "TSType"},
+"     Event = {icon = "🗲", hl = "TSType"},
+"     Operator = {icon = "+", hl = "TSOperator"},
+"     TypeParameter = {icon = "𝙏", hl = "TSParameter"}
+"   }
+" }
+" }
+" EOF
+" 
+" nnoremap <leader>sy :SymbolsOutline<CR>
 
 "flutter tools
 
@@ -1772,51 +1750,9 @@ nnoremap <leader>gdrf :GodotRunFZF<CR>
 
 
 "
-"LSP-saga config
-"
-lua << EOF
-local saga = require 'lspsaga'
-saga.init_lsp_saga {
- error_sign = '',
- warn_sign = '',
- hint_sign = '',
- infor_sign = '',
- diagnostic_header_icon = '   ',
- code_action_icon = ' ',
- code_action_prompt = {
-   enable = true,
-   sign = true,
-   sign_priority = 0,
-   virtual_text = true,
- },
- finder_definition_icon = '  ',
- finder_reference_icon = '  ',
- max_preview_lines = 10, -- preview lines of lsp_finder and definition preview
- finder_action_keys = {
-   open = 'o', vsplit = 's',split = 'i',quit = 'q',scroll_down = '<C-f>', scroll_up = '<C-b>' -- quit can be a table
- },
- code_action_keys = {
-   quit = 'q',exec = '<CR>'
- },
-	 rename_action_keys = {
-   quit = '<C-c>',exec = '<CR>'  -- quit can be a table
- },
- definition_preview_icon = '  ',
+"LSP-saga confi
+lua require'lspsaga-config'
 
- border_style = "single",
- rename_prompt_prefix = '➤',
-}
-require'lspsaga.diagnostic'.show_cursor_diagnostics()
-EOF
-nnoremap <silent><leader>sr :Lspsaga rename<CR>
-nnoremap <silent> [f :Lspsaga diagnostic_jump_next<CR>
-nnoremap <silent> ]f :Lspsaga diagnostic_jump_prev<CR>
-nnoremap <silent><leader>sf <cmd>lua require'lspsaga.provider'.lsp_finder()<CR>
-nnoremap <silent><leader>ca <cmd>lua require('lspsaga.codeaction').code_action()<CR>
-vnoremap <silent><leader>ca :<C-U>lua require('lspsaga.codeaction').range_code_action()<CR>
-nnoremap <silent><leader>k <cmd>lua require('lspsaga.hover').render_hover_doc()<CR>
-nnoremap <silent> <A-d> :Lspsaga open_floaterm<CR>
-tnoremap <silent> <A-d> <C-\><C-n>:Lspsaga close_floaterm<CR>
 
 " lua << EOF
 " require"bufferline".setup{
@@ -1984,7 +1920,7 @@ EOF
 
 "vim rooter
 let g:rooter_disable_map = 1
-let g:rooter_patterns = ['CMakeLists.txt','.git/','Makefile', 'build/',]
+let g:rooter_patterns = ['CMakeLists.txt','build/','.git/','Makefile']
 let g:rooter_change_directory_for_non_project_files = 1
 let g:rooter_silent_chdir = 0
 
@@ -2027,3 +1963,12 @@ nnoremap <leader>di <Cmd>lua require'dap'.step_into()<CR>
 nnoremap <leader>ds <Cmd>lua require'dap'.step_over()<CR>
 
 lua require('dap-go').setup()
+
+
+" cool virtual text when diagnostic
+" lua << EOF
+" 	require("lsp_lines").setup()
+" EOF
+lua << EOF
+	require('gitsigns').setup()
+EOF
