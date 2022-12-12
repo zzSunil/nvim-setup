@@ -580,6 +580,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'glepnir/lspsaga.nvim'
+Plug 'simrat39/rust-tools.nvim'
 " Plug 'Maan2003/lsp_lines.nvim'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'folke/trouble.nvim'
@@ -608,8 +609,8 @@ Plug 'machakann/vim-highlightedyank'
 "
 Plug 'seblj/nvim-tabline'
 
-"ranger
-Plug 'francoiscabrol/ranger.vim'
+"nnn file manager
+Plug 'luukvbaal/nnn.nvim'
 Plug 'rbgrouleff/bclose.vim'
 
 "code runner
@@ -658,7 +659,7 @@ set pumblend=20
 hi PmenuSel blend=0
 colorscheme gruvbox
 
-hi! Normal ctermbg=NONE guibg=NONE
+" hi! Normal ctermbg=NONE guibg=NONE
 
 " zephyr
 " colorscheme zephyr
@@ -1209,7 +1210,7 @@ lua << EOF
    highlight = {
      enable = true,              -- false will disable the whole extension
 	 additional_vim_regex_highlighting = true,
-     disable = {"rust"},  -- list of language that will be disabled
+     disable = {},  -- list of language that will be disabled
    },
  }
 EOF
@@ -1308,7 +1309,7 @@ autocmd BufWritePre *.cs lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.gd lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.css lua vim.lsp.buf.formatting_sync(nil, 100)
-" autocmd BufWritePre *.c lua vim.lsp.buf.formatting_sync(nil, 100)
+autocmd BufWritePre *.rs lua vim.lsp.buf.format(nil, 100)
 " autocmd BufWritePre *.cpp lua vim.lsp.buf.formatting_sync(nil, 100)
 
 
@@ -1442,6 +1443,7 @@ lua require'python-ls'
 lua require'clang-ls'
 lua require'glsl-ls'
 lua require'html-ls'
+lua require'rust-ls'
 lua require'r-ls'
 lua require'vimlsp'
 lua require'css-ls'
@@ -1772,7 +1774,7 @@ let g:neovide_transparency=0.8
 
 "ranger.vim
 let g:ranger_map_keys = 0
-nnoremap <leader>ra :Ranger<CR>
+nnoremap <leader>ra :NnnPicker<CR>
 
 "===
 "===telescope
@@ -1971,4 +1973,18 @@ lua require('dap-go').setup()
 " EOF
 lua << EOF
 	require('gitsigns').setup()
+EOF
+
+" nnn file manager
+lua << EOF
+require("nnn").setup({
+	picker = {
+		cmd = "tmux new-session nnn -a -Pp",
+		style = { border = "rounded" },
+		session = "shared",
+	},
+	replace_netrw = "picker",
+	auto_close = true,
+	offset = true,
+})
 EOF
