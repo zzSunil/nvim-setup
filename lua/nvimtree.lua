@@ -32,7 +32,7 @@ require("nvim-tree").setup { -- BEGIN_DEFAULT_OPTS
 		mappings = {
 			custom_only = false,
 			list = {
-				-- user mappings go here
+				{ key = "e", action = "" },
 			},
 		},
 		float = {

@@ -443,7 +443,7 @@ Plug 'yorik1984/lualine-theme.nvim'
 "
 Plug 'google/vim-maktaba'
 Plug 'google/vim-codefmt'
-Plug 'rhysd/vim-clang-format'
+" Plug 'rhysd/vim-clang-format'
 
 " Tex
  Plug 'lervag/vimtex'
@@ -555,6 +555,9 @@ Plug 'xolox/vim-session'
 Plug 'xolox/vim-misc' " vim-session dep
 
 "gruvbox color scheme
+Plug 'lifepillar/vim-colortemplate'
+Plug 'rktjmp/lush.nvim'
+Plug 'svitax/fennec-gruvbox.nvim'
 Plug 'zzLinus/gruvbox'
 Plug 'lifepillar/vim-gruvbox8'
 Plug 'sainnhe/gruvbox-material'
@@ -592,7 +595,7 @@ Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'onsails/lspkind-nvim'
 
 " "outline
-" Plug 'simrat39/symbols-outline.nvim'
+Plug 'simrat39/symbols-outline.nvim'
 
 "PlatformIO
 Plug 'coddingtonbear/neomake-platformio'
@@ -664,19 +667,16 @@ colorscheme gruvbox
 " zephyr
 " colorscheme zephyr
 
-" colors gruvbox8_hard
-" let g:gruvbox_italics = 0
-" let g:gruvbox_plugin_hi_groups = 1
-" let g:gruvbox_italicize_strings = 0
-" let g:gruvbox_bold = 1
+" set background=dark
+" colorscheme gruvbox8
+" set termguicolors
+" hi Normal guibg=#000000
 
+" colorscheme gruvbox-material
 
 " colorscheme gruvbox-flat
-" lua << EOF
-" 	vim.g.gruvbox_flat_style = "dark"
-" 	vim.g.gruvbox_flat_style = "hard"
-" EOF
-
+" vim.g.gruvbox_flat_style = "hard"
+" colorscheme fennec-gruvbox
 " ===
 " === edge
 " ===
@@ -694,7 +694,6 @@ colorscheme gruvbox
 " color orbital
 " color ahrenheit
 " color onedark
-" color gruvbox8_hard
 
 " color neon
 " lua << EOF
@@ -963,7 +962,7 @@ nnoremap <silent><leader>gb :GoBuild<CR>
 " ===
 augroup autoformat_settings
 	" autocmd FileType bzl AutoFormatBuffer buildifier
-	" autocmd FileType c,cpp,proto,arduino AutoFormatBuffer clang-format
+	autocmd FileType c,cpp,proto,arduino AutoFormatBuffer clang-format
 	" autocmd FileType dart AutoFormatBuffer dartfmt
 	" autocmd FileType go AutoFormatBuffer gofmt
 	" autocmd FileType gn AutoFormatBuffer gn
@@ -1310,7 +1309,7 @@ autocmd BufWritePre *.gd lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.css lua vim.lsp.buf.formatting_sync(nil, 100)
 autocmd BufWritePre *.rs lua vim.lsp.buf.format(nil, 100)
-" autocmd BufWritePre *.cpp lua vim.lsp.buf.formatting_sync(nil, 100)
+autocmd BufWritePre *.cpp lua vim.lsp.buf.format(nil, 100)
 
 
 "
@@ -1429,7 +1428,6 @@ highlight! SignColumn guibg=#000000
 highlight! SignifySignAdd guifg=#b8bb26 guibg=#000000
 highlight! SignifySignDelete guifg=#076678 guibg=#000000
 highlight! SignifySignChange guifg=#cc241d guibg=#000000
-
 hi CursorLine     guifg=none              guibg=#0f0f37
 
 
@@ -1451,6 +1449,7 @@ lua require'csharp-ls'
 lua require'gdscript-ls'
 lua require'go-ls'
 lua require'lua-ls'
+lua require'bash-ls'
 
 lua require'code-runner'
 
@@ -1526,73 +1525,72 @@ EOF
 set guifont=JetBrainsMono\ NF:h12
 
 " symbol outline
-" lua << EOF
-" require("symbols-outline").setup{
-" {
-"   highlight_hovered_item = true,
-"   show_guides = true,
-"   auto_preview = false,
-"   position = 'right',
-"   relative_width = true,
-"   width = 25,
-"   auto_close = false,
-"   show_numbers = false,
-"   show_relative_numbers = false,
-"   show_symbol_details = true,
-"   preview_bg_highlight = 'Pmenu',
-"   autofold_depth = nil,
-"   auto_unfold_hover = true,
-"   fold_markers = { '', '' },
-"   wrap = false,
-"   keymaps = { -- These keymaps can be a string or a table for multiple keys
-"     close = {"<Esc>", "q"},
-"     goto_location = "<Cr>",
-"     focus_location = "o",
-"     hover_symbol = "<C-space>",
-"     toggle_preview = "K",
-"     rename_symbol = "r",
-"     code_actions = "a",
-"     fold = "h",
-"     unfold = "l",
-"     fold_all = "W",
-"     unfold_all = "E",
-"     fold_reset = "R",
-"   },
-"   lsp_blacklist = {},
-"   symbol_blacklist = {},
-"   symbols = {
-"     File = {icon = "", hl = "TSURI"},
-"     Module = {icon = "", hl = "TSNamespace"},
-"     Namespace = {icon = "", hl = "TSNamespace"},
-"     Package = {icon = "", hl = "TSNamespace"},
-"     Class = {icon = "𝓒", hl = "TSType"},
-"     Method = {icon = "ƒ", hl = "TSMethod"},
-"     Property = {icon = "", hl = "TSMethod"},
-"     Field = {icon = "", hl = "TSField"},
-"     Constructor = {icon = "", hl = "TSConstructor"},
-"     Enum = {icon = "ℰ", hl = "TSType"},
-"     Interface = {icon = "ﰮ", hl = "TSType"},
-"     Function = {icon = "", hl = "TSFunction"},
-"     Variable = {icon = "", hl = "TSConstant"},
-"     Constant = {icon = "", hl = "TSConstant"},
-"     String = {icon = "𝓐", hl = "TSString"},
-"     Number = {icon = "#", hl = "TSNumber"},
-"     Boolean = {icon = "⊨", hl = "TSBoolean"},
-"     Array = {icon = "", hl = "TSConstant"},
-"     Object = {icon = "⦿", hl = "TSType"},
-"     Key = {icon = "🔐", hl = "TSType"},
-"     Null = {icon = "NULL", hl = "TSType"},
-"     EnumMember = {icon = "", hl = "TSField"},
-"     Struct = {icon = "𝓢", hl = "TSType"},
-"     Event = {icon = "🗲", hl = "TSType"},
-"     Operator = {icon = "+", hl = "TSOperator"},
-"     TypeParameter = {icon = "𝙏", hl = "TSParameter"}
-"   }
-" }
-" }
-" EOF
-" 
-" nnoremap <leader>sy :SymbolsOutline<CR>
+lua << EOF
+require("symbols-outline").setup{
+{
+  highlight_hovered_item = true,
+  show_guides = true,
+  auto_preview = false,
+  position = 'right',
+  relative_width = true,
+  width = 25,
+  auto_close = false,
+  show_numbers = false,
+  show_relative_numbers = false,
+  show_symbol_details = true,
+  preview_bg_highlight = 'Pmenu',
+  autofold_depth = nil,
+  auto_unfold_hover = true,
+  fold_markers = { '', '' },
+  wrap = false,
+  keymaps = { -- These keymaps can be a string or a table for multiple keys
+    close = {"<Esc>", "q"},
+    goto_location = "<Cr>",
+    focus_location = "o",
+    hover_symbol = "<C-space>",
+    toggle_preview = "K",
+    rename_symbol = "r",
+    code_actions = "a",
+    fold = "h",
+    unfold = "l",
+    fold_all = "W",
+    unfold_all = "E",
+    fold_reset = "R",
+  },
+  lsp_blacklist = {},
+  symbol_blacklist = {},
+  symbols = {
+    File = {icon = "", hl = "CmpItemAbbrMatch"},
+    Module = {icon = "", hl = "CmpItemKindModule"},
+    Namespace = {icon = "", hl = "CmpItemKindClass"},
+    Package = {icon = "", hl = "CmpItemKindModule"},
+    Class = {icon = "𝓒", hl = "CmpItemKindClass"},
+    Method = {icon = "ƒ", hl = "CmpItemKindMethod"},
+    Property = {icon = "", hl = "CmpItemKindMethod"},
+    Field = {icon = "", hl = "CmpItemKindField"},
+    Constructor = {icon = "", hl = "CmpItemKindConstructor"},
+    Enum = {icon = "ℰ", hl = "CmpItemKindKeyword"},
+    Interface = {icon = "ﰮ", hl = "CmpItemKindInterface"},
+    Function = {icon = "", hl = "CmpItemKindFunction"},
+    Variable = {icon = "", hl = "CmpItemKindVariable"},
+    Constant = {icon = "", hl = "CmpItemKindConstant"},
+    String = {icon = "𝓐", hl = "CmpItemKindVariable"},
+    Number = {icon = "#", hl = "CmpItemKindInterface"},
+    Boolean = {icon = "⊨", hl = "CmpItemKindVariable"},
+    Array = {icon = "", hl = "CmpItemKindReference"},
+    Object = {icon = "⦿", hl = "CmpItemKindSnippet"},
+    Key = {icon = "🔐", hl = "CmpItemKindKeyword"},
+    Null = {icon = "NULL", hl = "CmpItemAbbrMatchFuzzy"},
+    EnumMember = {icon = "", hl = "CmpItemKindField"},
+    Struct = {icon = "𝓢", hl = "CmpItemKindClass"},
+    Event = {icon = "🗲", hl = "CmpItemKindClass"},
+    Operator = {icon = "+", hl = "CmpItemKindVariable"},
+    TypeParameter = {icon = "𝙏", hl = "CmpItemKindKeyword"}
+  }
+}
+}
+EOF
+nnoremap <leader>sy :SymbolsOutline<CR>
 
 "flutter tools
 
@@ -1897,11 +1895,8 @@ nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 lua require'nvimtodo'
 nnoremap <LEADER>to :TodoTelescope<CR>
 
-"clang format
-let g:clang_format#enable_fallback_style = 0
-let g:clang_format#auto_format = 1
-
 " ts-rainbow3-brackets
+
 lua << EOF
 require("nvim-treesitter.configs").setup {
   highlight = {
@@ -1979,7 +1974,8 @@ EOF
 lua << EOF
 require("nnn").setup({
 	picker = {
-		cmd = "tmux new-session nnn -a -Pp",
+		cmd = "nnn -ca -Pp",
+		-- cmd = "tmux new-session nnn -a -Pp",
 		style = { border = "rounded" },
 		session = "shared",
 	},

@@ -18,6 +18,17 @@ require('code_runner').setup {
 			description = "bgfx cpp dev",
 			command = "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j 10 && ./bgfx_test"
 		},
+		["~/Dev/CPP/WhereToGo"] = {
+			name = "Where to Go",
+			description = "This way?? may be that one is better??",
+			-- cmake --fresh .. -DPLATFORM=STREQUAL -DCMAKE_BUILD_TYPE=Debug
+			command = "cd build && cmake .. -DPLATFORM=Desktop -DCMAKE_BUILD_TYPE=Debug && make -j10 && cd .. && ./build/WhereToGo"
+		},
+		["~/Dev/CPP/raylib_game"] = {
+			name = "Raylib-someshing",
+			description = "...",
+			command = "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j 10 && ./game"
+		},
 		["~/Dev/CPP/OpenGLSomething/chap2"] = {
 			name = "OpenGL Chap2",
 			description = "Project with make file",
@@ -47,6 +58,16 @@ require('code_runner').setup {
 			name = "ysyx nemu",
 			description = "ysyx nku lab",
 			command = "make run"
+		},
+		["/home/zzlinus/Dev/Python/ueberzug"] = {
+			name = "ueberzug nested tmux bug fixing",
+			description = "",
+			command = "./setup.sh build && chmod +x build/lib.linux-x86_64-cpython-310/ueberzug/__main__.py"
+		},
+		["/home/zzlinus/Dev/School/CPP/COVID"] = {
+			name = "covid",
+			description = "covid",
+			command = "cd build && cmake .. && make && ./covid"
 		},
 		["~/Dev/CPP/OpenGLSomething/chap4"] = {
 			name = "OpenGL Chap4",
