@@ -630,7 +630,7 @@ Plug 'DanielWeidinger/nvim-sshfs'
 Plug 'p00f/godbolt.nvim'
 
 " **THE org mode**
-Plug 'https://github.com/folke/zen-mode.nvim'
+Plug 'folke/zen-mode.nvim'
 
 " cmake intergration
 Plug 'Civitasv/cmake-tools.nvim'
@@ -656,21 +656,23 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " ===
 "
 
-set background=dark
-let g:gruvbox_contrast_dark='hard'
-set pumblend=20
-hi PmenuSel blend=0
-colorscheme gruvbox
+" set background=dark
+" let g:gruvbox_contrast_dark='hard'
+" set pumblend=20
+" hi PmenuSel blend=0
+" colorscheme gruvbox
 
 " hi! Normal ctermbg=NONE guibg=NONE
 
 " zephyr
 " colorscheme zephyr
 
-" set background=dark
-" colorscheme gruvbox8
-" set termguicolors
-" hi Normal guibg=#000000
+set background=dark
+colorscheme gruvbox8
+set termguicolors
+set pumblend=20
+hi PmenuSel blend=0
+hi Normal guibg=#000000
 
 " colorscheme gruvbox-material
 
@@ -1296,7 +1298,6 @@ lua require'plug-colorizer'
 
 "LSP config
 "
-nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
 nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
@@ -1428,6 +1429,26 @@ highlight! SignColumn guibg=#000000
 highlight! SignifySignAdd guifg=#b8bb26 guibg=#000000
 highlight! SignifySignDelete guifg=#076678 guibg=#000000
 highlight! SignifySignChange guifg=#cc241d guibg=#000000
+
+highlight! GitSignsAdd    guifg=#b8bb26 guibg=#000000
+highlight! GitSignsChange guifg=#cc241d guibg=#000000
+highlight! GitSignsDelete guifg=#076678 guibg=#000000
+highlight! GitSignsDelete guifg=#076678 guibg=#000000
+highlight! GitSignsChange guifg=#cc241d guibg=#000000
+highlight! GitSignsAdd    guifg=#b8bb26 guibg=#000000
+highlight! GitSignsAddLn    guifg=#b8bb26 guibg=#000000
+highlight! GitSignsChangeLn guifg=#cc241d guibg=#000000
+highlight! GitSignsDeleteLn guifg=#076678 guibg=#000000
+highlight! GitSignsDeleteLn guifg=#076678 guibg=#000000
+highlight! GitSignsChangeLn guifg=#cc241d guibg=#000000
+highlight! GitSignsAddLn    guifg=#b8bb26 guibg=#000000
+highlight! GitSignsAddNr     guifg=#b8bb26 guibg=#000000
+highlight! GitSignsChangeNr  guifg=#cc241d guibg=#000000
+highlight! GitSignsDeleteNr  guifg=#076678 guibg=#000000
+highlight! GitSignsDeleteNr  guifg=#076678 guibg=#000000
+highlight! GitSignsChangeNr  guifg=#cc241d guibg=#000000
+highlight! GitSignsAddNr     guifg=#b8bb26 guibg=#000000
+
 hi CursorLine     guifg=none              guibg=#0f0f37
 
 

@@ -49,6 +49,11 @@ require('code_runner').setup {
 			description = "Project with make file",
 			command = "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make && cd .. && ./build/main"
 		},
+		["/home/zzlinus/Dev/C/ysyx/ysyx-workbench/npc-riscv64"] = {
+			name = "ysyx npc-riscv64",
+			description = "ysyx B part",
+			command = "make sim"
+		},
 		["/home/zzlinus/Dev/C/ysyx/ysyx-workbench/npc"] = {
 			name = "ysyx npc",
 			description = "ysyx nku lab",
