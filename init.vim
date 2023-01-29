@@ -1774,7 +1774,6 @@ nnoremap <leader>gdrf :GodotRunFZF<CR>
 "LSP-saga confi
 lua require'lspsaga-config'
 
-
 " lua << EOF
 " require"bufferline".setup{
 " }
@@ -1984,9 +1983,6 @@ lua require('dap-go').setup()
 
 
 " cool virtual text when diagnostic
-" lua << EOF
-" 	require("lsp_lines").setup()
-" EOF
 lua << EOF
 	require('gitsigns').setup()
 EOF
