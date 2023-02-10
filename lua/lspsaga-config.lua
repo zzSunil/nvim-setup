@@ -53,7 +53,7 @@ require("lspsaga").setup({
 		auto_close = true,
 		custom_sort = nil,
 		keys = {
-			jump = "o",
+			jump = "<CR>",
 			expand_collapse = "c",
 			quit = "q",
 		},

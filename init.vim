@@ -37,7 +37,6 @@ source /home/zzlinus/.config/nvim/_machine_specific.vim
 "===
 set guicursor=n-v-c:block-Cursor
 
-
 " ====================
 " === Editor Setup ===
 " ====================
@@ -58,14 +57,14 @@ set number
 set relativenumber
 " set cursorline
 " set hidden
-set noexpandtab
 set autochdir
-set tabstop=4
 set shiftwidth=4
-set softtabstop=4
+set noexpandtab
+set tabstop=2
+set softtabstop=2
 set autoindent
-set list
 set listchars=tab:\ \ ,trail:▫
+set list
 set scrolloff=4
 set ttimeoutlen=0
 set notimeout
@@ -340,302 +339,228 @@ map <F10> :call SynGroup()<CR>
 "add vim spector Variable highlight
 noremap <leader>sb :call SetName()<CR>
 
+lua << EOF
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
 
-" ===
-" === Install Plugins with Vim-Plug
-" ===
+vim.opt.rtp:prepend(lazypath)
 
-call plug#begin('~/.config/nvim/plugged')
-"
-" Plug 'rainbowhxch/beacon.nvim'
+require("lazy").setup(
+	{
+		-- color theme
+		"jpo/vim-railscasts-theme",
+		"lifepillar/vim-gruvbox8",
+		"fcpg/vim-fahrenheit",
+		"cange/vim-theme-bronkow",
+		"joshdick/onedark.vim",
+		"fcpg/vim-orbital",
+		"lifepillar/vim-wwdc16-theme",
+		"arzg/vim-colors-xcode",
+		"sainnhe/edge",
+		"andreasvc/vim-256noir",
+		"yorickpeterse/happy_hacking.vim",
+		"fcpg/vim-orbital",
+		"vim-scripts/redstring.vim",
+		"glepnir/zephyr-nvim",
+		"habamax/vim-godot",
+		{
+			"nvim-treesitter/nvim-treesitter",
+			config = function()
+				require'nvim-treesitter.configs'.setup({
+					rainbow = {
+						enable = true,
+						extended_mode = true,
+						max_file_lines = nil, -- Do not enable for files with more than n lines, int
+					-- colors = {}, -- table of hex strings
+					-- termcolors = {} -- table of colour name strings
+					},
+					highlight = {
+						enable = true,              -- false will disable the whole extension
+						additional_vim_regex_highlighting = true,
+						disable = {},  -- list of language that will be disabled
+					},
+				})
+			end,
+		},
+		{"nvim-treesitter/playground"},
+		"nvim-lua/plenary.nvim",
+		"folke/todo-comments.nvim",
+		"jalvesaq/Nvim-R", 
+		"rafamadriz/neon",
+		"ajmwagar/vim-deus",
+		-- lsp
+		"ray-x/lsp_signature.nvim",
+		"neovim/nvim-lspconfig",
+		"hrsh7th/cmp-nvim-lsp",
+		"hrsh7th/cmp-buffer",
+		"glepnir/lspsaga.nvim",
+		"simrat39/rust-tools.nvim",
+		"Maan2003/lsp_lines.nvim",
+		"hrsh7th/nvim-cmp",
+		"folke/trouble.nvim",
+		"kyazdani42/nvim-web-devicons",
+		"p00f/clangd_extensions.nvim",
+		-- little funny tools
+		"rendon/vim-rooter",
+		"dhruvasagar/vim-table-mode",
+		{"RRethy/vim-hexokinase",build = "make hexokinase" },
+		"kyazdani42/nvim-web-devicons",
+		"ryanoasis/vim-devicons",
+		"kyazdani42/nvim-tree.lua",
+		"junegunn/fzf.vim",
+		"junegunn/fzf",
+		{"Yggdroot/LeaderF", build = "./install.sh"},
+		"nvim-telescope/telescope.nvim",
+		-- debug
+		{"puremourning/vimspector", build = "./install_gadget.py --enable-c --enable-python --enable-go"},
+		"mfussenegger/nvim-dap",
+		"rcarriga/nvim-dap-ui",
+		"leoluz/nvim-dap-go",
+		"SirVer/ultisnips",
+		"theniceboy/vim-snippets",
+		-- git tools
+		"mbbill/undotree",
+		"theniceboy/vim-gitignore",
+		"cohama/agit.vim",
+		"lewis6991/gitsigns.nvim",
+		"kdheepak/lazygit.nvim",
+		-- lualine
+		"nvim-lualine/lualine.nvim",
+		"yorik1984/lualine-theme.nvim",
+		-- Autoformat
+    	"google/vim-maktaba", 
+		{"google/vim-codefmt", event = "VeryLazy" },
+    	"rhysd/vim-clang-format",
+    	"elzr/vim-json",
+    	"neoclide/jsonc.vim",
+    	"othree/html5.vim",
+    	"alvan/vim-closetag",
+		{"hail2u/vim-css3-syntax" ,event = "VeryLazy"},
+		{"spf13/PIV", event = "VeryLazy"},
+    	{"pangloss/vim-javascript",  event = "VeryLazy"},
+    	{"yuezk/vim-js", event = "VeryLazy"},
+    	{"MaxMEllon/vim-jsx-pretty", event = "VeryLazy"},
+    	{"jelera/vim-javascript-syntax", event = "VeryLazy"},
+    	{"jaxbot/browserlink.vim", event = "VeryLazy"},
+    	"HerringtonDarkholme/yats.vim",
+    	"posva/vim-vue",
+    	"evanleck/vim-svelte",
+    	"leafOfTree/vim-svelte-plugin",
+    	"leafgarland/typescript-vim",
+    	"MaxMEllon/vim-jsx-pretty",
+    	"pangloss/vim-javascript",
+    	"leafgarland/typescript-vim",
+    	"peitalin/vim-jsx-typescript",
+    	"styled-components/vim-styled-components",
+    	"pantharshit00/vim-prisma",
+		-- golang
+		{"fatih/vim-go",cmd = "GoInstallBinaries"},
+		-- python
+		{"tmhedberg/SimpylFold",event = "VeryLazy"},
+    	{"Vimjas/vim-python-pep8-indent",event = "VeryLazy"},
+    	{"numirias/semshi",cmd = "UpdateRemotePlugins"},
+    	{"vim-scripts/indentpython.vim",event = "VeryLazy"},
+    	{"plytophogy/vim-virtualenv",event = "VeryLazy"},
+    	{"tweekmonster/braceless.vim",event = "VeryLazy"},
+		-- flutter
+		{"dart-lang/dart-vim-plugin",event = "VeryLazy" },
+		{"nvim-lua/plenary.nvim",event = "VeryLazy" },
+		{"akinsho/flutter-tools.nvim",event = "VeryLazy" },
+		-- markdown 
+		{"instant-markdown/vim-instant-markdown", build = "yarn install", event = "VeryLazy" },
+		{"mzlogin/vim-markdown-toc", event = "VeryLazy" },
+		{"dkarter/bullets.vim", event = "VeryLazy" },
+		{"ellisonleao/glow.nvim", event = "VeryLazy" },
+		{"iamcco/markdown-preview.nvim", build = "cd app && yarn install" , event = "VeryLazy" },
+		-- Editor Enhancement
+		"Raimondi/delimitMate",
+		"preservim/nerdcommenter",
+		"jiangmiao/auto-pairs",
+		"tpope/vim-surround", -- type yskw' to wrap the word with '' or type cs'` to change 'word' to `word`
+		"gcmt/wildfire.vim", -- in Visual mode, type k' to select all text in '', or type k) k] k} kp
+		"junegunn/vim-after-object", -- da= to delete what's after =
+		"godlygeek/tabular", -- ga, or :Tabularize <regex> to align
+		"tpope/vim-capslock", -- Ctrl+L (insert) to toggle capslock
+		"easymotion/vim-easymotion",
+		"Konfekt/FastFold",
+		"junegunn/vim-peekaboo",
+		"svermeulen/vim-subversive",
+		"theniceboy/argtextobj.vim",
+		"rhysd/clever-f.vim",
+		"AndrewRadev/splitjoin.vim",
+		"theniceboy/pair-maker.vim",
+		"theniceboy/vim-move",
+		"jeffkreeftmeijer/vim-numbertoggle",
+		"lukas-reineke/indent-blankline.nvim",
+		-- For general writing
+		"junegunn/goyo.vim",
+		"reedes/vim-wordy",
+		"voldikss/vim-translator",
+		-- Bookmarks
+		"MattesGroeger/vim-bookmarks",
+		"mhinz/vim-startify",
+		"skywind3000/asynctasks.vim",
+		"skywind3000/asyncrun.vim",
+		-- fancy notification
+		"rcarriga/nvim-notify",
+		-- gruvbox color scheme
+		"zzLinus/gruvbox",
+		"lifepillar/vim-gruvbox8",
+		-- Other visual enhancement
+		"p00f/nvim-ts-rainbow",
+		"wincent/terminus",
+		-- Other useful utilities
+		"lambdalisue/suda.vim", -- do stuff like :sudowrite
+		"makerj/vim-pdf",
+		-- "xolox/vim-misc", -- vim-session dep
+		-- "xolox/vim-session",
+		-- Dependencies
+		"MarcWeber/vim-addon-mw-utils",
+		"kana/vim-textobj-user",
+		"roxma/nvim-yarp",
+		-- NERDtree
+		"preservim/nerdtree",
+		"tiagofumo/vim-nerdtree-syntax-highlight",
+		-- For ultisnips user.
+		"quangnguyen30192/cmp-nvim-ultisnips",
+		"onsails/lspkind-nvim",
+		-- outline
+		"simrat39/symbols-outline.nvim",
+		-- PlatformIO
+		"coddingtonbear/neomake-platformio",
+		"neomake/neomake",
+		-- highlight yank
+		"machakann/vim-highlightedyank",
+		-- prettier buffer line
+		"akinsho/bufferline.nvim",
+		-- Tabline
+		"seblj/nvim-tabline",
+		-- nnn file manager
+		"luukvbaal/nnn.nvim",
+		"rbgrouleff/bclose.vim",
+		-- code runner
+		"CRAG666/code_runner.nvim",
 
-"laTex
-Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
-
-"vim-conda support
-" Plug 'cjrh/vim-conda'
-
-"color theme
-Plug 'jpo/vim-railscasts-theme'
-Plug 'fcpg/vim-fahrenheit'
-Plug 'cange/vim-theme-bronkow'
-Plug 'joshdick/onedark.vim'
-Plug 'fcpg/vim-orbital'
-Plug 'lifepillar/vim-wwdc16-theme'
-Plug 'arzg/vim-colors-xcode'
-Plug 'sainnhe/edge'
-Plug 'andreasvc/vim-256noir'
-Plug 'yorickpeterse/happy_hacking.vim'
-Plug 'fcpg/vim-orbital'
-Plug 'vim-scripts/redstring.vim'
-Plug 'glepnir/zephyr-nvim'
-
-"Godot
-Plug 'habamax/vim-godot'
-" Plug 'calviken/vim-gdscript3'
-
- "colorize
-Plug 'norcalli/nvim-colorizer.lua'
-
-" Treesitter
-Plug 'nvim-treesitter/nvim-treesitter'
-Plug 'nvim-treesitter/playground'
-
-" highlight todo
-Plug 'nvim-lua/plenary.nvim'
-Plug 'folke/todo-comments.nvim'
-
-
-"Clang syntax highlight
-Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'jalvesaq/Nvim-R'
-
-"LSP_signature
-Plug 'ray-x/lsp_signature.nvim'
-
-"Vim rooter
-Plug 'rendon/vim-rooter'
-
-"vim-table-mode
-Plug 'dhruvasagar/vim-table-mode'
-
-"General Highlighter
-Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
-Plug 'RRethy/vim-illuminate'
-"
-" File navigation
-Plug 'kyazdani42/nvim-web-devicons' " for file icons
-Plug 'kyazdani42/nvim-tree.lua'
-Plug 'junegunn/fzf.vim'
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
-
-
-" Debugger
-Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
-Plug 'mfussenegger/nvim-dap'
-Plug 'rcarriga/nvim-dap-ui'
-Plug 'leoluz/nvim-dap-go'
-
-
-" Snippets
-Plug 'SirVer/ultisnips'
-Plug 'theniceboy/vim-snippets'
-
-" Undo Tree
-Plug 'mbbill/undotree'
-
-" Git
-Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
-Plug 'cohama/agit.vim'
-Plug 'lewis6991/gitsigns.nvim'
-
-"nvim v0.5.0
-Plug 'kdheepak/lazygit.nvim'
-
-"lualine
-"
-Plug 'nvim-lualine/lualine.nvim'
-Plug 'yorik1984/lualine-theme.nvim'
-
-"Autoformat
-"
-Plug 'google/vim-maktaba'
-Plug 'google/vim-codefmt'
-" Plug 'rhysd/vim-clang-format'
-
-" Tex
- Plug 'lervag/vimtex'
-
-" HTML, CSS, JavaScript, Typescript, PHP, JSON, etc.
-Plug 'elzr/vim-json'
-Plug 'neoclide/jsonc.vim'
-Plug 'othree/html5.vim'
-Plug 'alvan/vim-closetag'
-Plug 'hail2u/vim-css3-syntax' " , { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-Plug 'spf13/PIV', { 'for' :['php', 'vim-plug'] }
-Plug 'pangloss/vim-javascript', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-Plug 'yuezk/vim-js', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-Plug 'MaxMEllon/vim-jsx-pretty', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-Plug 'jelera/vim-javascript-syntax', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-Plug 'jaxbot/browserlink.vim'
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'posva/vim-vue'
-Plug 'evanleck/vim-svelte', {'branch': 'main'}
-Plug 'leafOfTree/vim-svelte-plugin'
-Plug 'leafgarland/typescript-vim'
-Plug 'MaxMEllon/vim-jsx-pretty'
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
-Plug 'peitalin/vim-jsx-typescript'
-Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-Plug 'pantharshit00/vim-prisma'
-
-" Go
-Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
-
-" Python
-Plug 'tmhedberg/SimpylFold', { 'for' :['python', 'vim-plug'] }
-Plug 'Vimjas/vim-python-pep8-indent', { 'for' :['python', 'vim-plug'] }
-" Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
-Plug 'vim-scripts/indentpython.vim', { 'for' :['python', 'vim-plug'] }
-Plug 'plytophogy/vim-virtualenv', { 'for' :['python', 'vim-plug'] }
-Plug 'tweekmonster/braceless.vim', { 'for' :['python', 'vim-plug'] }
-" Plug 'petobens/poet-v'
-
-" Flutter Flutter
-Plug 'dart-lang/dart-vim-plugin'
-Plug 'f-person/pubspec-assist-nvim', { 'for' : ['pubspec.yaml'] }
-Plug 'nvim-lua/plenary.nvim'
-Plug 'akinsho/flutter-tools.nvim'
-
-
-" Markdown
-Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
-Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
-Plug 'dkarter/bullets.vim'
-Plug 'ellisonleao/glow.nvim'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
-
-
-" Editor Enhancement
-Plug 'Raimondi/delimitMate'
-Plug 'jiangmiao/auto-pairs'
-Plug 'tomtom/tcomment_vim' " in <space>cn to comment a line
-Plug 'tpope/vim-surround' " type yskw' to wrap the word with '' or type cs'` to change 'word' to `word`
-Plug 'gcmt/wildfire.vim' " in Visual mode, type k' to select all text in '', or type k) k] k} kp
-Plug 'junegunn/vim-after-object' " da= to delete what's after =
-Plug 'godlygeek/tabular' " ga, or :Tabularize <regex> to align
-Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
-Plug 'easymotion/vim-easymotion'
-Plug 'Konfekt/FastFold'
-Plug 'junegunn/vim-peekaboo'
-" Plug 'wellle/context.vim'
-Plug 'svermeulen/vim-subversive'
-Plug 'theniceboy/argtextobj.vim'
-Plug 'rhysd/clever-f.vim'
-Plug 'AndrewRadev/splitjoin.vim'
-Plug 'theniceboy/pair-maker.vim'
-Plug 'theniceboy/vim-move'
-Plug 'jeffkreeftmeijer/vim-numbertoggle'
-Plug 'lukas-reineke/indent-blankline.nvim'
-" For general writing
-Plug 'junegunn/goyo.vim'
-Plug 'reedes/vim-wordy'
-Plug 'ron89/thesaurus_query.vim'
-Plug 'voldikss/vim-translator'
-" Bookmarks
-Plug 'MattesGroeger/vim-bookmarks'
-
-" Find & Replace
-Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
-
-" Documentation
-Plug 'KabbAmine/zeavim.vim' " <LEADER>z to find doc
-
-ln -s ~/.tmux/.tmux.conf ~/.tmux.conf" Mini Vim-APP
-Plug 'mhinz/vim-startify'
-Plug 'skywind3000/asynctasks.vim'
-Plug 'skywind3000/asyncrun.vim'
-
-
-"fancy notification
-Plug 'rcarriga/nvim-notify'
-
-" Other visual enhancement
-Plug 'p00f/nvim-ts-rainbow'
-Plug 'wincent/terminus'
-Plug 'ajmwagar/vim-deus'
-
-" Other useful utilities
-Plug 'lambdalisue/suda.vim' " do stuff like :sudowrite
-Plug 'makerj/vim-pdf'
-Plug 'xolox/vim-session'
-Plug 'xolox/vim-misc' " vim-session dep
-
-"gruvbox color scheme
-Plug 'lifepillar/vim-colortemplate'
-Plug 'rktjmp/lush.nvim'
-Plug 'svitax/fennec-gruvbox.nvim'
-Plug 'zzLinus/gruvbox'
-Plug 'lifepillar/vim-gruvbox8'
-Plug 'sainnhe/gruvbox-material'
-Plug 'eddyekofo94/gruvbox-flat.nvim'
-
-"Dependencies
- Plug 'MarcWeber/vim-addon-mw-utils'
- Plug 'kana/vim-textobj-user'
- Plug 'roxma/nvim-yarp'
-
-"NERDtree
-Plug 'preservim/nerdtree',{'on': 'NERDTreeToggle'}
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-
-"vim-devicons
-Plug 'ryanoasis/vim-devicons'
-
-"neon color theme
-Plug 'rafamadriz/neon'
-"vim-native lsp
-"
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/cmp-buffer'
-Plug 'glepnir/lspsaga.nvim'
-Plug 'simrat39/rust-tools.nvim'
-" Plug 'Maan2003/lsp_lines.nvim'
-Plug 'hrsh7th/nvim-cmp'
-Plug 'folke/trouble.nvim'
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'p00f/clangd_extensions.nvim'
-
-" For ultisnips user.
-Plug 'quangnguyen30192/cmp-nvim-ultisnips'
-Plug 'onsails/lspkind-nvim'
-
-" "outline
-Plug 'simrat39/symbols-outline.nvim'
-
-"PlatformIO
-Plug 'coddingtonbear/neomake-platformio'
-Plug 'neomake/neomake'
-
-"highlight yank
-Plug 'machakann/vim-highlightedyank'
-
-"prettier buffer line
-" Plug 'akinsho/bufferline.nvim'
-
-"
-"Tabline
-"
-Plug 'seblj/nvim-tabline'
-
-"nnn file manager
-Plug 'luukvbaal/nnn.nvim'
-Plug 'rbgrouleff/bclose.vim'
-
-"code runner
-Plug 'CRAG666/code_runner.nvim'
-
-"shader language glsl
-Plug 'tikhomirov/vim-glsl'
-
-"ssh
-Plug 'DanielWeidinger/nvim-sshfs'
-
-"display assembly for the current buffer
-
-Plug 'p00f/godbolt.nvim'
-
-" **THE org mode**
-Plug 'folke/zen-mode.nvim'
-
-" cmake intergration
-Plug 'Civitasv/cmake-tools.nvim'
-
-call plug#end()
+		-- shader language glsl
+		"tikhomirov/vim-glsl",
+		-- ssh
+		"DanielWeidinger/nvim-sshfs",
+		-- display assembly for the current buffer
+		"p00f/godbolt.nvim",
+		-- cmake intergration
+		"Civitasv/cmake-tools.nvim",
+	}
+)
+EOF
 set re=0
 
 let g:python3_host_prog = '/usr/bin/python3'
@@ -667,8 +592,8 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " zephyr
 " colorscheme zephyr
 
-set background=dark
 colorscheme gruvbox8
+set background=dark
 set termguicolors
 set pumblend=20
 hi PmenuSel blend=0
@@ -878,7 +803,6 @@ noremap <LEADER>gi :FzfGitignore<CR>
 " ===
 " let g:tex_flavor = "latex"
  inoremap <c-n> <nop>
- let g:UltiSnipsExpandTrigger="<c-[]>"
  let g:UltiSnipsJumpForwardTrigger="<c-[>"
  let g:UltiSnipsJumpBackwardTrigger="<c-}>"
  let g:UltiSnipsSnippetDirectories = [$HOME.'/.config/nvim/Ultisnips/', $HOME.'/.config/nvim/plugged/vim-snippets/UltiSnips/']
@@ -1061,11 +985,6 @@ autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
 ""noremap sA :AppendTabSession<CR>
 
 
-" ===
-" === context.vim
-" ===
-"let g:context_add_mappings = 0
-"noremap <leader>ct :ContextToggle<CR>
 
 
 " ===
@@ -1164,18 +1083,6 @@ let g:asyncrun_open = 6
 "
 
 
-
-" ===
-" === tcomment_vim
-" ===
-nnoremap ci cl
-let g:tcomment_textobject_inlinecomment = ''
-nmap <LEADER>cn g>c
-vmap <LEADER>cn g>
-nmap <LEADER>cu g<c
-vmap <LEADER>cu g<
-
-
 " ===
 " === vim-move
 " ===
@@ -1200,21 +1107,6 @@ let g:typescript_ignore_browserwords = 1
 " ===
 nnoremap <LEADER>gl :Agit<CR>
 let g:agit_no_default_mappings = 1
-
-
-" ===
-" === nvim-treesitter
-
-lua << EOF
- require'nvim-treesitter.configs'.setup {
-   ensure_installed = {"typescript", "dart", "java","c","cpp"},     -- one of "all", "language", or a list of languages
-   highlight = {
-     enable = true,              -- false will disable the whole extension
-	 additional_vim_regex_highlighting = true,
-     disable = {},  -- list of language that will be disabled
-   },
- }
-EOF
 
 " ===
 " === lazygit.nvim
@@ -1678,7 +1570,7 @@ nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
 nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
 nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
 nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
-nnoremap gr <cmd>TroubleToggle lsp_references<cr>
+nnoremap gf <cmd>TroubleToggle lsp_references<cr>
 
 
 "paltformIO
@@ -1915,25 +1807,6 @@ nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 lua require'nvimtodo'
 nnoremap <LEADER>to :TodoTelescope<CR>
 
-" ts-rainbow3-brackets
-
-lua << EOF
-require("nvim-treesitter.configs").setup {
-  highlight = {
-      -- ...
-  },
-  -- ...
-  rainbow = {
-    enable = true,
-    -- disable = { "jsx", "cpp" }, list of languages you want to disable the plugin for
-    extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
-    max_file_lines = nil, -- Do not enable for files with more than n lines, int
-    -- colors = {}, -- table of hex strings
-    -- termcolors = {} -- table of colour name strings
-  }
-}
-EOF
-
 
 "vim rooter
 let g:rooter_disable_map = 1
@@ -2001,3 +1874,32 @@ require("nnn").setup({
 	offset = true,
 })
 EOF
+
+" commenter
+let g:NERDCreateDefaultMappings = 1
+
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 0
+
+" Use compact syntax for prettified multi-line comments
+let g:NERDCompactSexyComs = 0
+
+" Align line-wise comment delimiters flush left instead of following code indentation
+let g:NERDDefaultAlign = 'left'
+
+" Set a language to use its alternate delimiters by default
+let g:NERDAltDelims_java = 0
+
+" Add your own custom formats or override the defaults
+let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+
+" Allow commenting and inverting empty lines (useful when commenting a region)
+let g:NERDCommentEmptyLines = 0
+
+" Enable trimming of trailing whitespace when uncommenting
+let g:NERDTrimTrailingWhitespace = 1
+
+" Enable NERDCommenterToggle to check all selected lines is commented or not 
+let g:NERDToggleCheckAllLines = 0
+
+
