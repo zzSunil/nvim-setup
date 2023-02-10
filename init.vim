@@ -1261,7 +1261,7 @@ lua <<EOF
     },
     sources = {
 		{ name = 'nvim_lsp' },
-    	{ name = 'vsnip' },
+    { name = 'vsnip' },
 		{ name = 'ultisnips' ,keyword_length = 2},
 		{ name = 'buffer' },
     }
@@ -1316,6 +1316,9 @@ highlight! CmpItemKindEmumMember guibg=NONE guifg=#cc241d
 highlight! CmpItemKindConstant   guibg=NONE guifg=#b8bb26
 highlight! CmpItemKindStruct     guibg=NONE guifg=#076678
 highlight! CmpItemKindEvent      guibg=NONE guifg=#076678
+
+highlight! Pmenu guibg=#000000,guifg=#FFFFFF
+
 highlight! LineNr guibg=#000000
 highlight! SignColumn guibg=#000000
 highlight! SignifySignAdd guifg=#b8bb26 guibg=#000000
