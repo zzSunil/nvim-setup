@@ -12,7 +12,7 @@ require("lspsaga").setup({
 		-- This option only works in Neovim 0.9
 		title = true,
 		-- Border type can be single, double, rounded, solid, shadow.
-		border = "solid",
+		border = "rounded",
 		winblend = 0,
 		expand = "",
 		collapse = "",
@@ -148,3 +148,10 @@ keymap("n", "<Leader>co", "<cmd>Lspsaga outgoing_calls<CR>")
 
 -- Floating terminal
 keymap({ "n", "t" }, "<A-d>", "<cmd>Lspsaga term_toggle<CR>")
+
+
+local signs = { Error = "", Warn = "", Hint = "ﯦ", Info = "" }
+for type, icon in pairs(signs) do
+	local hl = "DiagnosticSign" .. type
+	vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end

@@ -29,7 +29,7 @@ if empty(glob('~/.config/nvim/_machine_specific.vim'))
 	let has_machine_specific_file = 0
 	silent! exec "!cp ~/.config/nvim/default_configs/_machine_specific_default.vim ~/.config/nvim/_machine_specific.vim"
 endif
-source /home/zzlinus/.config/nvim/_machine_specific.vim
+source /Users/zzlinus/.config/nvim/_machine_specific.vim
 " source /home/zzlinus/.config/nvim/colors/agnostic.vim
 
 "===
@@ -207,7 +207,7 @@ noremap B 5b
 " set h (same as n, cursor left) to 'end of word'
 noremap h e
 
-source /home/zzlinus/.config/nvim/cursor.vim
+source /Users/zzlinus/.config/nvim/cursor.vim
 
 " ===
 " === Insert Mode Cursor Movement
@@ -291,7 +291,7 @@ noremap tmi :+tabmove<CR>
 " === Markdown Settings
 " ===
 " Snippets
-source /home/zzlinus/.config/nvim/md-snippets.vim
+source ~/.config/nvim/md-snippets.vim
 " auto spell
 autocmd BufRead,BufNewFile *.md setlocal spell
 
@@ -346,16 +346,16 @@ noremap <leader>sb :call SetName()<CR>
 " ===
 
 call plug#begin('~/.config/nvim/plugged')
-"
-" Plug 'rainbowhxch/beacon.nvim'
 
-"laTex
+Plug 'rainbowhxch/beacon.nvim'
+
+"" laTex
 Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
 
-"vim-conda support
-" Plug 'cjrh/vim-conda'
+"" vim-conda support
+Plug 'cjrh/vim-conda'
 
-"color theme
+"" color theme
 Plug 'jpo/vim-railscasts-theme'
 Plug 'fcpg/vim-fahrenheit'
 Plug 'cange/vim-theme-bronkow'
@@ -370,40 +370,40 @@ Plug 'fcpg/vim-orbital'
 Plug 'vim-scripts/redstring.vim'
 Plug 'glepnir/zephyr-nvim'
 
-"Godot
+"" Godot
 Plug 'habamax/vim-godot'
-" Plug 'calviken/vim-gdscript3'
+Plug 'calviken/vim-gdscript3'
 
- "colorize
+"" colorize
 Plug 'norcalli/nvim-colorizer.lua'
 
-" Treesitter
+"" Treesitter
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/playground'
 
-" highlight todo
+"" highlight todo
 Plug 'nvim-lua/plenary.nvim'
 Plug 'folke/todo-comments.nvim'
 
 
-"Clang syntax highlight
+"" "Clang syntax highlight
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'jalvesaq/Nvim-R'
 
-"LSP_signature
+"" "LSP_signature
 Plug 'ray-x/lsp_signature.nvim'
 
-"Vim rooter
+"" "Vim rooter
 Plug 'rendon/vim-rooter'
 
-"vim-table-mode
+"" "vim-table-mode
 Plug 'dhruvasagar/vim-table-mode'
 
-"General Highlighter
+"" "General Highlighter
 Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 'RRethy/vim-illuminate'
-"
-" File navigation
+
+"" "File navigation
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'junegunn/fzf.vim'
@@ -412,43 +412,41 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
 
-" Debugger
+"" "Debugger
 Plug 'puremourning/vimspector', {'do': './install_gadget.py --enable-c --enable-python --enable-go'}
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'leoluz/nvim-dap-go'
 
 
-" Snippets
+"" "Snippets
 Plug 'SirVer/ultisnips'
 Plug 'theniceboy/vim-snippets'
 
-" Undo Tree
+"" "Undo Tree
 Plug 'mbbill/undotree'
 
-" Git
+"" "Git
 Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
 Plug 'cohama/agit.vim'
 Plug 'lewis6991/gitsigns.nvim'
 
-"nvim v0.5.0
+"" nvim v0.5.0
 Plug 'kdheepak/lazygit.nvim'
 
-"lualine
-"
+"" "lualine
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'yorik1984/lualine-theme.nvim'
 
-"Autoformat
-"
+"" "Autoformat
 Plug 'google/vim-maktaba'
 Plug 'google/vim-codefmt'
-" Plug 'rhysd/vim-clang-format'
+Plug 'rhysd/vim-clang-format'
 
-" Tex
+"" "Tex
  Plug 'lervag/vimtex'
 
-" HTML, CSS, JavaScript, Typescript, PHP, JSON, etc.
+"" "HTML, CSS, JavaScript, Typescript, PHP, JSON, etc.
 Plug 'elzr/vim-json'
 Plug 'neoclide/jsonc.vim'
 Plug 'othree/html5.vim'
@@ -472,24 +470,23 @@ Plug 'peitalin/vim-jsx-typescript'
 Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 Plug 'pantharshit00/vim-prisma'
 
-" Go
+"" "Go
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 
-" Python
+"" "Python
 Plug 'tmhedberg/SimpylFold', { 'for' :['python', 'vim-plug'] }
 Plug 'Vimjas/vim-python-pep8-indent', { 'for' :['python', 'vim-plug'] }
-" Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
+Plug 'numirias/semshi', { 'do': ':UpdateRemotePlugins' }
 Plug 'vim-scripts/indentpython.vim', { 'for' :['python', 'vim-plug'] }
 Plug 'plytophogy/vim-virtualenv', { 'for' :['python', 'vim-plug'] }
 Plug 'tweekmonster/braceless.vim', { 'for' :['python', 'vim-plug'] }
-" Plug 'petobens/poet-v'
+Plug 'petobens/poet-v'
 
 " Flutter Flutter
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'f-person/pubspec-assist-nvim', { 'for' : ['pubspec.yaml'] }
 Plug 'nvim-lua/plenary.nvim'
 Plug 'akinsho/flutter-tools.nvim'
-
 
 " Markdown
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn install'}
@@ -511,7 +508,7 @@ Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
 Plug 'easymotion/vim-easymotion'
 Plug 'Konfekt/FastFold'
 Plug 'junegunn/vim-peekaboo'
-" Plug 'wellle/context.vim'
+Plug 'wellle/context.vim'
 Plug 'svermeulen/vim-subversive'
 Plug 'theniceboy/argtextobj.vim'
 Plug 'rhysd/clever-f.vim'
@@ -520,27 +517,26 @@ Plug 'theniceboy/pair-maker.vim'
 Plug 'theniceboy/vim-move'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'lukas-reineke/indent-blankline.nvim'
-" For general writing
+"" For general writing
 Plug 'junegunn/goyo.vim'
 Plug 'reedes/vim-wordy'
 Plug 'ron89/thesaurus_query.vim'
 Plug 'voldikss/vim-translator'
-" Bookmarks
+"" Bookmarks
 Plug 'MattesGroeger/vim-bookmarks'
 
-" Find & Replace
+"" Find & Replace
 Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
 
-" Documentation
+"" Documentation
 Plug 'KabbAmine/zeavim.vim' " <LEADER>z to find doc
 
-ln -s ~/.tmux/.tmux.conf ~/.tmux.conf" Mini Vim-APP
 Plug 'mhinz/vim-startify'
 Plug 'skywind3000/asynctasks.vim'
 Plug 'skywind3000/asyncrun.vim'
 
 
-"fancy notification
+" fancy notification
 Plug 'rcarriga/nvim-notify'
 
 " Other visual enhancement
@@ -554,7 +550,7 @@ Plug 'makerj/vim-pdf'
 Plug 'xolox/vim-session'
 Plug 'xolox/vim-misc' " vim-session dep
 
-"gruvbox color scheme
+" gruvbox color scheme
 Plug 'lifepillar/vim-colortemplate'
 Plug 'rktjmp/lush.nvim'
 Plug 'svitax/fennec-gruvbox.nvim'
@@ -562,23 +558,23 @@ Plug 'zzLinus/gruvbox'
 Plug 'lifepillar/vim-gruvbox8'
 Plug 'sainnhe/gruvbox-material'
 Plug 'eddyekofo94/gruvbox-flat.nvim'
-
-"Dependencies
+"
+" Dependencies
  Plug 'MarcWeber/vim-addon-mw-utils'
  Plug 'kana/vim-textobj-user'
  Plug 'roxma/nvim-yarp'
-
-"NERDtree
+"
+" NERDtree
 Plug 'preservim/nerdtree',{'on': 'NERDTreeToggle'}
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-
-"vim-devicons
+"
+" vim-devicons
 Plug 'ryanoasis/vim-devicons'
 
-"neon color theme
-Plug 'rafamadriz/neon'
-"vim-native lsp
-"
+" neon color theme
+ Plug 'rafamadriz/neon'
+
+" vim-native lsp
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -597,36 +593,35 @@ Plug 'onsails/lspkind-nvim'
 " "outline
 Plug 'simrat39/symbols-outline.nvim'
 
-"PlatformIO
+" PlatformIO
 Plug 'coddingtonbear/neomake-platformio'
 Plug 'neomake/neomake'
 
-"highlight yank
+" highlight yank
 Plug 'machakann/vim-highlightedyank'
 
-"prettier buffer line
-" Plug 'akinsho/bufferline.nvim'
+" prettier buffer line
+Plug 'akinsho/bufferline.nvim'
 
-"
-"Tabline
-"
+
+" Tabline
+
 Plug 'seblj/nvim-tabline'
-
-"nnn file manager
+"
+" nnn file manager
 Plug 'luukvbaal/nnn.nvim'
 Plug 'rbgrouleff/bclose.vim'
-
-"code runner
+"
+" code runner
 Plug 'CRAG666/code_runner.nvim'
 
-"shader language glsl
+" shader language glsl
 Plug 'tikhomirov/vim-glsl'
 
-"ssh
+" ssh
 Plug 'DanielWeidinger/nvim-sshfs'
 
-"display assembly for the current buffer
-
+" display assembly for the current buffer
 Plug 'p00f/godbolt.nvim'
 
 " **THE org mode**
@@ -673,7 +668,7 @@ set termguicolors
 set pumblend=20
 hi PmenuSel blend=0
 hi Normal guibg=#000000
-
+"
 " colorscheme gruvbox-material
 
 " colorscheme gruvbox-flat
