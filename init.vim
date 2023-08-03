@@ -402,7 +402,7 @@ require("lazy").setup(
 		"neovim/nvim-lspconfig",
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-buffer",
-		"glepnir/lspsaga.nvim",
+		"nvimdev/lspsaga.nvim",
 		"simrat39/rust-tools.nvim",
 		"Maan2003/lsp_lines.nvim",
 		"hrsh7th/nvim-cmp",
@@ -421,7 +421,7 @@ require("lazy").setup(
 		{"Yggdroot/LeaderF", build = "./install.sh"},
 		"nvim-telescope/telescope.nvim",
 		-- debug
-		{"puremourning/vimspector", build = "./install_gadget.py --enable-c --enable-python --enable-go"},
+		-- {"puremourning/vimspector", build = "./install_gadget.py --enable-c --enable-python --enable-go"},
 		"mfussenegger/nvim-dap",
 		"rcarriga/nvim-dap-ui",
 		"leoluz/nvim-dap-go",
@@ -533,11 +533,10 @@ require("lazy").setup(
 		-- For ultisnips user.
 		"quangnguyen30192/cmp-nvim-ultisnips",
 		"onsails/lspkind-nvim",
+		"norcalli/nvim-colorizer.lua",
 		-- outline
 		"simrat39/symbols-outline.nvim",
 		-- PlatformIO
-		"coddingtonbear/neomake-platformio",
-		"neomake/neomake",
 		-- highlight yank
 		"machakann/vim-highlightedyank",
 		-- prettier buffer line
@@ -563,8 +562,7 @@ require("lazy").setup(
 EOF
 set re=0
 
-let g:python3_host_prog = '/usr/bin/python3'
-let g:python_host_prog = '/usr/bin/python2'
+let g:python3_host_prog = '/sbin/python3'
 
 " experimental
 set lazyredraw
@@ -888,7 +886,7 @@ nnoremap <silent><leader>gb :GoBuild<CR>
 " ===
 augroup autoformat_settings
 	" autocmd FileType bzl AutoFormatBuffer buildifier
-	autocmd FileType c,cpp,proto,arduino AutoFormatBuffer clang-format
+	" autocmd FileType c,cpp,proto,arduino AutoFormatBuffer clang-format
 	" autocmd FileType dart AutoFormatBuffer dartfmt
 	" autocmd FileType go AutoFormatBuffer gofmt
 	" autocmd FileType gn AutoFormatBuffer gn
@@ -1194,21 +1192,9 @@ nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>
 nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>
 nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 
-"auto format
-autocmd BufWritePre *.js lua vim.lsp.buf.formatting_sync(nil, 100)
-autocmd BufWritePre *.jsx lua vim.lsp.buf.formatting_sync(nil, 100)
-autocmd BufWritePre *.cs lua vim.lsp.buf.formatting_sync(nil, 100)
-autocmd BufWritePre *.gd lua vim.lsp.buf.formatting_sync(nil, 100)
-autocmd BufWritePre *.lua lua vim.lsp.buf.formatting_sync(nil, 100)
-autocmd BufWritePre *.css lua vim.lsp.buf.formatting_sync(nil, 100)
-autocmd BufWritePre *.rs lua vim.lsp.buf.format(nil, 100)
-autocmd BufWritePre *.cpp lua vim.lsp.buf.format(nil, 100)
-
-
 "
 " "nvim cmp settings
 "
-
 
 set completeopt=menu,menuone,noselect
 
