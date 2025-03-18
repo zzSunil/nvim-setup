@@ -1,11 +1,28 @@
 require('code_runner').setup {
-	mode = "toggle",
+	mode = "float",
 	focus = true,
 	startinsert = false,
 	term = {
 		position = "bot",
 		size = 20,
 	},
+	float = {
+				close_key = "<ESC>",
+				-- Window border (see ':h nvim_open_win')
+				border = "rounded",
+				-- Num from `0 - 1` for measurements
+				height = 0.8,
+				width = 0.8,
+				x = 0.5,
+				y = 0.5,
+				
+				-- Highlight group for floating window/border (see ':h winhl')
+				border_hl = "FloatBorder",
+				float_hl = "Normal",
+				
+				-- Transparency (see ':h winblend')
+				blend = 0,
+		},
 	project = {
 		["~/deno/example"] = {
 			name = "ExapleDeno",
@@ -13,66 +30,95 @@ require('code_runner').setup {
 			file_name = "http/main.ts",
 			command = "deno run --allow-net"
 		},
-		["~/Dev/CPP/bgfx-things?"] = {
+		["/home/zzlinus/dev/oscomp/2024/qemu_instrument"] = {
+			name = "qemu",
+			description = "qemu",
+			command = "make -C target/loongarch"
+		},
+		["/home/zzlinus/dev/cpp/autoaim/OpenRM2024"] = {
+			name = "qemu",
+			description = "qemu",
+			command = "cd build && cmake .. && make -j15"
+		},
+		["/home/zzlinus/dev/cpp/autoaim/TJURM2024"] = {
+			name = "qemu",
+			description = "qemu",
+			command = "cd build && cmake .. && make -j15"
+		},
+		["/home/zzlinus/dev/inter/kernel/src/trusted_kernel"] = {
+			name = "qemu",
+			description = "qemu",
+			command = "cargo build"
+		},
+		["/home/zzlinus/dev/inter/capability"] = {
+			name = "cap",
+			description = "cap",
+			command = "cargo run"
+		},
+		["/home/zzlinus/dev/inter/cap"] = {
+			name = "cap",
+			description = "cap",
+			command = "cargo run"
+		},
+		["/home/zzlinus/dev/oscomp/2024/qemu_instrument/target/loongarch"] = {
+			name = "qemu",
+			description = "qemu",
+			command = "make -C target/loongarch"
+		},
+		["/home/zzlinus/dev/gkd/rm2023-infantry"] = {
 			name = "bgfx project",
 			description = "bgfx cpp dev",
-			command = "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j 10 && ./bgfx_test"
+			command = "./flash.sh"
 		},
-		["~/Dev/CPP/WhereToGo"] = {
-			name = "Where to Go",
-			description = "This way?? may be that one is better??",
-			-- cmake --fresh .. -DPLATFORM=STREQUAL -DCMAKE_BUILD_TYPE=Debug
-			command = "cd build && cmake .. -DPLATFORM=Desktop -DCMAKE_BUILD_TYPE=Debug && make -j10 && cd .. && ./build/WhereToGo"
-		},
-		["~/Dev/CPP/raylib_game"] = {
-			name = "Raylib-someshing",
-			description = "...",
-			command = "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make -j 10 && ./game"
-		},
-		["~/Dev/CPP/OpenGLSomething/chap2"] = {
-			name = "OpenGL Chap2",
-			description = "Project with make file",
-			command = "cd build && cmake .. && make && cd .. && ./build/main"
-		},
-		["~/Dev/School/dataStructer/Assign1"] = {
-			name = "datastructer lab",
-			description = "Project with make file",
-			command = "cc -g main.c && ./a.out"
-		},
-		["/home/zzlinus/Dev/CPP/bgfx-things?"] = {
-			name = "datastructer lab",
-			description = "Project with make file",
-			command = "cd build && cmake .. && make && ./bgfx_test"
-		},
-		["~/Dev/CPP/OpenGLSomething/chap3"] = {
-			name = "OpenGL Chap3",
-			description = "Project with make file",
-			command = "cd build && cmake -DCMAKE_BUILD_TYPE=Debug .. && make && cd .. && ./build/main"
-		},
-		["/home/zzlinus/Dev/C/ysyx/ysyx-workbench/npc-riscv64"] = {
-			name = "ysyx npc-riscv64",
-			description = "ysyx B part",
-			command = "make sim"
-		},
-		["/home/zzlinus/Dev/C/ysyx/ysyx-workbench/npc"] = {
-			name = "ysyx npc",
-			description = "ysyx nku lab",
-			command = "make sim"
-		},
-		["/home/zzlinus/Dev/C/ysyx/ysyx-workbench/nemu"] = {
-			name = "ysyx nemu",
-			description = "ysyx nku lab",
-			command = "make run"
-		},
-		["/home/zzlinus/Dev/Python/ueberzug"] = {
+		["/home/zzlinus/dev/gkd/rm2023-infantry_myver"] = {
 			name = "ueberzug nested tmux bug fixing",
 			description = "",
-			command = "./setup.sh build && chmod +x build/lib.linux-x86_64-cpython-310/ueberzug/__main__.py"
+			command = "./flash.sh"
 		},
 		["/home/zzlinus/Dev/School/CPP/COVID"] = {
 			name = "covid",
 			description = "covid",
 			command = "cd build && cmake .. && make && ./covid"
+		},
+		["/home/zzlinus/dev/rust/kernel"] = {
+			name = "inter",
+			description = "inter",
+			command = "make rust_lib"
+		},
+		["/home/zzlinus/dev/go/can_tui"] = {
+			name = "can",
+			description = "can tool",
+			command = "onefetch && go build && ./can_tui"
+		},
+		["/home/zzlinus/dev/cpp/wjk"] = {
+			name = "wjk",
+			description = "ruiji go",
+			command = "cd build && make -j && ./wjk"
+		},
+		["/home/zzlinus/dev/go/ruiji_go"] = {
+			name = "ruiji",
+			description = "ruiji go",
+			command = "onefetch && go run main.go"
+		},
+		["/home/zzlinus/dev/cpp/NeoRMControl_OneForALL"] = {
+			name = "rmcontrol",
+			description = "rmcontrol",
+			command = "make mini-pc"
+		},
+		["/home/zzlinus/dev/cpp/rm_neobubing"] = {
+			name = "neo bubing",
+			description = "neo bubing",
+			command = "make clean && make -j && make run"
+		},
+		["/home/zzlinus/dev/cpp/rm_neobubing_controller"] = {
+			name = "neo bubing ctrl",
+			description = "neo bubing",
+			command = "make -j8 && make run"
+		},
+		["/home/zzlinus/dev/cpp/hidraylib"] = {
+			name = "covid",
+			description = "covid",
+			command = "make all"
 		},
 		["~/Dev/CPP/OpenGLSomething/chap4"] = {
 			name = "OpenGL Chap4",

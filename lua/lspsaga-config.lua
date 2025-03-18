@@ -111,10 +111,6 @@ keymap("n", "<leader>sc", "<cmd>Lspsaga show_cursor_diagnostics<CR>")
 -- Show buffer diagnostics
 keymap("n", "<leader>sb", "<cmd>Lspsaga show_buf_diagnostics<CR>")
 
--- Diagnostic jump
--- You can use <C-o> to jump back to your previous location
-keymap("n", "[[", "<cmd>Lspsaga diagnostic_jump_prev<CR>")
-keymap("n", "]]", "<cmd>Lspsaga diagnostic_jump_next<CR>")
 
 -- Diagnostic jump with filters such as only jumping to an error
 keymap("n", "[E", function()

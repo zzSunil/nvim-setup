@@ -8,15 +8,19 @@ dap.configurations.cpp = {
 			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
 		end,
 		cwd = '${workspaceFolder}',
+		args = function()
+				local args_string = vim.fn.input("Arguments: ")
+				return vim.split(args_string, " ")
+    end,
 		stopAtEntry = true,
 	},
 	{
-		name = 'Attach to gdbserver :1234',
+		name = 'Attach to gdbserver :3333',
 		type = 'cppdbg',
 		request = 'launch',
 		MIMode = 'gdb',
-		miDebuggerServerAddress = 'localhost:1234',
-		miDebuggerPath = '/usr/bin/gdb',
+		miDebuggerServerAddress = 'localhost:3333',
+		miDebuggerPath = '/usr/bin/arm-none-eabi-gdb',
 		cwd = '${workspaceFolder}',
 		program = function()
 			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
@@ -29,9 +33,26 @@ dap.configurations.c = dap.configurations.cpp
 dap.adapters.cppdbg = {
 	id = 'cppdbg',
 	type = 'executable',
-	command = '/home/zzlinus/Downloads/vscode-cpptools/1.11.5/root/extension/debugAdapters/bin/OpenDebugAD7',
+	command = '/home/zzlinus/Downloads/vscode-cpptools/1.17.5/root/extension/debugAdapters/bin/OpenDebugAD7',
 }
 
+dap.adapters.go = {
+  type = 'executable';
+  command = 'node';
+  args = {'/home/zzlinus/.local/share/vscode-go/dist/debugAdapter.js'};
+}
+dap.configurations.go = {
+  {
+    type = 'go';
+    name = 'Debug';
+    request = 'launch';
+    showLog = false;
+		program = function()
+			return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+		end,
+    dlvToolPath = vim.fn.exepath('dlv')  -- Adjust to where delve is installed
+  },
+}
 dap.configurations.python = {
 	{
 		-- The first three options are required by nvim-dap

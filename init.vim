@@ -58,7 +58,7 @@ set relativenumber
 " set cursorline
 " set hidden
 set autochdir
-set shiftwidth=4
+set shiftwidth=2
 set noexpandtab
 set tabstop=2
 set softtabstop=2
@@ -76,7 +76,7 @@ set foldmethod=indent
 set foldlevel=99
 set foldenable
 set formatoptions-=tc
-set clipboard=unnamedplus
+set clipboard+=unnamedplus
 set splitright
 set splitbelow
 set noshowmode
@@ -358,7 +358,6 @@ require("lazy").setup(
 	{
 		-- color theme
 		"jpo/vim-railscasts-theme",
-		"lifepillar/vim-gruvbox8",
 		"fcpg/vim-fahrenheit",
 		"cange/vim-theme-bronkow",
 		"joshdick/onedark.vim",
@@ -372,25 +371,7 @@ require("lazy").setup(
 		"vim-scripts/redstring.vim",
 		"glepnir/zephyr-nvim",
 		"habamax/vim-godot",
-		{
-			"nvim-treesitter/nvim-treesitter",
-			config = function()
-				require'nvim-treesitter.configs'.setup({
-					rainbow = {
-						enable = true,
-						extended_mode = true,
-						max_file_lines = nil, -- Do not enable for files with more than n lines, int
-					-- colors = {}, -- table of hex strings
-					-- termcolors = {} -- table of colour name strings
-					},
-					highlight = {
-						enable = true,              -- false will disable the whole extension
-						additional_vim_regex_highlighting = true,
-						disable = {},  -- list of language that will be disabled
-					},
-				})
-			end,
-		},
+		"nvim-treesitter/nvim-treesitter",
 		{"nvim-treesitter/playground"},
 		"nvim-lua/plenary.nvim",
 		"folke/todo-comments.nvim",
@@ -401,27 +382,65 @@ require("lazy").setup(
 		"ray-x/lsp_signature.nvim",
 		"neovim/nvim-lspconfig",
 		"hrsh7th/cmp-nvim-lsp",
+		"eandrju/cellular-automaton.nvim",
 		"hrsh7th/cmp-buffer",
 		"nvimdev/lspsaga.nvim",
 		"simrat39/rust-tools.nvim",
 		"Maan2003/lsp_lines.nvim",
+		{
+			"folke/trouble.nvim",
+			opts = {}, -- for default options, refer to the configuration section for custom setup.
+			cmd = "Trouble",
+			keys = {
+				{
+					"<leader>xx",
+					"<cmd>Trouble diagnostics toggle<cr>",
+					desc = "Diagnostics (Trouble)",
+				},
+				{
+					"<leader>xX",
+					"<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+					desc = "Buffer Diagnostics (Trouble)",
+				},
+				{
+					"<leader>cs",
+					"<cmd>Trouble symbols toggle focus=false<cr>",
+					desc = "Symbols (Trouble)",
+				},
+				{
+					"<leader>cl",
+					"<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+					desc = "LSP Definitions / references / ... (Trouble)",
+				},
+				{
+					"<leader>xL",
+					"<cmd>Trouble loclist toggle<cr>",
+					desc = "Location List (Trouble)",
+				},
+				{
+					"<leader>xQ",
+					"<cmd>Trouble qflist toggle<cr>",
+					desc = "Quickfix List (Trouble)",
+				},
+			},
+		},
 		"hrsh7th/nvim-cmp",
-		"folke/trouble.nvim",
 		"kyazdani42/nvim-web-devicons",
 		"p00f/clangd_extensions.nvim",
 		-- little funny tools
-		"rendon/vim-rooter",
+		"airblade/vim-rooter",
 		"dhruvasagar/vim-table-mode",
-		{"RRethy/vim-hexokinase",build = "make hexokinase" },
+		-- {"RRethy/vim-hexokinase",build = "make hexokinase" },
 		"kyazdani42/nvim-web-devicons",
 		"ryanoasis/vim-devicons",
 		"kyazdani42/nvim-tree.lua",
 		"junegunn/fzf.vim",
 		"junegunn/fzf",
-		{"Yggdroot/LeaderF", build = "./install.sh"},
+		--{"Yggdroot/LeaderF", build = "./install.sh"},
 		"nvim-telescope/telescope.nvim",
 		-- debug
 		-- {"puremourning/vimspector", build = "./install_gadget.py --enable-c --enable-python --enable-go"},
+		"nvim-neotest/nvim-nio",
 		"mfussenegger/nvim-dap",
 		"rcarriga/nvim-dap-ui",
 		"leoluz/nvim-dap-go",
@@ -469,7 +488,6 @@ require("lazy").setup(
     	{"Vimjas/vim-python-pep8-indent",event = "VeryLazy"},
     	{"numirias/semshi",cmd = "UpdateRemotePlugins"},
     	{"vim-scripts/indentpython.vim",event = "VeryLazy"},
-    	{"plytophogy/vim-virtualenv",event = "VeryLazy"},
     	{"tweekmonster/braceless.vim",event = "VeryLazy"},
 		-- flutter
 		{"dart-lang/dart-vim-plugin",event = "VeryLazy" },
@@ -495,6 +513,10 @@ require("lazy").setup(
 		"junegunn/vim-peekaboo",
 		"svermeulen/vim-subversive",
 		"theniceboy/argtextobj.vim",
+		{
+			'stevearc/conform.nvim',
+			opts = {},
+		},
 		"rhysd/clever-f.vim",
 		"AndrewRadev/splitjoin.vim",
 		"theniceboy/pair-maker.vim",
@@ -513,7 +535,7 @@ require("lazy").setup(
 		-- fancy notification
 		"rcarriga/nvim-notify",
 		-- gruvbox color scheme
-		"zzLinus/gruvbox",
+		"ellisonleao/gruvbox.nvim",
 		"lifepillar/vim-gruvbox8",
 		-- Other visual enhancement
 		"p00f/nvim-ts-rainbow",
@@ -527,11 +549,7 @@ require("lazy").setup(
 		"MarcWeber/vim-addon-mw-utils",
 		"kana/vim-textobj-user",
 		"roxma/nvim-yarp",
-		-- NERDtree
-		"preservim/nerdtree",
-		"tiagofumo/vim-nerdtree-syntax-highlight",
 		-- For ultisnips user.
-		"quangnguyen30192/cmp-nvim-ultisnips",
 		"onsails/lspkind-nvim",
 		"norcalli/nvim-colorizer.lua",
 		-- outline
@@ -543,8 +561,6 @@ require("lazy").setup(
 		"akinsho/bufferline.nvim",
 		-- Tabline
 		"seblj/nvim-tabline",
-		-- nnn file manager
-		"luukvbaal/nnn.nvim",
 		"rbgrouleff/bclose.vim",
 		-- code runner
 		"CRAG666/code_runner.nvim",
@@ -556,7 +572,35 @@ require("lazy").setup(
 		-- display assembly for the current buffer
 		"p00f/godbolt.nvim",
 		-- cmake intergration
+		"prichrd/netrw.nvim",
+		"ForsakenNGS/netdeploy.nvim",
 		"Civitasv/cmake-tools.nvim",
+		{
+				"kawre/leetcode.nvim",
+				build = ":TSUpdate html",
+				dependencies = {
+						"nvim-telescope/telescope.nvim",
+						"nvim-lua/plenary.nvim", -- telescope 所需
+						"MunifTanjim/nui.nvim",
+
+						-- 可选
+						"nvim-treesitter/nvim-treesitter",
+						"rcarriga/nvim-notify",
+						"nvim-tree/nvim-web-devicons",
+				},
+				opts = {
+						-- 配置放在这里
+						cn = {
+								enabled = true,
+						},
+
+						description = {
+								position = "left", ---@type lc.position
+								width = "40%", ---@type lc.size
+								show_stats = true, ---@type boolean
+						},
+				},
+		},
 	}
 )
 EOF
@@ -565,7 +609,7 @@ set re=0
 let g:python3_host_prog = '/sbin/python3'
 
 " experimental
-set lazyredraw
+"set lazyredraw
 "set regexpengine=1
 
 " ===
@@ -588,7 +632,15 @@ let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " hi! Normal ctermbg=NONE guibg=NONE
 
 " zephyr
-" colorscheme zephyr
+"colorscheme zephyr
+
+"lua << EOF
+"require("gruvbox").setup({
+"    palette_overrides = {
+"        dark1 = "#050007",
+"    }
+"})
+"EOF
 
 colorscheme gruvbox8
 set background=dark
@@ -1127,10 +1179,7 @@ endif
 set encoding=UTF-8
 
 "Can be enabled or disabled
-let g:webdevicons_enable_nerdtree = 1
 
-"whether or not to show the nerdtree brackets around flags
-let g:webdevicons_conceal_nerdtree_brackets = 1
 
 "adding to vim-airline's tabline
 let g:webdevicons_enable_airline_tabline = 1
@@ -1170,15 +1219,6 @@ if has_machine_specific_file == 0
 	exec "e ~/.config/nvim/_machine_specific.vim"
 endif
 
-"===
-"===NERDtree
-"===
-nnoremap <leader> N:NERDTreeFocus<CR>
-nnoremap tt :NERDTreeToggle<CR>
-
-let g:NERDTreeMapJumpNextSibling = 'e'
-let g:NERDTreeMapJumpPrevSibling = 'u'
-let g:NERDTreeMapOpenExpl = 'oe'
 
 
 :let g:session_autoload = 'no'
@@ -1357,6 +1397,7 @@ lua require'code-runner'
 
 lua require'nvim-dap'
 
+lua require'tree-sitter'
 
 "lsp trouble
 
@@ -1500,66 +1541,6 @@ lua << EOF
   require("flutter-tools").setup{} -- use defaults
 EOF
 
-"trouble.nvim
-
-lua << EOF
-  require("trouble").setup {
-{
-    position = "bottom", -- position of the list can be: bottom, top, left, right
-    height = 10, -- height of the trouble list when position is top or bottom
-    width = 50, -- width of the list when position is left or right
-    icons = true, -- use devicons for filenames
-    mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
-    fold_open = "", -- icon used for open folds
-    fold_closed = "", -- icon used for closed folds
-    group = true, -- group results by file
-    padding = true, -- add an extra new line on top of the list
-    action_keys = { -- key mappings for actions in the trouble list
-        -- map to {} to remove a mapping, for example:
-        -- close = {},
-        close = "q", -- close the list
-        cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
-        refresh = "r", -- manually refres
-        jump = {"<cr>", "<tab>"}, -- jump to the diagnostic or open / close folds
-        open_split = { "<c-x>" }, -- open buffer in new split
-        open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
-        open_tab = { "<c-t>" }, -- open buffer in new tab
-        jump_close = {"o"}, -- jump to the diagnostic and close the list
-        toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-        toggle_preview = "P", -- toggle auto_preview
-        hover = "K", -- opens a small popup with the full multiline message
-        preview = "p", -- preview the diagnostic location
-        close_folds = {"zM", "zm"}, -- close all folds
-        open_folds = {"zR", "zr"}, -- open all folds
-        toggle_fold = {"zA", "za"}, -- toggle fold of current file
-        previous = "k", -- preview item
-        next = "j" -- next item
-    },
-    indent_lines = true, -- add an indent guide below the fold icons
-    auto_open = false, -- automatically open the list when you have diagnostics
-    auto_close = false, -- automatically close the list when you have no diagnostics
-    auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
-    auto_fold = false, -- automatically fold a file trouble list at creation
-    auto_jump = {"lsp_definitions"}, -- for the given modes, automatically jump if there is only a single result
-    signs = {
-        -- icons / text used for a diagnostic
-        error = "",
-        warning = "",
-        hint = "",
-        information = "",
-        other = "﫠"
-    },
-    use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
-}
-}
-EOF
-" Vim Script
-nnoremap <leader>xx <cmd>TroubleToggle<cr>
-nnoremap <leader>xw <cmd>TroubleToggle workspace_diagnostics<cr>
-nnoremap <leader>xd <cmd>TroubleToggle document_diagnostics<cr>
-nnoremap <leader>xq <cmd>TroubleToggle quickfix<cr>
-nnoremap <leader>xl <cmd>TroubleToggle loclist<cr>
-nnoremap gf <cmd>TroubleToggle lsp_references<cr>
 
 
 "paltformIO
@@ -1662,7 +1643,6 @@ lua require'lspsaga-config'
 
 "vim translator
 nmap <silent> <Leader>w <Plug>TranslateW
-let g:translator_proxy_url = 'socks5://127.0.0.1:7890'
 
 "
 "neovide
@@ -1738,24 +1718,41 @@ EOF
 "
 "highlight duration
 "
-let g:highlightedyank_highlight_duration = 230
-let g:indent_blankline_use_treesitter = v:true
-let g:indent_blankline_filetype_exclude = ['startify']
-let g:indent_blankline_indent_level = 5
-let g:indent_blankline_space_char_blankline = ' '
-highlight IndentBlanklineContextChar guifg=#cc241d gui=nocombine
+"let g:highlightedyank_highlight_duration = 230
+"let g:indent_blankline_use_treesitter = v:true
+"let g:indent_blankline_filetype_exclude = ['startify']
+"let g:indent_blankline_indent_level = 5
+"let g:indent_blankline_space_char_blankline = ' '
+"highlight IndentBlanklineContextChar guifg=#cc241d gui=nocombine
 
 lua << EOF
-vim.opt.termguicolors = true
-
-vim.opt.list = true
-vim.opt.listchars:append("eol:↴")
-
-require("indent_blankline").setup {
-    space_char_blankline = " ",
-    show_current_context = true,
-    show_current_context_start = true,
+local highlight = {
+    "RainbowRed",
+    "RainbowYellow",
+    "RainbowBlue",
+    "RainbowOrange",
+    "RainbowGreen",
+    "RainbowViolet",
+    "RainbowCyan",
 }
+local hooks = require "ibl.hooks"
+-- create the highlight groups in the highlight setup hook, so they are reset
+-- every time the colorscheme changes
+hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+end)
+
+vim.g.rainbow_delimiters = { highlight = highlight }
+require("ibl").setup { scope = { highlight = highlight } }
+
+hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
+
 EOF
 
 
@@ -1799,9 +1796,10 @@ nnoremap <LEADER>to :TodoTelescope<CR>
 
 "vim rooter
 let g:rooter_disable_map = 1
-let g:rooter_patterns = ['CMakeLists.txt','build/','.git/','Makefile']
+let g:rooter_patterns = ['.git/','Cargo.toml']
 let g:rooter_change_directory_for_non_project_files = 1
 let g:rooter_silent_chdir = 0
+
 
 " Glow Makdown preview
 "
@@ -1849,21 +1847,6 @@ lua << EOF
 	require('gitsigns').setup()
 EOF
 
-" nnn file manager
-lua << EOF
-require("nnn").setup({
-	picker = {
-		cmd = "nnn -ca -Pp",
-		-- cmd = "tmux new-session nnn -a -Pp",
-		style = { border = "rounded" },
-		session = "shared",
-	},
-	replace_netrw = "picker",
-	auto_close = true,
-	offset = true,
-})
-EOF
-
 " commenter
 let g:NERDCreateDefaultMappings = 1
 
@@ -1892,3 +1875,51 @@ let g:NERDTrimTrailingWhitespace = 1
 let g:NERDToggleCheckAllLines = 0
 
 
+" leet code
+"
+nnoremap <leader>lt :Leet <CR>
+nnoremap <leader>lr :Leet run<CR>
+nnoremap <leader>ls :Leet submit<CR>
+nnoremap <leader>li :Leet info<CR>
+nnoremap <leader>ld :Leet daily<CR>
+nnoremap <leader>fm :FormatCode<CR>
+nnoremap <leader>du :NetDeployUpload<CR>
+autocmd BufEnter *.PH,*.H	:setlocal filetype=cpp
+
+nnoremap <leader>rr :CellularAutomaton make_it_rain<CR>
+nnoremap <leader>rl :CellularAutomaton game_of_life<CR>
+
+nnoremap <silent>)) :Lspsaga diagnostic_jump_next<CR>
+nnoremap <silent>(( :Lspsaga diagnostic_jump_prev<CR>
+
+hi VariableText guifg=#83a598 guibg=NONE guisp=NONE gui=NONE
+hi VariableText guifg=#83a598 guibg=NONE guisp=NONE gui=NONE
+hi VariableText2 guifg=#ebdbb2 guibg=NONE guisp=NONE gui=NONE
+hi DiagnosticError guifg=#cc241d guibg=NONE guisp=NONE gui=NONE
+hi DiagnosticWarn guifg=#fabd2f guibg=NONE guisp=NONE gui=NONE
+
+lua << EOF
+vim.api.nvim_set_hl(0, "@variable", { link = "VariableText" })
+vim.api.nvim_set_hl(0, "@lsp.type.variable", { link = "VariableText" })
+vim.api.nvim_set_hl(0, "@lsp.type.parameter", { link = "VariableText" })
+EOF
+
+lua << EOF
+require("conform").setup({
+  formatters_by_ft = {
+    lua = { "stylua" },
+		cpp = { "clang-format" },
+    -- Conform will run multiple formatters sequentially
+    python = { "isort", "black" },
+    -- You can customize some of the format options for the filetype (:help conform.format)
+    rust = { "rustfmt", lsp_format = "fallback" },
+    -- Conform will run the first available formatter
+    javascript = { "prettierd", "prettier", stop_after_first = true },
+  },
+	format_on_save = {
+    -- These options will be passed to conform.format()
+    timeout_ms = 500,
+    lsp_format = "fallback",
+  },
+})
+EOF
