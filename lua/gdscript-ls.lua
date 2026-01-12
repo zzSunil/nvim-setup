@@ -1,4 +1,4 @@
-require 'lspconfig'.gdscript.setup {
+vim.lsp.config('gdscript', {
   on_attach = function (client)
     local _notify = client.notify
 	flags = {
@@ -12,4 +12,5 @@ require 'lspconfig'.gdscript.setup {
       _notify(method, params)
     end
   end
-}
+})
+vim.lsp.enable('gdscript')

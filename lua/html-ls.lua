@@ -9,7 +9,4 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
   }
 }
 
-require'lspconfig'.html.setup {
-  capabilities = capabilities,
-}
-
+vim.lsp.enable('html')

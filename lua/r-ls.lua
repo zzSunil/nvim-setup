@@ -1,1 +1,1 @@
-require'lspconfig'.r_language_server.setup{}
+vim.lsp.enable('r_language_server')

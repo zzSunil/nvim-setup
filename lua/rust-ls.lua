@@ -1,8 +1,11 @@
-local rt = require("rust-tools")
-
-rt.setup({
-	server = {
-		on_attach = function(_, bufnr)
-		end,
-	},
+vim.lsp.config('rust_analyzer', {
+  settings = {
+    ['rust-analyzer'] = {
+      diagnostics = {
+        enable = false;
+      }
+    }
+  }
 })
+
+vim.lsp.enable('rust_analyzer')

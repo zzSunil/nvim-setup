@@ -1,1 +1,1 @@
-require 'lspconfig'.glslls.setup {}
+vim.lsp.enable('glslls')

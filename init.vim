@@ -1,8 +1,10 @@
-"  _______| |   (_)_ __  _   _ ___
+"          _     _                 
+"  _______| |   (_)_ __  _   _ ___ 
 " |_  /_  / |   | | '_ \| | | / __|
-
+"  / / / /| |___| | | | | |_| \__ \
 " /___/___|_____|_|_| |_|\__,_|___/
 "
+
 filetype on
 filetype indent on
 filetype plugin on
@@ -29,8 +31,8 @@ if empty(glob('~/.config/nvim/_machine_specific.vim'))
 	let has_machine_specific_file = 0
 	silent! exec "!cp ~/.config/nvim/default_configs/_machine_specific_default.vim ~/.config/nvim/_machine_specific.vim"
 endif
-source /home/zzlinus/.config/nvim/_machine_specific.vim
-" source /home/zzlinus/.config/nvim/colors/agnostic.vim
+source /home/zz/.config/nvim/_machine_specific.vim
+" source /home/zz/.config/nvim/colors/agnostic.vim
 
 "===
 "=== Cursor setings
@@ -206,7 +208,7 @@ noremap B 5b
 " set h (same as n, cursor left) to 'end of word'
 noremap h e
 
-source /home/zzlinus/.config/nvim/cursor.vim
+source /home/zz/.config/nvim/cursor.vim
 
 " ===
 " === Insert Mode Cursor Movement
@@ -290,9 +292,9 @@ noremap tmi :+tabmove<CR>
 " === Markdown Settings
 " ===
 " Snippets
-source /home/zzlinus/.config/nvim/md-snippets.vim
-" auto spell
-autocmd BufRead,BufNewFile *.md setlocal spell
+source /home/zz/.config/nvim/md-snippets.vim
+set nospell
+" autocmd BufRead,BufNewFile *.md setlocal spell
 
 
 " ===
@@ -383,6 +385,36 @@ require("lazy").setup(
 		"neovim/nvim-lspconfig",
 		"hrsh7th/cmp-nvim-lsp",
 		"eandrju/cellular-automaton.nvim",
+		{
+				"sphamba/smear-cursor.nvim",
+				opts = {
+						-- Smear cursor when switching buffers or windows.
+						smear_between_buffers = true,
+
+						-- Smear cursor when moving within line or to neighbor lines.
+						-- Use `min_horizontal_distance_smear` and `min_vertical_distance_smear` for finer control
+						smear_between_neighbor_lines = true,
+
+						-- Draw the smear in buffer space instead of screen space when scrolling
+						scroll_buffer_space = true,
+
+						-- Set to `true` if your font supports legacy computing symbols (block unicode symbols).
+						-- Smears will blend better on all backgrounds.
+						legacy_computing_symbols_support = false,
+
+						-- Smear cursor in insert mode.
+						-- See also `vertical_bar_cursor_insert_mode` and `distance_stop_animating_vertical_bar`.
+						smear_insert_mode = true,
+						stiffness = 0.9,                      -- 0.6      [0, 1]
+						trailing_stiffness = 0.6,             -- 0.45     [0, 1]
+						stiffness_insert_mode = 0.7,          -- 0.5      [0, 1]
+						trailing_stiffness_insert_mode = 0.7, -- 0.5      [0, 1]
+						damping = 0.95,                       -- 0.85     [0, 1]
+						damping_insert_mode = 0.95,           -- 0.9      [0, 1]
+						distance_stop_animating = 0.5,        -- 0.1      > 0
+						time_interval = 7, -- milliseconds
+				},
+		},
 		"hrsh7th/cmp-buffer",
 		"nvimdev/lspsaga.nvim",
 		"simrat39/rust-tools.nvim",
@@ -424,6 +456,50 @@ require("lazy").setup(
 				},
 			},
 		},
+		{
+			"coder/claudecode.nvim",
+			dependencies = { "folke/snacks.nvim" },
+			opts = {
+				terminal = {
+					provider = "snacks",
+					snacks_win_opts = {
+						start_insert = false,
+						auto_insert = false,
+						auto_close = true,
+					},
+				},
+			},
+			config = true,
+			keys = {
+				{ "<leader>a", nil, desc = "AI/Claude Code" },
+				{ "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+				{ "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
+				{ "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
+				{ "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+				{ "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+				{ "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+				{ "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+				{
+					"<leader>as",
+					"<cmd>ClaudeCodeTreeAdd<cr>",
+					desc = "Add file",
+					ft = { "NvimTree", "neo-tree", "oil", "minifiles", "netrw" },
+				},
+				-- Diff management
+				{ "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+				{ "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+			},
+		},
+		{
+			'MeanderingProgrammer/render-markdown.nvim',
+			dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
+			-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
+			-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+			---@module 'render-markdown'
+			---@type render.md.UserConfig
+			opts = {},
+		},
+		"andweeb/presence.nvim",
 		"hrsh7th/nvim-cmp",
 		"kyazdani42/nvim-web-devicons",
 		"p00f/clangd_extensions.nvim",
@@ -433,7 +509,13 @@ require("lazy").setup(
 		-- {"RRethy/vim-hexokinase",build = "make hexokinase" },
 		"kyazdani42/nvim-web-devicons",
 		"ryanoasis/vim-devicons",
-		"kyazdani42/nvim-tree.lua",
+		{
+			"A7Lavinraj/fyler.nvim",
+			dependencies = { "nvim-mini/mini.icons" },
+			branch = "stable",  -- Use stable branch for production
+			lazy = false, -- Necessary for `default_explorer` to work properly
+			opts = {}
+		},
 		"junegunn/fzf.vim",
 		"junegunn/fzf",
 		--{"Yggdroot/LeaderF", build = "./install.sh"},
@@ -444,7 +526,6 @@ require("lazy").setup(
 		"mfussenegger/nvim-dap",
 		"rcarriga/nvim-dap-ui",
 		"leoluz/nvim-dap-go",
-		"SirVer/ultisnips",
 		"theniceboy/vim-snippets",
 		-- git tools
 		"mbbill/undotree",
@@ -494,11 +575,9 @@ require("lazy").setup(
 		{"nvim-lua/plenary.nvim",event = "VeryLazy" },
 		{"akinsho/flutter-tools.nvim",event = "VeryLazy" },
 		-- markdown 
-		{"instant-markdown/vim-instant-markdown", build = "yarn install", event = "VeryLazy" },
 		{"mzlogin/vim-markdown-toc", event = "VeryLazy" },
 		{"dkarter/bullets.vim", event = "VeryLazy" },
 		{"ellisonleao/glow.nvim", event = "VeryLazy" },
-		{"iamcco/markdown-preview.nvim", build = "cd app && yarn install" , event = "VeryLazy" },
 		-- Editor Enhancement
 		"Raimondi/delimitMate",
 		"preservim/nerdcommenter",
@@ -518,6 +597,11 @@ require("lazy").setup(
 			opts = {},
 		},
 		"rhysd/clever-f.vim",
+		{
+			"pablopunk/todo.nvim",
+			config = true,
+			opts = { map = "<leader>td" } -- same as .setup({...})
+		},
 		"AndrewRadev/splitjoin.vim",
 		"theniceboy/pair-maker.vim",
 		"theniceboy/vim-move",
@@ -551,9 +635,8 @@ require("lazy").setup(
 		"roxma/nvim-yarp",
 		-- For ultisnips user.
 		"onsails/lspkind-nvim",
-		"norcalli/nvim-colorizer.lua",
 		-- outline
-		"simrat39/symbols-outline.nvim",
+		-- "simrat39/symbols-outline.nvim",
 		-- PlatformIO
 		-- highlight yank
 		"machakann/vim-highlightedyank",
@@ -574,7 +657,6 @@ require("lazy").setup(
 		-- cmake intergration
 		"prichrd/netrw.nvim",
 		"ForsakenNGS/netdeploy.nvim",
-		"Civitasv/cmake-tools.nvim",
 		{
 				"kawre/leetcode.nvim",
 				build = ":TSUpdate html",
@@ -847,21 +929,6 @@ let g:bullets_enabled_file_types = [
 " ===
 noremap <LEADER>gi :FzfGitignore<CR>
 
-
-" ===
-" === Ultisnips
-" ===
-" let g:tex_flavor = "latex"
- inoremap <c-n> <nop>
- let g:UltiSnipsJumpForwardTrigger="<c-[>"
- let g:UltiSnipsJumpBackwardTrigger="<c-}>"
- let g:UltiSnipsSnippetDirectories = [$HOME.'/.config/nvim/Ultisnips/', $HOME.'/.config/nvim/plugged/vim-snippets/UltiSnips/']
- silent! au BufEnter,BufRead,BufNewFile * silent! unmap <c-r>
- " Solve extreme insert-mode lag on macOS (by disabling autotrigger)
- augroup ultisnips_no_auto_expansion
-     au!
-     au VimEnter * au! UltiSnips_AutoTrigger
- augroup END
 
 
 
@@ -1223,7 +1290,6 @@ endif
 
 :let g:session_autoload = 'no'
 
-lua require'plug-colorizer'
 
 
 "LSP config
@@ -1292,18 +1358,6 @@ lua <<EOF
 		{ name = 'buffer' },
     }
   })
-
-	require'lspconfig'.jsonls.setup {
-	    commands = {
-	      Format = {
-	        function()
-	          vim.lsp.buf.range_formatting({},{0,0},{vim.fn.line("$"),0})
-	        end
-	      }
-	    }
-	}
-
-	require'lspconfig'.tsserver.setup{}
 
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
 	capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -1467,73 +1521,73 @@ EOF
 "
 set guifont=JetBrainsMono\ NF:h12
 
-" symbol outline
-lua << EOF
-require("symbols-outline").setup{
-{
-  highlight_hovered_item = true,
-  show_guides = true,
-  auto_preview = false,
-  position = 'right',
-  relative_width = true,
-  width = 25,
-  auto_close = false,
-  show_numbers = false,
-  show_relative_numbers = false,
-  show_symbol_details = true,
-  preview_bg_highlight = 'Pmenu',
-  autofold_depth = nil,
-  auto_unfold_hover = true,
-  fold_markers = { '', '' },
-  wrap = false,
-  keymaps = { -- These keymaps can be a string or a table for multiple keys
-    close = {"<Esc>", "q"},
-    goto_location = "<Cr>",
-    focus_location = "o",
-    hover_symbol = "<C-space>",
-    toggle_preview = "K",
-    rename_symbol = "r",
-    code_actions = "a",
-    fold = "h",
-    unfold = "l",
-    fold_all = "W",
-    unfold_all = "E",
-    fold_reset = "R",
-  },
-  lsp_blacklist = {},
-  symbol_blacklist = {},
-  symbols = {
-    File = {icon = "", hl = "CmpItemAbbrMatch"},
-    Module = {icon = "", hl = "CmpItemKindModule"},
-    Namespace = {icon = "", hl = "CmpItemKindClass"},
-    Package = {icon = "", hl = "CmpItemKindModule"},
-    Class = {icon = "𝓒", hl = "CmpItemKindClass"},
-    Method = {icon = "ƒ", hl = "CmpItemKindMethod"},
-    Property = {icon = "", hl = "CmpItemKindMethod"},
-    Field = {icon = "", hl = "CmpItemKindField"},
-    Constructor = {icon = "", hl = "CmpItemKindConstructor"},
-    Enum = {icon = "ℰ", hl = "CmpItemKindKeyword"},
-    Interface = {icon = "ﰮ", hl = "CmpItemKindInterface"},
-    Function = {icon = "", hl = "CmpItemKindFunction"},
-    Variable = {icon = "", hl = "CmpItemKindVariable"},
-    Constant = {icon = "", hl = "CmpItemKindConstant"},
-    String = {icon = "𝓐", hl = "CmpItemKindVariable"},
-    Number = {icon = "#", hl = "CmpItemKindInterface"},
-    Boolean = {icon = "⊨", hl = "CmpItemKindVariable"},
-    Array = {icon = "", hl = "CmpItemKindReference"},
-    Object = {icon = "⦿", hl = "CmpItemKindSnippet"},
-    Key = {icon = "🔐", hl = "CmpItemKindKeyword"},
-    Null = {icon = "NULL", hl = "CmpItemAbbrMatchFuzzy"},
-    EnumMember = {icon = "", hl = "CmpItemKindField"},
-    Struct = {icon = "𝓢", hl = "CmpItemKindClass"},
-    Event = {icon = "🗲", hl = "CmpItemKindClass"},
-    Operator = {icon = "+", hl = "CmpItemKindVariable"},
-    TypeParameter = {icon = "𝙏", hl = "CmpItemKindKeyword"}
-  }
-}
-}
-EOF
-nnoremap <leader>sy :SymbolsOutline<CR>
+" " symbol outline
+" lua << EOF
+" require("symbols-outline").setup{
+" {
+"   highlight_hovered_item = true,
+"   show_guides = true,
+"   auto_preview = false,
+"   position = 'right',
+"   relative_width = true,
+"   width = 25,
+"   auto_close = false,
+"   show_numbers = false,
+"   show_relative_numbers = false,
+"   show_symbol_details = true,
+"   preview_bg_highlight = 'Pmenu',
+"   autofold_depth = nil,
+"   auto_unfold_hover = true,
+"   fold_markers = { '', '' },
+"   wrap = false,
+"   keymaps = { -- These keymaps can be a string or a table for multiple keys
+"     close = {"<Esc>", "q"},
+"     goto_location = "<Cr>",
+"     focus_location = "o",
+"     hover_symbol = "<C-space>",
+"     toggle_preview = "K",
+"     rename_symbol = "r",
+"     code_actions = "a",
+"     fold = "h",
+"     unfold = "l",
+"     fold_all = "W",
+"     unfold_all = "E",
+"     fold_reset = "R",
+"   },
+"   lsp_blacklist = {},
+"   symbol_blacklist = {},
+"   symbols = {
+"     File = {icon = "", hl = "CmpItemAbbrMatch"},
+"     Module = {icon = "", hl = "CmpItemKindModule"},
+"     Namespace = {icon = "", hl = "CmpItemKindClass"},
+"     Package = {icon = "", hl = "CmpItemKindModule"},
+"     Class = {icon = "𝓒", hl = "CmpItemKindClass"},
+"     Method = {icon = "ƒ", hl = "CmpItemKindMethod"},
+"     Property = {icon = "", hl = "CmpItemKindMethod"},
+"     Field = {icon = "", hl = "CmpItemKindField"},
+"     Constructor = {icon = "", hl = "CmpItemKindConstructor"},
+"     Enum = {icon = "ℰ", hl = "CmpItemKindKeyword"},
+"     Interface = {icon = "ﰮ", hl = "CmpItemKindInterface"},
+"     Function = {icon = "", hl = "CmpItemKindFunction"},
+"     Variable = {icon = "", hl = "CmpItemKindVariable"},
+"     Constant = {icon = "", hl = "CmpItemKindConstant"},
+"     String = {icon = "𝓐", hl = "CmpItemKindVariable"},
+"     Number = {icon = "#", hl = "CmpItemKindInterface"},
+"     Boolean = {icon = "⊨", hl = "CmpItemKindVariable"},
+"     Array = {icon = "", hl = "CmpItemKindReference"},
+"     Object = {icon = "⦿", hl = "CmpItemKindSnippet"},
+"     Key = {icon = "🔐", hl = "CmpItemKindKeyword"},
+"     Null = {icon = "NULL", hl = "CmpItemAbbrMatchFuzzy"},
+"     EnumMember = {icon = "", hl = "CmpItemKindField"},
+"     Struct = {icon = "𝓢", hl = "CmpItemKindClass"},
+"     Event = {icon = "🗲", hl = "CmpItemKindClass"},
+"     Operator = {icon = "+", hl = "CmpItemKindVariable"},
+"     TypeParameter = {icon = "𝙏", hl = "CmpItemKindKeyword"}
+"   }
+" }
+" }
+" EOF
+" nnoremap <leader>sy :SymbolsOutline<CR>
 
 "flutter tools
 
@@ -1787,8 +1841,6 @@ EOF
 "fancy notify
 lua require'nvim-notify'
 
-lua require'nvimtree'
-nnoremap <leader>xt :NvimTreeFindFileToggle<CR>
 
 lua require'nvimtodo'
 nnoremap <LEADER>to :TodoTelescope<CR>
@@ -1916,10 +1968,81 @@ require("conform").setup({
     -- Conform will run the first available formatter
     javascript = { "prettierd", "prettier", stop_after_first = true },
   },
-	format_on_save = {
-    -- These options will be passed to conform.format()
-    timeout_ms = 500,
-    lsp_format = "fallback",
-  },
+--	format_on_save = {
+--    -- These options will be passed to conform.format()
+--    timeout_ms = 500,
+--    lsp_format = "fallback",
+--  },
 })
+EOF
+
+lua << EOF
+-- The setup config table shows all available config options with their default values:
+require("presence").setup({
+    -- General options
+    auto_update         = true,                       -- Update activity based on autocmd events (if `false`, map or manually execute `:lua package.loaded.presence:update()`)
+    neovim_image_text   = "The One True Text Editor", -- Text displayed when hovered over the Neovim image
+    main_image          = "neovim",                   -- Main image display (either "neovim" or "file")
+		
+    client_id           = "793271441293967371",       -- Use your own Discord application client id (not recommended)
+    log_level           = "debug",                        -- Log messages at or above this level (one of the following: "debug", "info", "warn", "error")
+    debounce_timeout    = 10,                         -- Number of seconds to debounce events (or calls to `:lua package.loaded.presence:update(<filename>, true)`)
+    enable_line_number  = false,                      -- Displays the current line number instead of the current project
+    blacklist           = {},                         -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
+    buttons             = true,                       -- Configure Rich Presence button(s), either a boolean to enable/disable, a static table (`{{ label = "<label>", url = "<url>" }, ...}`, or a function(buffer: string, repo_url: string|nil): table)
+    file_assets         = {},                         -- Custom file asset definitions keyed by file names and extensions (see default config at `lua/presence/file_assets.lua` for reference)
+    show_time           = true,                       -- Show the timer
+
+    -- Rich Presence text options
+    editing_text        = "Editing %s",               -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
+    eile_explorer_text  = "Browsing %s",              -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
+    git_commit_text     = "Committing changes",       -- Format string rendered when committing changes in git (either string or function(filename: string): string)
+    plugin_manager_text = "Managing plugins",         -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
+    reading_text        = "Reading %s",               -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
+    workspace_text      = "Working on %s",            -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
+    line_number_text    = "Line %s out of %s",        -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
+})
+EOF
+
+lua << EOF
+-- The setup config table shows all available config options with their default values:
+require("presence").setup({
+    -- General options
+    auto_update         = true,                       -- Update activity based on autocmd events (if `false`, map or manually execute `:lua package.loaded.presence:update()`)
+    neovim_image_text   = "The One True Text Editor", -- Text displayed when hovered over the Neovim image
+    main_image          = "neovim",                   -- Main image display (either "neovim" or "file")
+    client_id           = "793271441293967371",       -- Use your own Discord application client id (not recommended)
+    log_level           = nil,                        -- Log messages at or above this level (one of the following: "debug", "info", "warn", "error")
+    debounce_timeout    = 10,                         -- Number of seconds to debounce events (or calls to `:lua package.loaded.presence:update(<filename>, true)`)
+    enable_line_number  = false,                      -- Displays the current line number instead of the current project
+    blacklist           = {},                         -- A list of strings or Lua patterns that disable Rich Presence if the current file name, path, or workspace matches
+    buttons             = true,                       -- Configure Rich Presence button(s), either a boolean to enable/disable, a static table (`{{ label = "<label>", url = "<url>" }, ...}`, or a function(buffer: string, repo_url: string|nil): table)
+    file_assets         = {},                         -- Custom file asset definitions keyed by file names and extensions (see default config at `lua/presence/file_assets.lua` for reference)
+    show_time           = true,                       -- Show the timer
+
+    -- Rich Presence text options
+    editing_text        = "Editing %s",               -- Format string rendered when an editable file is loaded in the buffer (either string or function(filename: string): string)
+    file_explorer_text  = "Browsing %s",              -- Format string rendered when browsing a file explorer (either string or function(file_explorer_name: string): string)
+    git_commit_text     = "Committing changes",       -- Format string rendered when committing changes in git (either string or function(filename: string): string)
+    plugin_manager_text = "Managing plugins",         -- Format string rendered when managing plugins (either string or function(plugin_manager_name: string): string)
+    reading_text        = "Reading %s",               -- Format string rendered when a read-only or unmodifiable file is loaded in the buffer (either string or function(filename: string): string)
+    workspace_text      = "Working on %s",            -- Format string rendered when in a git repository (either string or function(project_name: string|nil, filename: string): string)
+    line_number_text    = "Line %s out of %s",        -- Format string rendered when `enable_line_number` is set to true (either string or function(line_number: number, line_count: number): string)
+})
+EOF
+
+lua << EOF
+	vim.lsp.enable('arduino_language_server')
+EOF
+
+lua << EOF
+local fyler = require('fyler')
+
+-- Wrap in a function to pass additional arguments
+vim.keymap.set(
+    "n",
+    "<leader>xt",
+    function() fyler.toggle({ kind = "split_left_most" }) end,
+    { desc = "Open Fyler View" }
+)
 EOF
