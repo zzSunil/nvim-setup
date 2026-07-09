@@ -105,6 +105,11 @@ require('code_runner').setup {
 			description = "rmcontrol",
 			command = "make mini-pc"
 		},
+		["/home/zz/dev/git/xen"] = {
+			name = "rmcontrol",
+			description = "rmcontrol",
+			command = "XEN_TARGET_ARCH=riscv64 CROSS_COMPILE=riscv64-linux-gnu- CC=gcc CXX=g++ KBUILD_DEFCONFIG=tiny64_defconfig HYPERVISOR_ONLY=y debug=n ./automation/scripts/build"
+		},
 		["/home/zzlinus/dev/cpp/rm_neobubing"] = {
 			name = "neo bubing",
 			description = "neo bubing",

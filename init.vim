@@ -107,9 +107,13 @@ endif
 set updatetime=100
 set virtualedit=block
 
+set diffopt+=internal,algorithm:patience,indent-heuristic
+set diffopt+=linematch:60
+
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 
+xnoremap p "_dP
 " ===
 " === Terminal Behaviors
 " ===
@@ -227,12 +231,6 @@ cnoremap <C-a> <Home>
 cnoremap <M-b> <S-Left>
 cnoremap <M-w> <S-Right>
 
-
-" ===
-" === Searching
-" ===
-noremap - N
-noremap = n
 
 
 " ===
@@ -435,16 +433,6 @@ require("lazy").setup(
 					desc = "Buffer Diagnostics (Trouble)",
 				},
 				{
-					"<leader>cs",
-					"<cmd>Trouble symbols toggle focus=false<cr>",
-					desc = "Symbols (Trouble)",
-				},
-				{
-					"<leader>cl",
-					"<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
-					desc = "LSP Definitions / references / ... (Trouble)",
-				},
-				{
 					"<leader>xL",
 					"<cmd>Trouble loclist toggle<cr>",
 					desc = "Location List (Trouble)",
@@ -461,12 +449,7 @@ require("lazy").setup(
 			dependencies = { "folke/snacks.nvim" },
 			opts = {
 				terminal = {
-					provider = "snacks",
-					snacks_win_opts = {
-						start_insert = false,
-						auto_insert = false,
-						auto_close = true,
-					},
+					split_side = "left",
 				},
 			},
 			config = true,
@@ -490,16 +473,146 @@ require("lazy").setup(
 				{ "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
 			},
 		},
+		{"pablopunk/pi.nvim"},
+		{
+			"NickvanDyke/opencode.nvim",
+			dependencies = {
+				-- Recommended for `ask()` and `select()`.
+				-- Required for `snacks` provider.
+				---@module 'snacks' <- Loads `snacks.nvim` types for configuration intellisense.
+				{ "folke/snacks.nvim", opts = { input = {}, picker = {}, terminal = {} } },
+			},
+			config = function()
+				---@type opencode.Opts
+				vim.g.opencode_opts = {
+				}
+
+				-- Required for `opts.events.reload`.
+				vim.o.autoread = true
+
+				-- Recommended/example keymaps.
+				vim.keymap.set({ "n", "x" }, "<leader>zs", function() require("opencode").ask("@this: ", { submit = true }) end, { desc = "Ask opencode" })
+				vim.keymap.set({ "n", "x" }, "<leader>ze", function() require("opencode").select() end,                          { desc = "Execute opencode action…" })
+				vim.keymap.set({ "n", "x" }, "<leader>zt", function() require("opencode").toggle() end,                          { desc = "Toggle opencode" })
+				vim.keymap.set({ "n", "x" }, "<leader>zr",  function() return require("opencode").operator("@this ") end,        { expr = true, desc = "Add range to opencode" })
+				vim.keymap.set("n",          "<leader>zl", function() return require("opencode").operator("@this ") .. "_" end, { expr = true, desc = "Add line to opencode" })
+				vim.keymap.set("n", "<S-C-u>", function() require("opencode").command("session.half.page.up") end,   { desc = "opencode half page up" })
+				vim.keymap.set("n", "<S-C-e>", function() require("opencode").command("session.half.page.down") end, { desc = "opencode half page down" })
+
+			end,
+		},
 		{
 			'MeanderingProgrammer/render-markdown.nvim',
 			dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
 			-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
 			-- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+			config = function(_, opts)
+				if vim.fn.has('nvim-0.12') ~= 1 then
+					require('render-markdown').setup(opts)
+					return
+				end
+
+				local query = require('vim.treesitter.query')
+				local html_script_type_languages = {
+					importmap = 'json',
+					module = 'javascript',
+					['application/ecmascript'] = 'javascript',
+					['text/ecmascript'] = 'javascript',
+				}
+				local injection_aliases = {
+					ex = 'elixir',
+					pl = 'perl',
+					sh = 'bash',
+					ts = 'typescript',
+					uxn = 'uxntal',
+				}
+				local function capture_node(match, capture_id)
+					local nodes = match[capture_id]
+					if type(nodes) ~= 'table' then
+						return nodes
+					end
+					return nodes[#nodes]
+				end
+				local function parser_from_info_string(alias)
+					local match = vim.filetype.match({ filename = 'a.' .. alias })
+					return match or injection_aliases[alias] or alias
+				end
+
+				query.add_predicate('nth?', function(match, _, _, pred)
+					local node = capture_node(match, pred[2])
+					local n = tonumber(pred[3])
+					if node and node:parent() and node:parent():named_child_count() > n then
+						return node:parent():named_child(n) == node
+					end
+					return false
+				end, { force = true })
+
+				query.add_predicate('is?', function(match, _, bufnr, pred)
+					local locals = require('nvim-treesitter.locals')
+					local node = capture_node(match, pred[2])
+					local types = { unpack(pred, 3) }
+					if not node then
+						return true
+					end
+					local _, _, kind = locals.find_definition(node, bufnr)
+					return vim.tbl_contains(types, kind)
+				end, { force = true })
+
+				query.add_predicate('kind-eq?', function(match, _, _, pred)
+					local node = capture_node(match, pred[2])
+					local types = { unpack(pred, 3) }
+					if not node then
+						return true
+					end
+					return vim.tbl_contains(types, node:type())
+				end, { force = true })
+
+				query.add_directive('set-lang-from-mimetype!', function(match, _, bufnr, pred, metadata)
+					local node = capture_node(match, pred[2])
+					if not node then
+						return
+					end
+					local type_attr_value = vim.treesitter.get_node_text(node, bufnr)
+					local configured = html_script_type_languages[type_attr_value]
+					if configured then
+						metadata['injection.language'] = configured
+					else
+						local parts = vim.split(type_attr_value, '/', {})
+						metadata['injection.language'] = parts[#parts]
+					end
+				end, { force = true })
+
+				query.add_directive('set-lang-from-info-string!', function(match, _, bufnr, pred, metadata)
+					local node = capture_node(match, pred[2])
+					if not node then
+						return
+					end
+					local injection_alias = vim.treesitter.get_node_text(node, bufnr):lower()
+					metadata['injection.language'] = parser_from_info_string(injection_alias)
+				end, { force = true })
+
+				query.add_directive('downcase!', function(match, _, bufnr, pred, metadata)
+					local id = pred[2]
+					local node = capture_node(match, id)
+					if not node then
+						return
+					end
+					local text = vim.treesitter.get_node_text(node, bufnr, { metadata = metadata[id] }) or ''
+					metadata[id] = metadata[id] or {}
+					metadata[id].text = string.lower(text)
+				end, { force = true })
+				require('render-markdown').setup(opts)
+			end,
 			---@module 'render-markdown'
 			---@type render.md.UserConfig
 			opts = {},
 		},
-		"andweeb/presence.nvim",
+		{
+			"andweeb/presence.nvim",
+			event = "VeryLazy",
+		},
+		"rhart92/codex.nvim",
+		"sindrets/diffview.nvim",
 		"hrsh7th/nvim-cmp",
 		"kyazdani42/nvim-web-devicons",
 		"p00f/clangd_extensions.nvim",
@@ -507,14 +620,11 @@ require("lazy").setup(
 		"airblade/vim-rooter",
 		"dhruvasagar/vim-table-mode",
 		-- {"RRethy/vim-hexokinase",build = "make hexokinase" },
-		"kyazdani42/nvim-web-devicons",
 		"ryanoasis/vim-devicons",
+		"lambdalisue/vim-nerdfont",
 		{
 			"A7Lavinraj/fyler.nvim",
-			dependencies = { "nvim-mini/mini.icons" },
-			branch = "stable",  -- Use stable branch for production
-			lazy = false, -- Necessary for `default_explorer` to work properly
-			opts = {}
+			branch = "main",  -- Use stable branch for production
 		},
 		"junegunn/fzf.vim",
 		"junegunn/fzf",
@@ -537,43 +647,21 @@ require("lazy").setup(
 		"nvim-lualine/lualine.nvim",
 		"yorik1984/lualine-theme.nvim",
 		-- Autoformat
-    	"google/vim-maktaba", 
+		{
+			'stevearc/conform.nvim',
+			opts = {},
+		},
+		"google/vim-maktaba", 
 		{"google/vim-codefmt", event = "VeryLazy" },
-    	"rhysd/vim-clang-format",
-    	"elzr/vim-json",
-    	"neoclide/jsonc.vim",
-    	"othree/html5.vim",
-    	"alvan/vim-closetag",
+		"rhysd/vim-clang-format",
+		"elzr/vim-json",
+		"neoclide/jsonc.vim",
+		"othree/html5.vim",
+		"alvan/vim-closetag",
 		{"hail2u/vim-css3-syntax" ,event = "VeryLazy"},
 		{"spf13/PIV", event = "VeryLazy"},
-    	{"pangloss/vim-javascript",  event = "VeryLazy"},
-    	{"yuezk/vim-js", event = "VeryLazy"},
-    	{"MaxMEllon/vim-jsx-pretty", event = "VeryLazy"},
-    	{"jelera/vim-javascript-syntax", event = "VeryLazy"},
-    	{"jaxbot/browserlink.vim", event = "VeryLazy"},
-    	"HerringtonDarkholme/yats.vim",
-    	"posva/vim-vue",
-    	"evanleck/vim-svelte",
-    	"leafOfTree/vim-svelte-plugin",
-    	"leafgarland/typescript-vim",
-    	"MaxMEllon/vim-jsx-pretty",
-    	"pangloss/vim-javascript",
-    	"leafgarland/typescript-vim",
-    	"peitalin/vim-jsx-typescript",
-    	"styled-components/vim-styled-components",
-    	"pantharshit00/vim-prisma",
 		-- golang
 		{"fatih/vim-go",cmd = "GoInstallBinaries"},
-		-- python
-		{"tmhedberg/SimpylFold",event = "VeryLazy"},
-    	{"Vimjas/vim-python-pep8-indent",event = "VeryLazy"},
-    	{"numirias/semshi",cmd = "UpdateRemotePlugins"},
-    	{"vim-scripts/indentpython.vim",event = "VeryLazy"},
-    	{"tweekmonster/braceless.vim",event = "VeryLazy"},
-		-- flutter
-		{"dart-lang/dart-vim-plugin",event = "VeryLazy" },
-		{"nvim-lua/plenary.nvim",event = "VeryLazy" },
-		{"akinsho/flutter-tools.nvim",event = "VeryLazy" },
 		-- markdown 
 		{"mzlogin/vim-markdown-toc", event = "VeryLazy" },
 		{"dkarter/bullets.vim", event = "VeryLazy" },
@@ -581,7 +669,6 @@ require("lazy").setup(
 		-- Editor Enhancement
 		"Raimondi/delimitMate",
 		"preservim/nerdcommenter",
-		"jiangmiao/auto-pairs",
 		"tpope/vim-surround", -- type yskw' to wrap the word with '' or type cs'` to change 'word' to `word`
 		"gcmt/wildfire.vim", -- in Visual mode, type k' to select all text in '', or type k) k] k} kp
 		"junegunn/vim-after-object", -- da= to delete what's after =
@@ -592,10 +679,6 @@ require("lazy").setup(
 		"junegunn/vim-peekaboo",
 		"svermeulen/vim-subversive",
 		"theniceboy/argtextobj.vim",
-		{
-			'stevearc/conform.nvim',
-			opts = {},
-		},
 		"rhysd/clever-f.vim",
 		{
 			"pablopunk/todo.nvim",
@@ -603,12 +686,10 @@ require("lazy").setup(
 			opts = { map = "<leader>td" } -- same as .setup({...})
 		},
 		"AndrewRadev/splitjoin.vim",
-		"theniceboy/pair-maker.vim",
 		"theniceboy/vim-move",
 		"jeffkreeftmeijer/vim-numbertoggle",
 		"lukas-reineke/indent-blankline.nvim",
 		-- For general writing
-		"junegunn/goyo.vim",
 		"reedes/vim-wordy",
 		"voldikss/vim-translator",
 		-- Bookmarks
@@ -633,10 +714,12 @@ require("lazy").setup(
 		"MarcWeber/vim-addon-mw-utils",
 		"kana/vim-textobj-user",
 		"roxma/nvim-yarp",
+		
 		-- For ultisnips user.
+		"SirVer/ultisnips",
+		"quangnguyen30192/cmp-nvim-ultisnips",
+		
 		"onsails/lspkind-nvim",
-		-- outline
-		-- "simrat39/symbols-outline.nvim",
 		-- PlatformIO
 		-- highlight yank
 		"machakann/vim-highlightedyank",
@@ -651,6 +734,13 @@ require("lazy").setup(
 		-- shader language glsl
 		"tikhomirov/vim-glsl",
 		-- ssh
+		{
+			's1n7ax/nvim-window-picker',
+			name = 'window-picker',
+			config = function()
+					require'window-picker'.setup()
+			end,
+		},
 		"DanielWeidinger/nvim-sshfs",
 		-- display assembly for the current buffer
 		"p00f/godbolt.nvim",
@@ -701,9 +791,19 @@ set termguicolors " enable true colors support
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 " ===
-" === gruvbox
+" === Searching
 " ===
+noremap - N
+noremap = n
+
+" ===
+" === Searching
+" ===
+noremap - N
+noremap = n
 "
+
+set signcolumn=yes
 
 " set background=dark
 " let g:gruvbox_contrast_dark='hard'
@@ -928,147 +1028,6 @@ let g:bullets_enabled_file_types = [
 " === fzf-gitignore
 " ===
 noremap <LEADER>gi :FzfGitignore<CR>
-
-
-
-
-" ===
-" === vimtex
-" ===
-"let g:vimtex_view_method = ''
-let g:vimtex_view_general_viewer = 'llpp'
-let g:vimtex_mappings_enabled = 0
-let g:vimtex_text_obj_enabled = 0
-let g:vimtex_motion_enabled = 0
-let maplocalleader=' '
-
-
-" ===
-" === vim-calendar
-" ===
-noremap \c :Calendar -position=here<CR>
-noremap \\ :Calendar -view=clock -position=here<CR>
-" let g:calendar_google_calendar = 1
-" let g:calendar_google_task = 1
-augroup calendar-mappings
-	autocmd!
-	" diamond cursor
-	autocmd FileType calendar nmap <buffer> u <Plug>(calendar_up)
-	autocmd FileType calendar nmap <buffer> n <Plug>(calendar_left)
-	autocmd FileType calendar nmap <buffer> e <Plug>(calendar_down)
-	autocmd FileType calendar nmap <buffer> i <Plug>(calendar_right)
-	autocmd FileType calendar nmap <buffer> <c-u> <Plug>(calendar_move_up)
-	autocmd FileType calendar nmap <buffer> <c-n> <Plug>(calendar_move_left)
-	autocmd FileType calendar nmap <buffer> <c-e> <Plug>(calendar_move_down)
-	autocmd FileType calendar nmap <buffer> k <Plug>(calendar_start_insert)
-	autocmd FileType calendar nmap <buffer> K <Plug>(calendar_start_insert_head)
-	" unmap <C-n>, <C-p> for other plugins
-	autocmd FileType calendar nunmap <buffer> <C-n>
-	autocmd FileType calendar nunmap <buffer> <C-p>
-augroup END
-
-
-" ===
-" === vim-go
-" ===
-let g:go_echo_go_info = 0
-let g:go_doc_popup_window = 1
-let g:go_def_mapping_enabled = 0
-let g:go_template_autocreate = 0
-let g:go_textobj_enabled = 0
-let g:go_auto_type_info = 1
-let g:go_def_mapping_enabled = 0
-let g:go_highlight_array_whitespace_error = 1
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_chan_whitespace_error = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_format_strings = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_function_parameters = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_generate_tags = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_space_tab_error = 1
-let g:go_highlight_string_spellcheck = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_trailing_whitespace_error = 1
-let g:go_highlight_types = 1
-let g:go_highlight_variable_assignments = 1
-let g:go_highlight_variable_declarations = 1
-let g:go_doc_keywordprg_enabled = 0
-nnoremap <silent><leader>gb :GoBuild<CR>
-
-" ===
-" === AutoFormat
-" ===
-augroup autoformat_settings
-	" autocmd FileType bzl AutoFormatBuffer buildifier
-	" autocmd FileType c,cpp,proto,arduino AutoFormatBuffer clang-format
-	" autocmd FileType dart AutoFormatBuffer dartfmt
-	" autocmd FileType go AutoFormatBuffer gofmt
-	" autocmd FileType gn AutoFormatBuffer gn
-	" autocmd FileType html,css,sass,scss,less,json AutoFormatBuffer js-beautify
-	autocmd FileType java AutoFormatBuffer google-java-format
-	" autocmd FileType python AutoFormatBuffer yapf
-	" Alternative: autocmd FileType python AutoFormatBuffer autopep8
-	" autocmd FileType rust AutoFormatBuffer rustfmt
-	" autocmd FileType vue AutoFormatBuffer prettier
-augroup END
-
-
-
-" ===
-" === vim-easymotion
-" ===
-let g:EasyMotion_do_mapping = 0
-let g:EasyMotion_do_shade = 0
-let g:EasyMotion_smartcase = 1
-" map ' <Plug>(easymotion-overwin-f2)
-" nmap ' <Plug>(easymotion-overwin-f2)
-"map E <Plug>(easymotion-j)
-"map U <Plug>(easymotion-k)
-"nmap f <Plug>(easymotion-overwin-f)
-"map \; <Plug>(easymotion-prefix)
-"nmap ' <Plug>(easymotion-overwin-f2)
-"map 'l <Plug>(easymotion-bd-jk)
-"nmap 'l <Plug>(easymotion-overwin-line)
-"map  'w <Plug>(easymotion-bd-w)
-"nmap 'w <Plug>(easymotion-overwin-w)
-
-
-" ===
-" === goyo
-" ===
-map <LEADER>gy :Goyo<CR>
-
-
-" ===
-" === jsx
-" ===
-let g:vim_jsx_pretty_colorful_config = 1
-
-
-" ===
-" === fastfold
-" ===
-" nmap zuz <Plug>(FastFoldUpdate)
-" let g:fastfold_savehook = 1
-" let g:fastfold_fold_command_suffixes =  ['x','X','a','A','o','O','c','C']
-" let g:fastfold_fold_movement_commands = [']z', '[z', 'ze', 'zu']
-" let g:markdown_folding = 1
-" let g:tex_fold_enabled = 1
-" let g:vimsyn_folding = 'af'
-" let g:xml_syntax_folding = 1
-" let g:javaScript_fold = 1
-" let g:sh_fold_enabled= 7
-" let g:ruby_fold = 1
-" let g:perl_fold = 1
-" let g:perl_fold_blocks = 1
-" let g:r_syntax_folding = 1
-" let g:rust_fold = 1
-" let g:php_folding = 1
 
 
 " ===
@@ -1309,55 +1268,50 @@ lua <<EOF
   local cmp = require'cmp'
 
   cmp.setup({
-    snippet = {
-      expand = function(args)
-        vim.fn["UltiSnips#Anon"](args.body)
-      end,
-    },
-
-	window = {
-		completion = {
-			winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-			border = 'rounded',
-			col_offset = -3,
-			side_padding = 0,
+		snippet = {
+			expand = function(args)
+				vim.fn["UltiSnips#Anon"](args.body)
+			end,
 		},
-		documentation = { -- no border; native-style scrollbar
-			  border = 'rounded',
-			  scrollbar = '',
+		window = {
+			completion = {
+				winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+				border = 'rounded',
+				col_offset = -3,
+				side_padding = 0,
+			},
+			documentation = { -- no border; native-style scrollbar
+					border = 'rounded',
+					scrollbar = '',
+			},
 		},
-	},
-	formatting = {
-	fields = { "kind", "abbr", "menu" },
-	  format = require("lspkind").cmp_format({with_text = true, menu = ({
-	      buffer = "[Buffer]",
-	      nvim_lsp = "[LSP]",
-	      ultisnips = "[UltiSnips]",
-	      nvim_lua = "[Lua]",
-	      latex_symbols = "[Latex]",
-	    })}),
-	},
-
-
-	experimental = {
-		native_menu = false,
-		ghost_text = true,
-	},
-
-    mapping = {
+		formatting = {
+		fields = { "kind", "abbr", "menu" },
+			format = require("lspkind").cmp_format({with_text = true, menu = ({
+					buffer = "[Buffer]",
+					nvim_lsp = "[LSP]",
+					ultisnips = "[UltiSnips]",
+					nvim_lua = "[Lua]",
+					latex_symbols = "[Latex]",
+				})}),
+		},
+		experimental = {
+			native_menu = false,
+			ghost_text = true,
+		},
+		mapping = {
 			['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
 			['<C-l>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
 			['<C-j>'] = cmp.mapping.complete(),
 			['<C-g>'] = cmp.mapping.close(),
 			['<C-s>'] = cmp.mapping.confirm({ select = true }),
-    },
-    sources = {
-		{ name = 'nvim_lsp' },
-    { name = 'vsnip' },
-		{ name = 'ultisnips' ,keyword_length = 2},
-		{ name = 'buffer' },
-    }
-  })
+		},
+		sources = {
+			{ name = 'nvim_lsp' },
+			{ name = 'ultisnips'},
+			{ name = 'buffer' },
+		}
+	})
 
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
 	capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -1453,6 +1407,8 @@ lua require'nvim-dap'
 
 lua require'tree-sitter'
 
+lua require'diff-view'
+
 "lsp trouble
 
 
@@ -1516,111 +1472,6 @@ require'lualine'.setup {
   extensions = {}
 }
 EOF
-
-
-"
-set guifont=JetBrainsMono\ NF:h12
-
-" " symbol outline
-" lua << EOF
-" require("symbols-outline").setup{
-" {
-"   highlight_hovered_item = true,
-"   show_guides = true,
-"   auto_preview = false,
-"   position = 'right',
-"   relative_width = true,
-"   width = 25,
-"   auto_close = false,
-"   show_numbers = false,
-"   show_relative_numbers = false,
-"   show_symbol_details = true,
-"   preview_bg_highlight = 'Pmenu',
-"   autofold_depth = nil,
-"   auto_unfold_hover = true,
-"   fold_markers = { '', '' },
-"   wrap = false,
-"   keymaps = { -- These keymaps can be a string or a table for multiple keys
-"     close = {"<Esc>", "q"},
-"     goto_location = "<Cr>",
-"     focus_location = "o",
-"     hover_symbol = "<C-space>",
-"     toggle_preview = "K",
-"     rename_symbol = "r",
-"     code_actions = "a",
-"     fold = "h",
-"     unfold = "l",
-"     fold_all = "W",
-"     unfold_all = "E",
-"     fold_reset = "R",
-"   },
-"   lsp_blacklist = {},
-"   symbol_blacklist = {},
-"   symbols = {
-"     File = {icon = "", hl = "CmpItemAbbrMatch"},
-"     Module = {icon = "", hl = "CmpItemKindModule"},
-"     Namespace = {icon = "", hl = "CmpItemKindClass"},
-"     Package = {icon = "", hl = "CmpItemKindModule"},
-"     Class = {icon = "𝓒", hl = "CmpItemKindClass"},
-"     Method = {icon = "ƒ", hl = "CmpItemKindMethod"},
-"     Property = {icon = "", hl = "CmpItemKindMethod"},
-"     Field = {icon = "", hl = "CmpItemKindField"},
-"     Constructor = {icon = "", hl = "CmpItemKindConstructor"},
-"     Enum = {icon = "ℰ", hl = "CmpItemKindKeyword"},
-"     Interface = {icon = "ﰮ", hl = "CmpItemKindInterface"},
-"     Function = {icon = "", hl = "CmpItemKindFunction"},
-"     Variable = {icon = "", hl = "CmpItemKindVariable"},
-"     Constant = {icon = "", hl = "CmpItemKindConstant"},
-"     String = {icon = "𝓐", hl = "CmpItemKindVariable"},
-"     Number = {icon = "#", hl = "CmpItemKindInterface"},
-"     Boolean = {icon = "⊨", hl = "CmpItemKindVariable"},
-"     Array = {icon = "", hl = "CmpItemKindReference"},
-"     Object = {icon = "⦿", hl = "CmpItemKindSnippet"},
-"     Key = {icon = "🔐", hl = "CmpItemKindKeyword"},
-"     Null = {icon = "NULL", hl = "CmpItemAbbrMatchFuzzy"},
-"     EnumMember = {icon = "", hl = "CmpItemKindField"},
-"     Struct = {icon = "𝓢", hl = "CmpItemKindClass"},
-"     Event = {icon = "🗲", hl = "CmpItemKindClass"},
-"     Operator = {icon = "+", hl = "CmpItemKindVariable"},
-"     TypeParameter = {icon = "𝙏", hl = "CmpItemKindKeyword"}
-"   }
-" }
-" }
-" EOF
-" nnoremap <leader>sy :SymbolsOutline<CR>
-
-"flutter tools
-
-lua << EOF
-  require("flutter-tools").setup{} -- use defaults
-EOF
-
-
-
-"paltformIO
-" call SetupPlatformioEnvironment('/home/zz/dev/C++/platformIO_Procject/TestProject ')
-
-" neomake
-noremap <LEADER>ma :Neomake clang<CR>
-noremap <LEADER>mc :NeomakeClean<CR>
-let g:neomake_open_list = 2
-let g:neomake_error_sign = {
-    \ 'text': '✖',
-    \ 'texthl': 'NeomakeErrorSign',
-    \ }
-let g:neomake_warning_sign = {
-    \   'text': '‼',
-    \   'texthl': 'NeomakeWarningSign',
-    \ }
-let g:neomake_message_sign = {
-     \   'text': '➤',
-     \   'texthl': 'NeomakeMessageSign',
-     \ }
-let g:neomake_info_sign = {
-     \ 'text': 'ℹ',
-     \ 'texthl': 'NeomakeInfoSign'
-     \ }
-
 
 
 "lsp_signature
@@ -1878,10 +1729,6 @@ let g:closetag_regions = {
 let g:closetag_shortcut = '>'
 let g:closetag_enable_react_fragment = 1
 
-" cmake tools
-nnoremap <leader>cg :CMakeGenerate<CR>
-nnoremap <leader>cb :CMakeBuild<CR>
-
 " nvim dap
 nnoremap <leader>db <Cmd>lua require("dapui").open()<CR>
 nnoremap <leader>dc <Cmd>lua require("dapui").close()<CR>
@@ -2036,6 +1883,17 @@ lua << EOF
 EOF
 
 lua << EOF
+require("fyler").setup({
+	integrations = {
+		icon = "nvim_web_devicons",  -- default
+		winpick = function(_, onsubmit)
+			local prev_winnr = vim.fn.winnr '#'
+			local prev_winid = prev_winnr ~= 0 and vim.fn.win_getid(prev_winnr) or nil
+			onsubmit(prev_winid)
+    end,
+	},
+})
+
 local fyler = require('fyler')
 
 -- Wrap in a function to pass additional arguments
@@ -2045,4 +1903,37 @@ vim.keymap.set(
     function() fyler.toggle({ kind = "split_left_most" }) end,
     { desc = "Open Fyler View" }
 )
+EOF
+
+
+nnoremap <leader>dv :DiffviewFileHistory %<CR>
+xnoremap <leader>dv :DiffviewFileHistory<CR>
+nnoremap <leader>dc :DiffviewClose<CR>
+let g:UltiSnipsJumpForwardTrigger="<c-i>"
+let g:UltiSnipsJumpBackwardTrigger="<c-I>"
+
+lua << EOF
+require("pi").setup({
+  provider = "openrouter",
+  model = "openrouter/free",
+  max_context_lines = 300,
+  max_context_bytes = 24000,
+  selection_context_lines = 40,
+  log_path = "/tmp/pi-nvim.log",
+  skills = true,
+  extensions = true,
+  tools = true,
+})
+
+vim.keymap.set("n", "<leader>ai", ":PiAsk<CR>", { desc = "Ask pi" })
+vim.keymap.set("v", "<leader>ai", ":PiAskSelection<CR>", { desc = "Ask pi (selection)" })
+
+EOF
+
+lua << EOF
+require("codex").setup({
+})
+
+vim.keymap.set("n", "<leader>cc", function() require("codex").toggle() end, { desc = "Codex: Toggle" })
+vim.keymap.set("v", "<leader>cs", function() require("codex").actions.send_selection() end, { desc = "Codex: Send selection" })
 EOF
